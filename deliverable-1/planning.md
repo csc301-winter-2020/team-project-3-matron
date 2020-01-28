@@ -77,6 +77,12 @@ Describe meetings (and other events) you are planning to have.
    * What were the outcomes of each meeting?
    * You must provide meeting minutes.
    * You must have a regular meeting schedule established by the second meeting.  
+   
+We plan to have team meetings once a week that all members are required to attend either in person or by call. Through a two-stage voting process we've decided on Thursday 5-6 as our regular meeting time, as it was the time that worked for 6/7 of our group members. For the group members who can't make it, they will call in using Discord so they can still contibute to group discussions. The location may change, but it will generally be a group study room booked in advance by the team lead - we've found that larger rooms with whiteboards and tv screens help us organize better.
+
+The main purpose of the meetings will be to update the team on our progress so far, and share any questions or concerns that any team members have about the project. We plan to use a less strict organizational methodology like Kanban, so weekly meetings to check in and ensure we're on track will be necessary to keep us organized
+
+We also have our meetings with our project partner. These will be biweekly and online via Skype, as per our partner's preference. Depending on our availabilites different amounts of the team may join, but we have a dedicated partner liason who will be the one to schedule the meetings and speak to the partner. If nobody else can join, the partner liason will be responsible for taking the group's concerns to the partner and bringing back information at the weekly team meetings.
   
 #### Q8: What artifacts will you use to self-organize?
 
