@@ -66,6 +66,8 @@ List each team member and:
  * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
  * 3 technical strengths and weaknesses each (e.g. languages, frameworks, libraries, development methodologies, etc.)
 
+
+
 #### Q7: What operational events will you have as a team?
 
 Describe meetings (and other events) you are planning to have. 
@@ -76,7 +78,7 @@ Describe meetings (and other events) you are planning to have.
    * What did you discuss during the meetings?
    * What were the outcomes of each meeting?
    * You must provide meeting minutes.
-   * You must have a regular meeting schedule established by the second meeting.  
+   * You must have a regular meeting schedule established by the second meeting.
    
 We plan to have team meetings once a week that all members are required to attend either in person or by call. Through a two-stage voting process we've decided on Thursday 5-6 as our regular meeting time, as it was the time that worked for 6/7 of our group members. For the group members who can't make it, they will call in using Discord so they can still contibute to group discussions. The location may change, but it will generally be a group study room booked in advance by the team lead - we've found that larger rooms with whiteboards and tv screens help us organize better.
 
@@ -94,6 +96,13 @@ List/describe the artifacts you will produce in order to organize your team.
    * How do you prioritize tasks?
    * How do tasks get assigned to team members?
    * How do you determine the status of work from inception to completion?
+   
+Our team's primary means of internal communication is via Discord. Our group's server has 5 total text channels split into two categories:
+ * Organizational: Three text channels under this category are used to make team-wide announcements, post meeting minutes, and share important notes as they come up.
+ * Production: Two text channels here are used for general chat and issue discussion when it requires the attention of some or all other team members.
+This server provides a quick means of instant messaging between the group while still organizing messages into unique and useful categories. There are also 4 voice chat rooms which our team members may join at any time. We have multiple voice chat rooms so that members may split off into pairs or small groups and work on issues/files together.
+
+Our team also has a Trello board where we use a form of Kanban. We post important information (To-do lists, pending tasks, links to Google documents, etc.) here as well. Group members can see when one member takes on a specific task, as well as when it is completed.
 
 #### Q9: What are the rules regarding how your team works?
 
