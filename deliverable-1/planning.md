@@ -107,6 +107,12 @@ List/describe the artifacts you will produce in order to organize your team.
    * How do you prioritize tasks?
    * How do tasks get assigned to team members?
    * How do you determine the status of work from inception to completion?
+   
+Our team's primary means of internal communication is via Discord. Our group's server has 5 total text channels split into two categories:
+
+Organizational: Three text channels under this category are used to make team-wide announcements, post meeting minutes, and share important notes as they come up.
+Production: Two text channels here are used for general chat and issue discussion when it requires the attention of some or all other team members. This server provides a quick means of instant messaging between the group while still organizing messages into unique and useful categories. There are also 4 voice chat rooms which our team members may join at any time. We have multiple voice chat rooms so that members may split off into pairs or small groups and work on issues/files together.
+Our team also has a Trello board where we use a form of Kanban. We post important information (To-do lists, pending tasks, links to Google documents, etc.) here as well. Group members can see when one member takes on a specific task, as well as when it is completed.
 
 #### Q9: What are the rules regarding how your team works?
 
