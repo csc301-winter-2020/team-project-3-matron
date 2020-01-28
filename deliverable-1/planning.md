@@ -66,8 +66,6 @@ List each team member and:
  * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
  * 3 technical strengths and weaknesses each (e.g. languages, frameworks, libraries, development methodologies, etc.)
 
-
-
 #### Q7: What operational events will you have as a team?
 
 Describe meetings (and other events) you are planning to have. 
@@ -78,7 +76,7 @@ Describe meetings (and other events) you are planning to have.
    * What did you discuss during the meetings?
    * What were the outcomes of each meeting?
    * You must provide meeting minutes.
-   * You must have a regular meeting schedule established by the second meeting.
+   * You must have a regular meeting schedule established by the second meeting.  
    
 We plan to have team meetings once a week that all members are required to attend either in person or by call. Through a two-stage voting process we've decided on Thursday 5-6 as our regular meeting time, as it was the time that worked for 6/7 of our group members. For the group members who can't make it, they will call in using Discord so they can still contibute to group discussions. The location may change, but it will generally be a group study room booked in advance by the team lead - we've found that larger rooms with whiteboards and tv screens help us organize better.
 
@@ -96,13 +94,6 @@ List/describe the artifacts you will produce in order to organize your team.
    * How do you prioritize tasks?
    * How do tasks get assigned to team members?
    * How do you determine the status of work from inception to completion?
-   
-Our team's primary means of internal communication is via Discord. Our group's server has 5 total text channels split into two categories:
- * Organizational: Three text channels under this category are used to make team-wide announcements, post meeting minutes, and share important notes as they come up.
- * Production: Two text channels here are used for general chat and issue discussion when it requires the attention of some or all other team members.
-This server provides a quick means of instant messaging between the group while still organizing messages into unique and useful categories. There are also 4 voice chat rooms which our team members may join at any time. We have multiple voice chat rooms so that members may split off into pairs or small groups and work on issues/files together.
-
-Our team also has a Trello board where we use a form of Kanban. We post important information (To-do lists, pending tasks, links to Google documents, etc.) here as well. Group members can see when one member takes on a specific task, as well as when it is completed.
 
 #### Q9: What are the rules regarding how your team works?
 
@@ -112,12 +103,16 @@ Describe your team's working culture.
  * What is the expected frequency? What methods/channels are appropriate? 
  * If you have a partner project, what is your process (in detail) for communicating with your partner?
  
+Between group members, minimum of once a week because we have a weekly meetings. On average, we expect to speak with each other regarding the project about once every other day via our Discord channel or in person. For emergencies, we've all shared our phone numbers with each other except for 1 group member who didn't consent.
+Our expected frequency of communications with the partner is biweekly, as per the partners preference, with a Skype call or via email for immediate requests. We have a dedicated partner liason who will be responsible for keeping the partner up to date on our progress and sending emails if we have any questions.
+ 
 **Meetings:**
  * How are people held accountable for attending meetings, completing action items? Is there a moderator or process?
  
+If a group member doesn't attend a meeting or complete an assigned action item, the team lead will contact them and ask for justification about why they didn't attend. Since all the group members are friends in real life, we don't expect this to happen often and if it does we can just ask them in person.
+ 
 **Conflict Resolution:**
  * List at least three team scenarios/conflicts you discussed in lecture and how you decided you will resolve them. Indecisions? Non-responsive team members? Any other scenarios you can think of?
-
 
 
 
