@@ -65,6 +65,19 @@ Describe the different roles on the team and the responsibilities associated wit
 List each team member and:
  * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
  * 3 technical strengths and weaknesses each (e.g. languages, frameworks, libraries, development methodologies, etc.)
+ 
+ Adit:
+  role:
+  
+  strengths:
+  - Front end development HTML, CSS, JS, and graphic design
+  - Good experience with databases SQL and noSQL
+  - Experience with web development with MERN stack, django, and flask
+  
+  weaknesses:
+  - GIT merging conflicts
+  - Infrequent activity of group project discord, as well low profiency with discord
+  - No experience with development methodologies
 
 #### Q7: What operational events will you have as a team?
 
@@ -103,16 +116,12 @@ Describe your team's working culture.
  * What is the expected frequency? What methods/channels are appropriate? 
  * If you have a partner project, what is your process (in detail) for communicating with your partner?
  
-Between group members, minimum of once a week because we have a weekly meetings. On average, we expect to speak with each other regarding the project about once every other day via our Discord channel or in person. For emergencies, we've all shared our phone numbers with each other except for 1 group member who didn't consent.
-Our expected frequency of communications with the partner is biweekly, as per the partners preference, with a Skype call or via email for immediate requests. We have a dedicated partner liason who will be responsible for keeping the partner up to date on our progress and sending emails if we have any questions.
- 
 **Meetings:**
  * How are people held accountable for attending meetings, completing action items? Is there a moderator or process?
  
-If a group member doesn't attend a meeting or complete an assigned action item, the team lead will contact them and ask for justification about why they didn't attend. Since all the group members are friends in real life, we don't expect this to happen often and if it does we can just ask them in person.
- 
 **Conflict Resolution:**
  * List at least three team scenarios/conflicts you discussed in lecture and how you decided you will resolve them. Indecisions? Non-responsive team members? Any other scenarios you can think of?
+
 
 
 
