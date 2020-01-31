@@ -66,7 +66,7 @@ List each team member and:
  * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
  * 3 technical strengths and weaknesses each (e.g. languages, frameworks, libraries, development methodologies, etc.)
  
- Adit:
+Adit:
   role:
   
   strengths:
@@ -78,6 +78,19 @@ List each team member and:
   - GIT merging conflicts
   - Infrequent activity of group project discord, as well low profiency with discord
   - No experience with development methodologies
+  
+David:
+  role:
+
+  strengths:
+  - database management (PostgreSQL and MongoDB)
+  - server implementation in node.js, flask
+  - python, javascript
+  weaknesses:
+  - general front end design (HTML/CSS) and associated UI libraries (bootstrap, react, etc.)
+  - mobile development/programming (both android/iOS)
+  - testing and debugging
+
 
 #### Q7: What operational events will you have as a team?
 
