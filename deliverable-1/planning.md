@@ -86,6 +86,7 @@ David:
   - database management (PostgreSQL and MongoDB)
   - server implementation in node.js, flask
   - python, javascript
+  
   weaknesses:
   - general front end design (HTML/CSS) and associated UI libraries (bootstrap, react, etc.)
   - mobile development/programming (both android/iOS)
