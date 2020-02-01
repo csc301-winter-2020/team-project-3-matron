@@ -91,6 +91,21 @@ David:
   - general front end design (HTML/CSS) and associated UI libraries (bootstrap, react, etc.)
   - mobile development/programming (both android/iOS)
   - testing and debugging
+  
+  John:
+  role: Tester and unittest assistant
+   * Writing unittests and making sure the unittests works for people who have already written it
+   * Debugging if unittest does not work
+  
+  strengths:
+  - Able write in python, SQL, javascript, html/css.
+  - Likes to test and debug code - (good ability to pay attention to details).
+  - Experience in mobile android app development.
+  
+  weaknesses:
+  - Overall little technical experience in web development.
+  - Not much familiar with design patterns.
+  - Not familiar with libraries used in front-end. 
 
 
 #### Q7: What operational events will you have as a team?
