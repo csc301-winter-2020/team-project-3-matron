@@ -96,18 +96,18 @@ Adit:
   - No experience with development methodologies
   
 Thomas:
-	role: back-end routing
-		- Handling routing of the information coming from the back-end 
-		
-	strengths:
-	- Experience with python, HTML, CSS, and JS.
-	- Capable of handling flexible workloads and working on other parts of the project if required.
-	- Thoroughly experienced with debugging personal and other individuals code.
-	
-	weaknesses:
-	- Working with the foreign libraries and frameworks that will be used.
-	- Handling GIT conflicts such as merging.
-	- Can't show up to tourney match
+  role: back-end routing
+	- Handling routing of the information coming from the back-end 
+
+  strengths:
+  - Experience with python, HTML, CSS, and JS.
+  - Capable of handling flexible workloads and working on other parts of the project if required.
+  - Thoroughly experienced with debugging personal and other individuals code.
+
+  weaknesses:
+  - Working with the foreign libraries and frameworks that will be used.
+  - Handling GIT conflicts such as merging.
+  - Can't show up to tourney match
   
 David:
   role:
