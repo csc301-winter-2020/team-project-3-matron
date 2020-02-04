@@ -18,6 +18,13 @@
    For example: This is not the time or the place to talk about which programming language and/or framework you are planning to use.
  * **Feel free (and very much encouraged) to include useful diagrams, mock-ups and/or links**.
 
+Our project is to build a plug-in to an already existing product to help calculate the distance between any two given rooms in a hospital wing.
+
+The problem presented to us is that nurses in hospital have a perceived increased workload based off how much they are required for their job. This in turn may increase stress which may lower the quality of work effecting the patients, so our job is to help minimize the amount of traveling a nurse is required to do on a given work day to aid in preventing this work exhaust from happening.
+
+This will be a plug-in to an already existing web based software that the hospital administrator/interns are currently using. Since the hospital administrator is responsible for handling the nurses schedules, the most common use case would be to calculate the distances between any two room in the nurses' schedules.
+In terms of interns, in case distances are not yet collected for a given sect in the hospital, it is their job to find and said distance and input it into the system.
+
 
 #### Q2: Who are your target users?
 
@@ -87,6 +94,20 @@ Adit:
   - GIT merging conflicts
   - Infrequent activity of group project discord, as well low profiency with discord
   - No experience with development methodologies
+  
+Thomas:
+	role: back-end routing
+		- Handling routing of the information coming from the back-end 
+		
+	strengths:
+	- Experience with python, HTML, CSS, and JS.
+	- Capable of handling flexible workloads and working on other parts of the project if required.
+	- Thoroughly experienced with debugging personal and other individuals code.
+	
+	weaknesses:
+	- Working with the foreign libraries and frameworks that will be used.
+	- Handling GIT conflicts such as merging.
+	- Can't show up to tourney match
   
 David:
   role:
