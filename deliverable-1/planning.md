@@ -52,6 +52,14 @@
  * You must follow proper user story format (as taught in lecture) ```As a <user of the app>, I want to <do something in the app> in order to <accomplish some goal>```
  * If you have a partner, these must be reviewed and accepted by them
  * The user stories should be written in Github and each one must have clear acceptance criteria.
+ 
+ Tentative User Stories:
+    - As a manager, I want to be able to input two rooms in my unit and obtain the distance between them
+    - As a manager, I want to be able to get a list of the nearest supplyrooms and workstations to optimize nurse schedules
+    - As an intern, I want to be able to upload a hospital blueprint to create and use a digital map of rooms and hallways 
+    - As an intern, I want to be able to edit rooms on the digital map to reflect changes in where patients are
+    - An an intern, I want to be able to estimate the distance between rooms on a map through logging my accelerometer data
+
 
 ----
 
