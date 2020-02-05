@@ -78,10 +78,10 @@ The plugin will be built using Python and Flask for the backend, and HTML5 and J
 
   - As a user of the Matron API, I want to see the distances between a given room and all other rooms of a given type (patientroom, supplyroom, workstation, etc.) so I can direct an agent to the closest room that satisfies their needs.
   - As a user of the Matron API, I want to be able to query the distance between any two known rooms so I can optimize a route that traverses a set of rooms.
+    - As an intern, I want to upload hospital blueprints so I can use them as reference for building a correctly-scaled graph of my unit.
   - As an intern without access to my unit's blueprints, I want to visually construct a graph of my unit using nodes with room numbers and edges connecting them so that the system knows what routes we can walk.
   - As an intern with a badly drawn unit graph, I want to physically measure the time it takes to walk along the edges of my graph so that the system can rescale it to the correct proportions.
-  - As an intern, I want to upload hospital blueprints so I can use them as reference for building a correctly-scaled graph of my unit.
-  - As an intern, I want to add and remove nodes and edges from the graph of my unit so the system knows of and can direct me to a patient held in an ad-hoc location.
+  - As an intern, I want to add and remove nodes and edges from the graph of my unit to correct errors or let the system know of patients held in ad-hoc location.
 
 ----
 
