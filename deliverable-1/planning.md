@@ -1,4 +1,4 @@
-# YOUR PRODUCT/TEAM NAME
+# Team 3 - Matron
 > _Note:_ This document is meant to evolve throughout the planning phase of your project.   That is, it makes sense for you commit regularly to this file while working on the project (especially edits/additions/deletions to the _Highlights_ section). Most importantly, it is a reflection of all the planning you work you've done in the first iteration. 
  > **This document will serve as a master plan between your team, your partner and your TA.**
 
@@ -82,6 +82,27 @@ List each team member and:
  * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
  * 3 technical strengths and weaknesses each (e.g. languages, frameworks, libraries, development methodologies, etc.)
  
+Although all team members are experienced with computer science, and will be free to contribute wherever their skills are needed, the roles here reflect which components they'll be in charge of and mainly focusing on.
+ 
+ 
+Saad:
+  role: Project Manager and Team Lead
+  responsibilities:
+   - Overall team organization, including managing Trello board, Discord server, and leading team meetings
+   - Facilitating Kanban workflow including reviewing stories to make sure partner's requirements are met
+   - Reviewing project structure holistically and ensuring overall backend/frontend integration
+   - In charge of any ML and AI based techniques used in backend, as well as possibly advising on design of Flask backend 
+  
+  strengths:
+   - python and related libraries such as Flask, numpy/scipy, matplotlib
+   - AI and ML including PyTorch, neural networks, and probabilistic techniques
+   - Agile methodologies including Scrum and Kanban
+  
+  weaknesses:
+   - UI and frontend, including HTML/CSS and JS
+   - mobile app development, such as Android apps in Java and iOS apps in Swift
+   - unit testing and test-driven development
+ 
 Adit:
   role:
   
@@ -122,7 +143,7 @@ David:
   - mobile development/programming (both android/iOS)
   - testing and debugging
   
-  John:
+John:
   role: Tester and unittest assistant
    * Writing unittests and making sure the unittests works for people who have already written it
    * Debugging if unittest does not work
