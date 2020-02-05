@@ -82,7 +82,9 @@ The plugin will be built using Python and Flask for the backend, and HTML5 and J
   - As an intern without access to my unit's blueprints, I want to visually construct a graph of my unit using nodes with room numbers and edges connecting them so that the system knows what routes we can walk.
   - As an intern with a badly drawn unit graph, I want to physically measure the time it takes to walk along the edges of my graph so that the system can rescale it to the correct proportions.
   - As an intern, I want to add and remove nodes and edges from the graph of my unit to correct errors or let the system know of patients held in ad-hoc location.
-
+  - As an intern, I want to box-select multiple rooms/nodes in the graph and drag them around so I can mor easily fix large scaling innaccuracies in my graph.
+  - As a hospital manager, I want to open the graphs of multiple distinct hospital units and draw edges between them so the schedules of nurses working across multiple units can be optimized.
+  
 ----
 
 ## Process Details
