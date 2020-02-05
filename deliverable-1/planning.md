@@ -79,10 +79,15 @@ The plugin will be built using Python and Flask for the backend, and HTML5 and J
   - As a user of the Matron API, I want to see the distances between a given room and all other rooms of a given type (patientroom, supplyroom, workstation, etc.) so I can direct an agent to the closest room that satisfies their needs.
   - As a user of the Matron API, I want to be able to query the distance between any two known rooms so I can optimize a route that traverses a set of rooms.
   - As an intern, I want to upload hospital blueprints so I can use them as reference for building a correctly-scaled graph of my unit.
-  - As an intern without access to my unit's blueprints, I want to visually construct a graph of my unit using nodes with room numbers and edges connecting them so that the system knows what routes we can walk.
+  - As an intern without access to my unit's blueprints, I want to visually construct a graph of my unit using nodes marked with room number/type and edges connecting them so that the system knows what routes we can walk.
+  - As an intern, I want to save my graph once I'm done editing it so my hard work is not lost.
   - As an intern with a badly drawn unit graph, I want to physically measure the time it takes to walk along the edges of my graph so that the system can rescale it to the correct proportions.
-  - As an intern, I want to add and remove nodes and edges from the graph of my unit to correct errors or let the system know of patients held in ad-hoc location.
-  - As an intern, I want to box-select multiple rooms/nodes in the graph and drag them around so I can mor easily fix large scaling innaccuracies in my graph.
+  - As an intern, I want to load and edit (add and remove nodes and edges from) the graph of my unit to correct errors or let the system know of patients held in ad-hoc location.
+  - As an intern, I want to be notified of obvious mistakes in my graph such as unlabelled rooms or inaccessible areas so I can correct them.
+  - As an intern, I want to box-select multiple rooms/nodes in the graph and drag them around so I can more easily fix large scaling innaccuracies in my graph.
+  - As an intern, I want to click to open a pie menu to select the tool I'm currently using in the graph editor so I can quickly switch between adding nodes, box-selecting nodes, lasso selecting nodes, drawing edges, or editing room numbers.
+
+
   - As a hospital manager, I want to open the graphs of multiple distinct hospital units and draw edges between them so the schedules of nurses working across multiple units can be optimized.
   
 ----
@@ -120,7 +125,7 @@ Saad: Project Manager and Team Lead
    - mobile app development, such as Android apps in Java and iOS apps in Swift
    - unit testing and test-driven development
  
-Kavosh: Partner liaison, Map scale corrector, Map-creator UX designer
+Kavosh: Partner liaison, Graph scaling manager, Graph-editor UX designer
 
   responsibilities:
    - Communicate with partner
