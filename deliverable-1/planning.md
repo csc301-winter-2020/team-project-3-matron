@@ -85,8 +85,7 @@ List each team member and:
 Although all team members are experienced with computer science, and will be free to contribute wherever their skills are needed, the roles here reflect which components they'll be in charge of and mainly focusing on.
  
  
-Saad:
-  role: Project Manager and Team Lead
+Saad: Project Manager and Team Lead
   
   responsibilities:
    - Overall team organization, including managing Trello board, Discord server, and leading team meetings
