@@ -226,6 +226,11 @@ Our team's primary means of internal communication is via Discord. Our group's s
 Organizational: There are three text channels under this category that are used to make team-wide announcements, post meeting minutes, and share important notes as they come up. The first two are restricted so that only the project manager may post announcements and meeting minutes, to keep irrelevant conversations out of the way and better disseminate information. The last one serves as more of a queue to deal with items as they come up, and issues here will then be moved to the appropriate place such as on the Trello board.
 
 Production: Two text channels here are used for general chat and issue discussion when it requires the attention of some or all other team members. This server provides a quick means of instant messaging between the group while still organizing messages into unique and useful categories. There are also 4 voice chat rooms which our team members may join at any time. We have multiple voice chat rooms so that members may split off into pairs or small groups and work on issues/files together.
+
+For team-wide announcements, we use Discord's emoji reaction feature to verify the all team members have read and concur with the announcement. For example, if the project lead announces that we are to hold a meeting on date X, all members who can make it react with a thumbs up emoji and those who can't react with a thumbs down emoji. This reduces clutter on the message board as reactions are tied to the announcement and don't show up as unique messages. If a member doesn't react within 24 hours, we assume they haven't seen the announcement and will make further attempts to reach them.
+
+- TODO mention polling
+
 Our team also has a Trello board where we use a form of Kanban. We post important information (To-do lists, pending tasks, links to Google documents, etc.) here as well. Group members can see when one member takes on a specific task, as well as when it is completed.
 
 #### Q9: What are the rules regarding how your team works?
