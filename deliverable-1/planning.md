@@ -262,7 +262,7 @@ If a group member doesn't attend a meeting or complete an assigned action item, 
       * However, if we still cannot come to an agreement we will leave it up to chance to produce a random value, based off the number of potential decisions, and use this value to make our final decision.
    
  * Non-responsive team members:
-        * If this were to occur, the plan is to have who we believe to be the closest individual to said ghoster and have them attempt to contact them through any means they are comfortable with. If this behavior continues for longer than 3 days, then we will contact our TA and course coordinator and let them know about this. 
+     * If this were to occur, the plan is to have who we believe to be the closest individual to said ghoster and have them attempt to contact them through any means they are comfortable with. If this behavior continues for longer than 3 days, then we will contact our TA and course coordinator and let them know about this. 
 
  * Unproductive member: 
   For this case, there are 2 scenarios we are considering. One where the individual is unable to aid in the project due to external unforeseen events, such as death of parents, terminal illness, etc.. And two, the individual is just unproductive.
