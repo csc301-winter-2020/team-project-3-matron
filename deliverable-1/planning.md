@@ -69,13 +69,6 @@ The plugin will be built using Python and Flask for the backend, and HTML5 and J
  * The user stories should be written in Github and each one must have clear acceptance criteria.
  
  Tentative User Stories:
- 
-  - As a manager, I want to be able to input two rooms in my unit and obtain the distance between them
-  - As a manager, I want to be able to get a list of the nearest supplyrooms and workstations to optimize nurse schedules
-  - As an intern, I want to be able to upload a hospital blueprint to create and use a digital map of rooms and hallways 
-  - As an intern, I want to be able to edit rooms on the digital map to reflect changes in where patients are
-  - An an intern, I want to be able to estimate the distance between rooms on a map through logging my accelerometer data
-
   - As a user of the Matron API, I want to see the distances between a given room and all other rooms of a given type (patientroom, supplyroom, workstation, etc.) so I can direct an agent to the closest room that satisfies their needs.
   - As a user of the Matron API, I want to be able to query the distance between any two known rooms so I can optimize a route that traverses a set of rooms.
   - As an intern, I want to upload hospital blueprints so I can use them as reference for building a correctly-scaled graph of my unit.
@@ -86,8 +79,6 @@ The plugin will be built using Python and Flask for the backend, and HTML5 and J
   - As an intern, I want to be notified of obvious mistakes in my graph such as unlabelled rooms or inaccessible areas so I can correct them.
   - As an intern, I want to box-select multiple rooms/nodes in the graph and drag them around so I can more easily fix large scaling innaccuracies in my graph.
   - As an intern, I want to click to open a pie menu to select the tool I'm currently using in the graph editor so I can quickly switch between adding nodes, box-selecting nodes, lasso selecting nodes, drawing edges, or editing room numbers.
-
-
   - As a hospital manager, I want to open the graphs of multiple distinct hospital units and draw edges between them so the schedules of nurses working across multiple units can be optimized.
   
 ----
