@@ -89,8 +89,9 @@ Saad: Project Manager and Team Lead
   
   responsibilities:
    - Overall team organization, including managing Trello board, Discord server, and leading team meetings
-   - Facilitating Kanban workflow including reviewing stories to make sure partner's requirements are met
-   - Reviewing project structure holistically and ensuring overall backend/frontend integration
+   - Continually assess each team member and their assigned tasks, similar to a Scrum master type role
+   - Review tasks and stories to make sure partner's requirements are met
+   - Review project structure holistically and ensure overall backend/frontend integration
    - In charge of any ML and AI based techniques used in backend, as well as possibly advising on design of Flask backend 
   
   strengths:
