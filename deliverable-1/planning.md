@@ -20,11 +20,12 @@
 
 Our project is to build a plug-in to an already existing product to help calculate the distance between any two given rooms in a hospital wing.
 
-The problem presented to us is that nurses in hospital have a perceived increased workload based off how much they are required for their job. This in turn may increase stress which may lower the quality of work effecting the patients, so our job is to help minimize the amount of traveling a nurse is required to do on a given work day to aid in preventing this work exhaust from happening.
+The problem presented to us is that nurses in hospital have a perceived increased workload based off how much they are required for their job. This in turn may increase stress which may lower the quality of work effecting the patients, so our job is to help minimize the amount of traveling a nurse is required to do on a given work day to aid in preventing this work exhaust from happening. Currently, our partner has informed us that they currently have a scheduler which does not take into account of the distances between each of the tasks they must complete, so the schedule may provided tasks in an order which results in excessive travelling.
 
-This will be a plug-in to an already existing web based software that the hospital administrator/interns are currently using. Since the hospital administrator is responsible for handling the nurses schedules, the most common use case would be to calculate the distances between any two room in the nurses' schedules.
-In terms of interns, in case distances are not yet collected for a given sect in the hospital, it is their job to find and said distance and input it into the system.
+With this information at hand, we are to design a plug-in to an already existing web based software that the hospital administrator/interns are currently using. Since the hospital administrator is responsible for handling the nurses schedules, the most common use case would be to calculate the distances between any two room in the nurses' schedules.
+In terms of interns, in case distances are not yet collected for a given sect in the hospital, it is their job to find and said distance and input it into the system. The users may also find that the map they're working with is without error and may have to make changes to better reflect reality due to limitations of our code accounting for niche edge cases.
 
+In the end, our plug-in is to aid in their pre-existing scheduling software by providing the traveling distance to further optimize nurse schedules and increase overall quality of work by diminishing the effect of exhaustion caused by excessive walking.
 
 #### Q2: Who are your target users?
 
@@ -118,8 +119,12 @@ Adit:
   - No experience with development methodologies
   
 Thomas:
-  role: back-end routing
-	- Handling routing of the information coming from the back-end 
+  roles: back-end routing and cheerleader
+  responsibilities:
+  - Handling routing of the information coming from the back-end 
+  - Maintaining team moral and motivation
+  - Creating test cases for back-end related routing and events
+  - Debugging back-end related events
 
   strengths:
   - Experience with python, HTML, CSS, and JS.
