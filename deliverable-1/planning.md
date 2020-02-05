@@ -118,7 +118,8 @@ Saad: Project Manager and Team Lead
    - mobile app development, such as Android apps in Java and iOS apps in Swift
    - unit testing and test-driven development
  
-Kavosh: Partner liaison, Map scale corrector, Map-creation UX designer
+Kavosh: Partner liaison, Map scale corrector, Map-creator UX designer
+
   responsibilities:
    - Communicate with partner
    - Audio record meetings and upload/share files with team
