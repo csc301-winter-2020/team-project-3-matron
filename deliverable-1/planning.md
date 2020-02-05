@@ -112,6 +112,26 @@ Saad: Project Manager and Team Lead
    - mobile app development, such as Android apps in Java and iOS apps in Swift
    - unit testing and test-driven development
  
+Kavosh: Partner liaison, Map scale corrector, Map-creation UX designer
+  responsibilities:
+   - Communicate with partner
+   - Audio record meetings and upload/share files with team
+   - Work on the graph based map building UI
+   - Build the blueprint-unassisted map rescaler
+      - Create a page that instructors the user to go on a tour of the unit (the graph MST)
+      - Instructors user to tap at the start and end of each leg of the tour
+      - Uses the recorded time deltas to correct the scaling on an existing map graph  
+  
+  strengths:
+   - Javascript/Java/Python
+   - Computer graphics, OpenGL
+   - Theoretical comp sci, graph theory/algorithms
+  
+  weaknesses:
+   - Documenting code
+   - Flask
+   - noSQL databases
+ 
 Adit:
   role:
   
