@@ -18,12 +18,11 @@
    For example: This is not the time or the place to talk about which programming language and/or framework you are planning to use.
  * **Feel free (and very much encouraged) to include useful diagrams, mock-ups and/or links**.
 
-Our project is to build a plug-in to an already existing product to help calculate the distance between any two given rooms in a hospital wing.
+Our project is to build a plugin which users can use to build a virtual blueprint and calculate the distance between any two rooms in a hospital wing.
 
-The problem presented to us is that nurses in hospital have a perceived increased workload based off how much they are required for their job. This in turn may increase stress which may lower the quality of work effecting the patients, so our job is to help minimize the amount of traveling a nurse is required to do on a given work day to aid in preventing this work exhaust from happening. Currently, our partner has informed us that they currently have a scheduler which does not take into account of the distances between each of the tasks they must complete, so the schedule may provided tasks in an order which results in excessive travelling.
+The problem presented to us is that nurses in hospital have a perceived increased workload based off how much they are required for their job. This in turn may increase stress which may lower the quality of work effecting the patients, so our job is to help minimize the amount of traveling a nurse is required to do on a given work day to prevent this from happening. Currently, our partner has informed us that they currently have a scheduler which does not take into account of the distances between each of the tasks they must complete, so the schedule may provide tasks in an order which causes excessive travelling.
 
-With this information at hand, we are to design a plug-in to an already existing web based software that the hospital administrator/interns are currently using. Since the hospital administrator is responsible for handling the nurses schedules, the most common use case would be to calculate the distances between any two room in the nurses' schedules.
-In terms of interns, in case distances are not yet collected for a given sect in the hospital, it is their job to find and said distance and input it into the system. The users may also find that the map they're working with is without error and may have to make changes to better reflect reality due to limitations of our code accounting for niche edge cases.
+With this information at hand, we are to design a plug-in to an already existing scheduling software that the hospital administrator/interns are currently using. This plugin will be used to create virtual blueprints of the hospital, which will then integrate with the existing scheduler to calculate the distance between parts of the hospital. These calculations will be used to generate more efficient schedules with less overall walking required, which will be able to alleviate a large portion of the Nurses' workload. In addition, the virtual blueprint will be able to be edited to reflect periods of overcrowding in the hospital, for example when patients are forced to stay in the hallways.
 
 In the end, our plug-in is to aid in their pre-existing scheduling software by providing the traveling distance to further optimize nurse schedules and increase overall quality of work by diminishing the effect of exhaustion caused by excessive walking.
 
@@ -33,6 +32,10 @@ In the end, our plug-in is to aid in their pre-existing scheduling software by p
  * Be specific (e.g. a 'a third-year university student studying Computer Science' and not 'a student')
  * **Feel free (but not obligated) to use personas.         
    You can create your personas as part of this Markdown file, or add a link to an external site (for example, [Xtensio](https://xtensio.com/user-persona/)).**
+   
+The first type of user for our application is the hospital manager. Our plugin will integrate with an existing scheduling system, which is currently operated by managers who create the schedules and give them to the nurses. When our plugin is complete, the main features such as calculating distances between rooms will be used by the manager when they operate the scheduling system.
+
+The second type of user will be the interns who will be responsible for inputting the spatial and blueprint data into the plugin to build the virtual blueprint. They will be the ones who translate the real, physical layout of the hospital into a format that can be used by the backend of our plugin when pathfinding between rooms and calculating distance.
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
@@ -44,6 +47,8 @@ In the end, our plug-in is to aid in their pre-existing scheduling software by p
     * Provide users with more accurate and/or informative data (what kind of data? Why is it useful to them?)
     * Does this application exist in another form? If so, how does your differ and provide value to the users?
     * How does this align with your partner's organization's values/mission/mandate?
+    
+There are many benefits to using this plugin, the main one being there is no existing software that currently replicates its functionality in a hospital environment. The existing scheduling system does not have any way to take distances into account at all, is forced to build Nurse schedules solely from other factors. Integrating our plugin will save the nurses large amounts of time going from patient room to patient room and patient room to supply room, which is directly translate to a lighter workoad and less stress. This will allow them to better aid their patients which directly corresponds to the hospitals values of doing their best at helping their patients recover.
 
 #### Q4: How will you build it?
 
@@ -53,6 +58,8 @@ In the end, our plug-in is to aid in their pre-existing scheduling software by p
  * Describe the architecture - what are the high level components or patterns you will use? Diagrams are useful here. 
  * Will you be using third party applications or APIs? If so, what are they?
  * What is your testing strategy?
+ 
+The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use MongoDB as our DBMS which will be hosted on the Atlas cloud service.
 
 #### Q5: What are the user stories that make up the MVP?
 
@@ -98,7 +105,7 @@ Saad: Project Manager and Team Lead
   strengths:
    - python and related libraries such as Flask, numpy/scipy, matplotlib
    - AI and ML including PyTorch, neural networks, and probabilistic techniques
-   - Agile methodologies including Scrum and Kanban
+   - Agile methodologies including Scrum and Kanban 
   
   weaknesses:
    - UI and frontend, including HTML/CSS and JS
@@ -196,7 +203,8 @@ List/describe the artifacts you will produce in order to organize your team.
    
 Our team's primary means of internal communication is via Discord. Our group's server has 5 total text channels split into two categories:
 
-Organizational: Three text channels under this category are used to make team-wide announcements, post meeting minutes, and share important notes as they come up.
+Organizational: There are three text channels under this category that are used to make team-wide announcements, post meeting minutes, and share important notes as they come up. The first two are restricted so that only the project manager may post announcements and meeting minutes, to keep irrelevant conversations out of the way and better disseminate information. The last one serves as more of a queue to deal with items as they come up, and issues here will then be moved to the appropriate place such as on the Trello board.
+
 Production: Two text channels here are used for general chat and issue discussion when it requires the attention of some or all other team members. This server provides a quick means of instant messaging between the group while still organizing messages into unique and useful categories. There are also 4 voice chat rooms which our team members may join at any time. We have multiple voice chat rooms so that members may split off into pairs or small groups and work on issues/files together.
 Our team also has a Trello board where we use a form of Kanban. We post important information (To-do lists, pending tasks, links to Google documents, etc.) here as well. Group members can see when one member takes on a specific task, as well as when it is completed.
 
@@ -234,3 +242,5 @@ and/or collaborative process.
     * Explain why the option you decided on makes the most sense for your team/product/users.
  * Essentially, we want to understand how (and why) you ended up with your current product and process plan.
  * This section is useful for important information regarding your decision making process that may not necessarily fit in other sections. 
+ 
+One issue that repeatedly came up was our design for the app, and how we would gather data about the distances between rooms.
