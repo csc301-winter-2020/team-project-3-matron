@@ -87,6 +87,7 @@ Although all team members are experienced with computer science, and will be fre
  
 Saad:
   role: Project Manager and Team Lead
+  
   responsibilities:
    - Overall team organization, including managing Trello board, Discord server, and leading team meetings
    - Facilitating Kanban workflow including reviewing stories to make sure partner's requirements are met
