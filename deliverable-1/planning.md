@@ -101,118 +101,98 @@ List each team member and:
 Although all team members are experienced with computer science, and will be free to contribute wherever their skills are needed, the roles here reflect which components they'll be in charge of and mainly focusing on.
  
  
-Saad: Project Manager and Team Lead
-  
-  responsibilities:
-   - Overall team organization, including managing Trello board, Discord server, and leading team meetings
-   - Continually assess each team member and their assigned tasks, similar to a Scrum master type role
-   - Review tasks and stories to make sure partner's requirements are met
-   - Review project structure holistically and ensure overall backend/frontend integration
-   - In charge of any ML and AI based techniques used in backend, as well as possibly advising on design of Flask backend 
-  
-  strengths:
-   - python and related libraries such as Flask, numpy/scipy, matplotlib
-   - AI and ML including PyTorch, neural networks, and probabilistic techniques
-   - Agile methodologies including Scrum and Kanban 
-  
-  weaknesses:
-   - UI and frontend, including HTML/CSS and JS
-   - mobile app development, such as Android apps in Java and iOS apps in Swift
-   - unit testing and test-driven development
- 
-Kavosh: Partner liaison, Graph scaling manager, Graph-editor UX designer
-
-  responsibilities:
-   - Communicate with partner
-   - Audio record meetings and upload/share files with team
-   - Work on the graph based map building UI
-   - Build the blueprint-unassisted map rescaler
-      - Create a page that instructors the user to go on a tour of the unit (the graph MST)
-      - Instructors user to tap at the start and end of each leg of the tour
-      - Uses the recorded time deltas to correct the scaling on an existing map graph  
-  
-  strengths:
-   - Javascript/Java/Python
-   - Computer graphics, OpenGL
-   - Theoretical comp sci, graph theory/algorithms
-  
-  weaknesses:
-   - Documenting code
-   - Flask
-   - noSQL databases
- 
-Adit:
-  role:
-  
-  strengths:
-  - Front end development HTML, CSS, JS, and graphic design
-  - Good experience with databases SQL and noSQL
-  - Experience with web development with MERN stack, django, and flask
-  
-  weaknesses:
-  - GIT merging conflicts
-  - Infrequent activity of group project discord, as well low profiency with discord
-  - No experience with development methodologies
-  
-Thomas:
-  roles: back-end routing and cheerleader
-  responsibilities:
-  - Handling routing of the information coming from the back-end 
-  - Maintaining team moral and motivation
-  - Creating test cases for back-end related routing and events
-  - Debugging back-end related events
-
-  strengths:
-  - Experience with python, HTML, CSS, and JS.
-  - Capable of handling flexible workloads and working on other parts of the project if required.
-  - Thoroughly experienced with debugging personal and other individuals code.
-
-  weaknesses:
-  - Working with the foreign libraries and frameworks that will be used.
-  - Handling GIT conflicts such as merging.
-  
-Ilan:
-  role: Backend logic developer, assistant cheerleader
-   * Handling of data structures and back end logic
-   * Ensuring correctness of product's algorithms
-   * Debugging and creating test cases during development of back end logic
-  
-  strengths:
-  * Strong experience in Python and OOP design patterns
-  * Well-versed in data structures and algorithms to do with graph traversal and pathfinding
-  * High standards for documentation and code cleanliness
-  
-  weaknesses:
-  * Databases and web development
-  * Advanced Git usage
-  * Little experience in front end development
-  
-David: Database Manager
-
-  strengths:
-  - database management (PostgreSQL and MongoDB)
-  - server implementation in node.js, flask
-  - python, javascript
-  
-  weaknesses:
-  - general front end design (HTML/CSS) and associated UI libraries (bootstrap, react, etc.)
-  - mobile development/programming (both android/iOS)
-  - testing and debugging
-  
-John:
-  role: Tester and unittest assistant
-   * Writing unittests and making sure the unittests works for people who have already written it
-   * Debugging if unittest does not work
-  
-  strengths:
-  - Able write in python, SQL, javascript, html/css.
-  - Likes to test and debug code - (good ability to pay attention to details).
-  - Experience in mobile android app development.
-  
-  weaknesses:
-  - Overall little technical experience in web development.
-  - Not much familiar with design patterns.
-  - Not familiar with libraries used in front-end. 
+* Saad: Project Manager and Team Lead
+  * Responsibilities:
+    * Overall team organization, including managing Trello board, Discord server, and leading team meetings
+    * Continually assess each team member and their assigned tasks, similar to a Scrum master type role
+    * Review tasks and stories to make sure partner's requirements are met
+    * Review project structure holistically and ensure overall backend/frontend integration
+    * In charge of any ML and AI based techniques used in backend, as well as possibly advising on design of Flask backend 
+  * Strengths:
+    * Python and related libraries such as Flask, numpy/scipy, matplotlib
+    * AI and ML including PyTorch, neural networks, and probabilistic techniques
+    * Agile methodologies including Scrum and Kanban 
+  * Weaknesses:
+    * UI and frontend, including HTML/CSS and JS
+    * mobile app development, such as Android apps in Java and iOS apps in Swift
+    * unit testing and test-driven development
+* Kavosh: Partner liaison, Graph scaling manager, Graph-editor UX designer
+  * Responsibilities:
+    * Communicate with partner
+    * Audio record meetings and upload/share files with team
+    * Work on the graph based map building UI
+    * Build the blueprint-unassisted map rescaler
+      * Create a page that instructors the user to go on a tour of the unit (the graph MST)
+      * Instructors user to tap at the start and end of each leg of the tour
+      * Uses the recorded time deltas to correct the scaling on an existing map graph  
+  * Strengths:
+    * Javascript/Java/Python
+    * Computer graphics, OpenGL
+    * Theoretical comp sci, graph theory/algorithms
+  * Weaknesses:
+    * Documenting code
+    * Flask
+    * noSQL databases
+* Adit: `TODO: role`
+  * Responsibilities:
+    * `TODO`
+  * Strengths:
+    * Front end development HTML, CSS, JS, and graphic design
+    * Good experience with databases SQL and noSQL
+    * Experience with web development with MERN stack, django, and flask
+  * Weaknesses:
+    * GIT merging conflicts
+    * Infrequent activity of group project discord, as well low profiency with discord
+    * No experience with development methodologies
+* Thomas: Back-end Routing, Cheerleader
+  * Responsibilities:
+    * Handling routing of the information coming from the back-end 
+    * Maintaining team moral and motivation
+    * Creating test cases for back-end related routing and events
+    * Debugging back-end related events
+  * Strengths:
+    * Experience with python, HTML, CSS, and JS.
+    * Capable of handling flexible workloads and working on other parts of the project if required.
+    * Thoroughly experienced with debugging personal and other individuals code.
+  * Weaknesses:
+    * Working with the foreign libraries and frameworks that will be used.
+    * Handling GIT conflicts such as merging.
+* Ilan: Backend Logic Developer, Assistant Cheerleader
+  * Responsibilities:
+    * Handling of data structures and back end logic
+    * Ensuring correctness of product's algorithms
+    * Debugging and creating test cases during development of back end logic
+  * Strengths:
+    * Strong experience in Python and OOP design patterns
+    * Well-versed in data structures and algorithms to do with graph traversal and pathfinding
+    * High standards for documentation and code cleanliness
+  * Weaknesses:
+    * Databases and web development
+    * Advanced Git usage
+    * Little experience in front end development
+* David: Database Manager
+  * Responsibilities:
+    * `TODO`
+  * Strengths:
+    * Database management (PostgreSQL and MongoDB)
+    * Server implementation in node.js, flask
+    * Python, Javascript
+  * Weaknesses:
+    * General front end design (HTML/CSS) and associated UI libraries (bootstrap, react, etc.)
+    * Mobile development/programming (both android/iOS)
+    * Testing and debugging
+* John: Tester and unittest assistant
+  * Responsibilities:
+    * Writing unittests and making sure the unittests works for people who have already written it
+    * Debugging if unittest does not work
+  * Strengths:
+    * Able write in python, SQL, javascript, html/css.
+    * Likes to test and debug code - (good ability to pay attention to details).
+    * Experience in mobile android app development.
+  * Weaknesses:
+    * Overall little technical experience in web development.
+    * Not much familiar with design patterns.
+    * Not familiar with libraries used in front-end. 
 
 
 #### Q7: What operational events will you have as a team?
