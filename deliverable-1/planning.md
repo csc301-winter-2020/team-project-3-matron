@@ -172,8 +172,7 @@ Thomas:
   - Handling GIT conflicts such as merging.
   - Can't show up to tourney match
   
-David:
-  role:
+David: Database Manager
 
   strengths:
   - database management (PostgreSQL and MongoDB)
