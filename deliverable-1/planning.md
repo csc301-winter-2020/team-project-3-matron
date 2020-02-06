@@ -65,6 +65,14 @@ Finally, integrating our plugin with their scheduling system will save the nurse
  
 The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use MongoDB as our DBMS which will be hosted on the Atlas cloud service.
 
+high level components of our project consists of:
+
+The webserver, which the users will be directly interacting with. This webserver will be written with Flask and will be responsible for serving webpages as well as communicating with our database.
+
+Database (mongoDB) : its responsibiliies consist of storing images of blueprints, meta data for a graph that our user would create through our interface builder, as well as the actual graph the user has created it self.
+
+A pattern that we would like to use is the DOA (data access object that we discussed in class)
+
 #### Q5: What are the user stories that make up the MVP?
 
  * At least 5 user stories concerning the main features of the application - note that this can broken down further
