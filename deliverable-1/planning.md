@@ -63,13 +63,13 @@ Finally, integrating our plugin with their scheduling system will save the nurse
  * Will you be using third party applications or APIs? If so, what are they?
  * What is your testing strategy?
  
-The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use MongoDB as our DBMS which will be hosted on the Atlas cloud service. We will also be using the <insert name/s> javascript library to create and render the graphs in the graph builder interface.
+The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use <TBD> as our DBMS which will be hosted on <TBD>. We will also be using the <insert name/s> javascript library to create and render the graphs in the graph builder interface.
 
 high level components of our project consists of:
 
 The webserver, which the users will be directly interacting with. This webserver will be written with Flask and will be responsible for serving webpages as well as communicating with our database.
 
-Database (mongoDB) : its responsibilities consist of storing images of blueprints, meta data for a graph that our user would create through our graph builder interface, as well as the actual graph the user has created it self.
+Database (<TBD>) : its responsibilities consist of storing images of blueprints, meta data for a graph that our user would create through our graph builder interface, as well as the actual graph the user has created it self.
 
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
 
