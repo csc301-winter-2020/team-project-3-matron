@@ -155,7 +155,7 @@ Although all team members are experienced with computer science, and will be fre
 * **Thomas: Back-end Routing, Cheerleader**
   * *Responsibilities:*
     * Handling routing of the information coming from the back-end 
-    * Maintaining team moral and motivation
+    * Maintaining team morale and motivation
     * Creating test cases for back-end related routing and events
     * Debugging back-end related events
   * *Strengths:*
@@ -180,7 +180,9 @@ Although all team members are experienced with computer science, and will be fre
     * Little experience in front end development
 * **David: Database Manager**
   * *Responsibilities:*
-    * `TODO`
+    * Setting up and maintaining the product database
+    * Creating the DAO for the project
+    * Determining data structure design/representation
   * *Strengths:*
     * Database management (PostgreSQL and MongoDB)
     * Server implementation in node.js, flask
