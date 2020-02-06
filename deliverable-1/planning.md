@@ -170,7 +170,22 @@ Thomas:
   weaknesses:
   - Working with the foreign libraries and frameworks that will be used.
   - Handling GIT conflicts such as merging.
-  - Can't show up to tourney match
+  
+Ilan:
+  role: Backend logic developer, assistant cheerleader
+   * Handling of data structures and back end logic
+   * Ensuring correctness of product's algorithms
+   * Debugging and creating test cases during development of back end logic
+  
+  strengths:
+  * Strong experience in Python and OOP design patterns
+  * Well-versed in data structures and algorithms to do with graph traversal and pathfinding
+  * High standards for documentation and code cleanliness
+  
+  weaknesses:
+  * Databases and web development
+  * Advanced Git usage
+  * Little experience in front end development
   
 David: Database Manager
 
