@@ -257,16 +257,16 @@ If a group member doesn't attend a meeting or complete an assigned action item, 
  * List at least three team scenarios/conflicts you discussed in lecture and how you decided you will resolve them. Indecisions? Non-responsive team members? Any other scenarios you can think of?
 
  * Team indicision:
-      * In terms of development we've determined that if we cannot all come to a majority vote, the team member(s) that are in charge of that specific implementation will have the final say in the design decisions. If this is a decision we believe the partner would have insight on, we will contact them and they would have final say.
+      * In terms of development the first course of action would be to have a vote and see if there's a clear consensus. If not, then the team member(s) that are in charge of the implementation of the feature will have the final say in the design decision. If this is a decision we believe the partner would have insight on, we will contact them and they will have final say. This is because we believe that the person who has to actually code a feature should have more control over the specifications of that feature.
   
-      * However, if we still cannot come to an agreement we will leave it up to chance to produce a random value, based off the number of potential decisions, and use this value to make our final decision.
+      * However, if we still cannot come to an agreement after we've thoroughly discussed all options we will leave it up to chance pick which one to choose.
    
  * Non-responsive team members:
-     * If this were to occur, the plan is to have who we believe to be the closest individual to said ghoster and have them attempt to contact them through any means they are comfortable with. If this behavior continues for longer than 3 days, then we will contact our TA and course coordinator and let them know about this. 
+     * If this were to occur, the plan is to attempt to contact the non-responsive team member; firstly via Discord and email, and then using their phone number and finding them in person. If this behavior were to continue for longer than 3 days, then we would contact our TA and course coordinator and let them know about this. 
 
  * Unproductive member: 
   For this case, there are 2 scenarios we are considering. One where the individual is unable to aid in the project due to external unforeseen events, such as death of parents, terminal illness, etc.. And two, the individual is just unproductive.
-   * For the first case, we've agreed the person(s) with the most amount of time will work on this members portion of the project until the member has recovered/returned from their required leave.
+   * For the first case, we've agreed the person(s) with the most amount of free time and knowledge of the member's codebase will work on their portion of the project until the member has recovered/returned from their required leave.
    * For the second case, if we require the code immediately, any member who has time and understands what needs to be implemented will be responsible for handling this part of the project. We have agreed that any member who has had to fulfill the role of another due to lack of productivity will be entitled to $10 - $50 of compensation (amount is decided by the programmer) from the unproductive individual. 
 ----
 ### Highlights
