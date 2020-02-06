@@ -73,9 +73,6 @@ Database (<TBD>) : its responsibilities consist of storing images of blueprints,
 
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
 
-Our testing method will follow the Test Driven Development. People will need to write unittests first before they start writing code. This will encourage people to design what they will create before jumping into writing codes. Furthermore, there must be a unittest for every functions we write to thoroughly ensure no bug is there. 
-We will also use continuous integration method. We will perform code reviews and manually deploy onto Heroku. We will only deploy master-branch/working-app onto Heroku. 
-
 #### Q5: What are the user stories that make up the MVP?
 
  * At least 5 user stories concerning the main features of the application - note that this can broken down further
@@ -197,7 +194,7 @@ Although all team members are experienced with computer science, and will be fre
 * **John: Tester and unittest assistant**
   * *Responsibilities:*
     * Writing unittests and making sure the unittests works for people who have already written it
-    * Debugging if unittest does not work and refactor codes
+    * Debugging if unittest does not work
   * *Strengths:*
     * Able write in python, SQL, javascript, html/css.
     * Likes to test and debug code - (good ability to pay attention to details).
@@ -291,5 +288,12 @@ and/or collaborative process.
     * Explain why the option you decided on makes the most sense for your team/product/users.
  * Essentially, we want to understand how (and why) you ended up with your current product and process plan.
  * This section is useful for important information regarding your decision making process that may not necessarily fit in other sections. 
- 
+
+
+The first major issue which we faced was whether our implementation would consist of a learning algorithm to determine the shortest routes betweens rooms in a hosptial, or use an interface which allowed for a user to create a graph structure representing the hospital floor plan and map out the distances automatically by entering a scale. The pros for the learning algorithm would be that it would not require a blueprint to map out the entire hospital floor plan and the same technology could be applied more generally. The con of this was that not only is there no data available for training a model, but also data collection would also be hard due to hospital guidelines. The pro of the interface builder was that it would not require any training data and the scale between rooms could be easily obtained as blue prints are scaled drawing. The con is that it would take manual effort to build a graph for a large hospital. The option we took was the route of the creating an interface in which a user can build a graph to model a hospital floor plan. We took this decision as when we met with our partner they explained that manually gathering data to use would be infeasable, as doctors, nurses, and other personal were not allowed to carry phones with them and thus we would have no idea to track their locations to gather timing data.
+
+
+Another idea for an insight was when we choose to use the line segments to model the floor plan instead of the block based system the partner proposed.
+
+
 One issue that repeatedly came up was our design for the app, and how we would gather data about the distances between rooms.
