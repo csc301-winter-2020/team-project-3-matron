@@ -276,16 +276,15 @@ If a group member doesn't attend a meeting or complete an assigned action item, 
 
  * Team indicision:
       * In terms of development the first course of action would be to have a vote and see if there's a clear consensus. If not, then the team member(s) that are in charge of the implementation of the feature will have the final say in the design decision. If this is a decision we believe the partner would have insight on, we will contact them and they will have final say. This is because we believe that the person who has to actually code a feature should have more control over the specifications of that feature.
-  
       * However, if we still cannot come to an agreement after we've thoroughly discussed all options we will leave it up to chance pick which one to choose.
    
  * Non-responsive team members:
      * If this were to occur, the plan is to attempt to contact the non-responsive team member; firstly via Discord and email, and then using their phone number and finding them in person. If this behavior were to continue for longer than 3 days, then we would contact our TA and course coordinator and let them know about this. 
 
  * Unproductive member: 
-  For this case, there are 2 scenarios we are considering. One where the individual is unable to aid in the project due to external unforeseen events, such as death of parents, terminal illness, etc.. And two, the individual is just unproductive.
-   * For the first case, we've agreed the person(s) with the most amount of free time and knowledge of the member's codebase will work on their portion of the project until the member has recovered/returned from their required leave.
-   * For the second case, we will handle this as described above in how they're held accountable. We'll first contact them normally, through Discord, email, phone, or in person; then the team lead and course coordinators may get involved.
+   Our policy can be broken down into two scenarios, based on the cause of the problem:
+   * **Unforseen circumstances:** In this case, the member is unable to fully contribute due to factors outside of our control. It would be unfair to penalize them for this. The team member with the greatest amount of availability and knowledge of the unproductive member's responsibility will take on their work until the unproductive member is able to fully contribute to the project again.
+   * **Just unproductive/unresponsive:** A team member who is just not doing their part will be handled as described before. We will first contact them normally, through Discord, email, phone, or in person. If this does not help, the team lead and course coordinators may get involved.
 ----
 ### Highlights
 
