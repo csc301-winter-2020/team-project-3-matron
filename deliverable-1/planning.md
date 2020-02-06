@@ -63,18 +63,15 @@ Finally, integrating our plugin with their scheduling system will save the nurse
  * Will you be using third party applications or APIs? If so, what are they?
  * What is your testing strategy?
  
-The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use MongoDB as our DBMS which will be hosted on the Atlas cloud service.
+The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use MongoDB as our DBMS which will be hosted on the Atlas cloud service. We will also be using the <insert name/s> javascript library to create and render the graphs in the graph builder interface.
 
 high level components of our project consists of:
 
 The webserver, which the users will be directly interacting with. This webserver will be written with Flask and will be responsible for serving webpages as well as communicating with our database.
 
-Database (mongoDB) : its responsibiliies consist of storing images of blueprints, meta data for a graph that our user would create through our interface builder, as well as the actual graph the user has created it self.
+Database (mongoDB) : its responsibilities consist of storing images of blueprints, meta data for a graph that our user would create through our graph builder interface, as well as the actual graph the user has created it self.
 
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
-
-The testing strategy will be the continuous delivery. We will deploy on Heroku after we do code review to test it. 
-For the unittests, everybody needs to write a unittests before they write the functions. Ideally, everybody needs to think about what functions/objects are required for the app before they start writing the code. 
 
 #### Q5: What are the user stories that make up the MVP?
 
@@ -196,7 +193,6 @@ Although all team members are experienced with computer science, and will be fre
   * *Responsibilities:*
     * Writing unittests and making sure the unittests works for people who have already written it
     * Debugging if unittest does not work
-    * Help refactor codes while looking over unittests. 
   * *Strengths:*
     * Able write in python, SQL, javascript, html/css.
     * Likes to test and debug code - (good ability to pay attention to details).
