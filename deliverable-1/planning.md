@@ -33,9 +33,9 @@ In the end, our plug-in is to aid in their pre-existing scheduling software by p
  * **Feel free (but not obligated) to use personas.         
    You can create your personas as part of this Markdown file, or add a link to an external site (for example, [Xtensio](https://xtensio.com/user-persona/)).**
    
-The first type of user for our application is the hospital manager. Our plugin will integrate with an existing scheduling system, which is currently operated by managers who create the schedules and give them to the nurses. When our plugin is complete, the main features such as calculating distances between rooms will be used by the manager when they operate the scheduling system.
+The first type of user for our application is the hospital manager. This would be any hospital staff in an administrative position who's in charge of scheduling tasks for the other hospital staff. Their goal is to try and optimize nurse schedules as much as possible, which our product would help them achieve by allowing them to take distance into account when creating schedules.
 
-The second type of user will be the interns who will be responsible for inputting the spatial and blueprint data into the plugin to build the virtual blueprint. They will be the ones who translate the real, physical layout of the hospital into a format that can be used by the backend of our plugin when pathfinding between rooms and calculating distance.
+The second type of user will be the interns employed by the hospital. They're job will be to translate the real, physical layout of the hospital into a virtual blueprint on our plugin. Before the hospital manager can benefit from optimized schedules, an intern will have to use the product to create virtual blueprints of the hospital to be used by the pathfinding system.
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
@@ -48,7 +48,11 @@ The second type of user will be the interns who will be responsible for inputtin
     * Does this application exist in another form? If so, how does your differ and provide value to the users?
     * How does this align with your partner's organization's values/mission/mandate?
     
-There are many benefits to using this plugin, the main one being there is no existing software that currently replicates its functionality in a hospital environment. The existing scheduling system does not have any way to take distances into account at all, is forced to build Nurse schedules solely from other factors. Integrating our plugin will save the nurses large amounts of time going from patient room to patient room and patient room to supply room, which is directly translate to a lighter workoad and less stress. This will allow them to better aid their patients which directly corresponds to the hospitals values of doing their best at helping their patients recover.
+There are many benefits to using this plugin, the main one being there is no existing software that currently replicates its functionality in a hospital environment. The existing scheduling system does not have any way to take distances into account at all, and is forced to build the Nurses' schedules solely from other factors. Our product will alleviate this by being able to provide the distance between any two rooms in the hospital, meaning that there will no longer be any inefficient schedules with too much walking.
+
+In addition, there is also no easy way to digitally represent the physical layout of the hospital which is why factoring in distance when making schedules is currently so difficult. This will also be solved by our product by providing a clean and simple user interface for creating virtual blueprints of the hospital. They will be able to build it on top of existing blueprints, or completely from scratch for maximum ease of use and flexability.
+
+Finally, integrating our plugin with their scheduling system will save the nurses large amounts of time which will directly translate to a lighter workoad and less stress. This will allow them to better aid their patients which directly helps the hospitals values of doing their best at helping their patients recover.
 
 #### Q4: How will you build it?
 
@@ -236,22 +240,22 @@ For team-wide announcements, we use Discord's emoji reaction feature to verify t
 
 - TODO mention polling
 
-Our team also has a Trello board where we use a form of Kanban. We post important information (To-do lists, pending tasks, links to Google documents, etc.) here as well. Group members can see when one member takes on a specific task, as well as when it is completed.
+Our team also has a Trello board where we use a modified form of Kanban. We post important information (To-do lists, pending tasks, documentation, etc.) here as well for everybody to see. Group members can see when one member takes on a specific task, as well as when it is ready for design, implementation, testing, and code review. We plan to use this board to facilitate a modified version of Kanban; we will pipeline our code and features on a Kanban board, but with the added oversight of a scrum master type role to keep all team members focused and on track. 
 
 #### Q9: What are the rules regarding how your team works?
 
-Describe your team's working culture.
+We plan to have a fairly open working culture, where each team member is given a task or role and has freedom to handle it however they see fit. We've divided the project into general roles such as frontend, backend, database, etc. and each member will oversee and do any research, design, and implementation on any area they're in charge of. We'll have weekly meetings and consistent communication on our Discord server to ensure team members are organized and completing their tasks, and the team lead will oversee the Trello board to keep the project on track. When they merge a pull request to the master branch, we will require 3 code reviews to ensure only quality code is commited and that each team member has a sense of the overall state of the project.
 
 **Communications:**
  * What is the expected frequency? What methods/channels are appropriate? 
  * If you have a partner project, what is your process (in detail) for communicating with your partner?
  
-Between group members, minimum of once a week because we have a weekly meetings. On average, we expect to speak with each other regarding the project about once every other day via our Discord channel or in person. For emergencies, we've all shared our phone numbers with each other except for 1 group member who didn't consent. Our expected frequency of communications with the partner is biweekly, as per the partners preference, with a Skype call or via email for immediate requests. We have a dedicated partner liason who will be responsible for keeping the partner up to date on our progress and sending emails if we have any questions.
+Between group members, minimum of once a week because we have a weekly meetings. On average, we expect to speak with each other regarding the project about once every other day via our Discord server or in person. For emergencies, we've all shared our phone numbers with each other except for 1 group member who didn't consent. Our expected frequency of communications with the partner is biweekly, as per the partners preference, with a Skype call or via email for immediate requests. We have a dedicated partner liason who will be responsible for keeping the partner up to date on our progress and sending emails if we have any questions.
 
 **Meetings:**
  * How are people held accountable for attending meetings, completing action items? Is there a moderator or process?
  
-If a group member doesn't attend a meeting or complete an assigned action item, the team lead will contact them and ask for justification about why they didn't attend. Since all the group members are friends in real life, we don't expect this to happen often and if it does we can just ask them in person.
+If a group member doesn't attend a meeting or complete an assigned action item, the team lead will contact them and ask for justification about why they didn't attend. We have various ways to contact each other if needed including our official Discord server, email, phone number, or just in person if needed. The team lead is willing to step in if needed, and in extreme cases the TA or course coordinators would be contacted to find a resolution. Since each team member has a distinct role, we take it seriously if they don't contribute since covering their workload would be quite difficult.
  
 **Conflict Resolution:**
  * List at least three team scenarios/conflicts you discussed in lecture and how you decided you will resolve them. Indecisions? Non-responsive team members? Any other scenarios you can think of?
@@ -267,7 +271,7 @@ If a group member doesn't attend a meeting or complete an assigned action item, 
  * Unproductive member: 
   For this case, there are 2 scenarios we are considering. One where the individual is unable to aid in the project due to external unforeseen events, such as death of parents, terminal illness, etc.. And two, the individual is just unproductive.
    * For the first case, we've agreed the person(s) with the most amount of free time and knowledge of the member's codebase will work on their portion of the project until the member has recovered/returned from their required leave.
-   * For the second case, if we require the code immediately, any member who has time and understands what needs to be implemented will be responsible for handling this part of the project. We have agreed that any member who has had to fulfill the role of another due to lack of productivity will be entitled to $10 - $50 of compensation (amount is decided by the programmer) from the unproductive individual. 
+   * For the second case, we will handle this as described above in how they're held accountable. We'll first contact them normally, through Discord, email, phone, or in person; then the team lead and course coordinators may get involved.
 ----
 ### Highlights
 
