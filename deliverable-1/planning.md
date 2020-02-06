@@ -74,6 +74,7 @@ Database (<TBD>) : its responsibilities consist of storing images of blueprints,
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
 
 Our testing method will follow the Test Driven Development. People will need to write unittests first before they start writing code. This will encourage people to design what they will create before jumping into writing codes. 
+We will also use continuous integration method. We will perform code reviews and manually deploy onto Heroku. We will only deploy master-branch/working-app onto Heroku. 
 
 #### Q5: What are the user stories that make up the MVP?
 
