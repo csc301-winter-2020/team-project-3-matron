@@ -73,9 +73,8 @@ Database (<TBD>) : its responsibilities consist of storing images of blueprints,
 
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
 
-Our testing method will follow the Test Driven Development. People will need to write unittests first before they start writing code. This will encourage people to design what they will create before jumping into writing codes. Only when people passes all the unittests people can move on to add new functions and features. Furthermore, there must be a unittest for every functions we write to thoroughly ensure no bug is there. 
+Our testing method will follow the Test Driven Development. People will need to write unittests first before they start writing code. This will encourage people to design what they will create before jumping into writing codes. 
 We will also use continuous integration method. We will perform code reviews and manually deploy onto Heroku. We will only deploy master-branch/working-app onto Heroku. 
-
 
 #### Q5: What are the user stories that make up the MVP?
 
@@ -198,7 +197,7 @@ Although all team members are experienced with computer science, and will be fre
 * **John: Tester and unittest assistant**
   * *Responsibilities:*
     * Writing unittests and making sure the unittests works for people who have already written it
-    * Debugging if unittest does not work and refactoring
+    * Debugging if unittest does not work and refactor codes
   * *Strengths:*
     * Able write in python, SQL, javascript, html/css.
     * Likes to test and debug code - (good ability to pay attention to details).
@@ -292,14 +291,7 @@ and/or collaborative process.
     * Explain why the option you decided on makes the most sense for your team/product/users.
  * Essentially, we want to understand how (and why) you ended up with your current product and process plan.
  * This section is useful for important information regarding your decision making process that may not necessarily fit in other sections. 
+ 
+The first issue that repeatedly came up was how we would gather data about the distances between rooms when said information was not given or known by the users. We had a variety of options for how we would gather this data including gps tracking, accelerometer data (step counting), and time measurements from something like a stopwatch or timer. Each of these had their various pros and cons. For example, gps tracking would give the most accurate distance information under ideal conditions but might be completely inviable deep inside large buildings (like a hospital). Accelerometer data is still fairly accurate to a degree and would not depend on the gps quality but would require some averaging to account for different peoples' strides. Time is the simplest metric and would not require use of seperate hardware such as a gps unit or accelerometer. Ultimately, we decided on using time as the distance metric since 1. we wouldn't need to implement a mobile solution to gather the distance information 2. It would be able to account for additional factors like hallway traffic. 3. It's less dependant on external factors such as gps and accelerometer quality.
 
-
-The first major issue which we faced was whether our implementation would consist of a learning algorithm to determine the shortest routes betweens rooms in a hosptial, or use an interface which allowed for a user to create a graph structure representing the hospital floor plan and map out the distances automatically by entering a scale. The pros for the learning algorithm would be that it would not require a blueprint to map out the entire hospital floor plan and the same technology could be applied more generally. The con of this was that not only is there no data available for training a model, and thus we would have to devise of a way to gather data by tracking hospital personnal. The pro of the interface builder was that it would not require any training data and the scale between rooms could be easily obtained as blue prints are scaled drawing. The con is that it would take manual effort to build a graph for a large hospital. The option we took was the route of the creating an interface in which a user can build a graph to model a hospital floor plan. We took this decision as when we met with our partner they explained that manually gathering data to use would be infeasable, as doctors, nurses, and other personal were not allowed to carry phones with them and thus we would have no idea to track their locations to gather timing data.
-
-
-Another idea for an insight was when we choose to use the line segments to model the floor plan instead of the block based system the partner proposed.
-
-
-One issue that repeatedly came up was our design for the app, and how we would gather data about the distances between rooms.
-
-We noticed that the app does not need to display a map which directs from one room to another on the User Interface. The app only needs to list out the order of rooms a hospital staff should visit if he/she wishes to minimize the walking distances throughout his/her working hours. That is to say, we only need to evaluate relative distances among locations and rooms, not the absolute distances.
+Another issue that came up was what choice of database we would use to store our data. Our options were Postgres (SQL), MongoDB (noSQL) and Neo4j (Graph DB). The considerations for SQL vs noSQL were fairly standard (structure vs flexibility, efficiency vs scalability). The other option was considered specifically because of its applicability towards our project since our main functionaly is specifically graph-related. Another consideration was our collective familiarity with the various types of databases. Overall, we were the most familiar with MongoDB, with Postgres being a close second. Meanwhile, none of us had any experience with Neo4j, which meant that we would have to learn how to use it from scratch. In the end, we chose to use <>.
