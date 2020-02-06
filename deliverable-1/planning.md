@@ -301,3 +301,5 @@ Another idea for an insight was when we choose to use the line segments to model
 
 
 One issue that repeatedly came up was our design for the app, and how we would gather data about the distances between rooms.
+
+We noticed that the app do not need to display a map which directs from one room to another on the User Interface. The app only needs to list out the order of rooms a hospital staff should visit if he/she wishes to minimize the walking distances throughout his/her working hours.
