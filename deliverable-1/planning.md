@@ -87,15 +87,18 @@ We will also use continuous integration method. We will perform code reviews and
   - As a user of the Matron API, I want to see the distances between a given room and all other rooms of a given type (patientroom, supplyroom, workstation, etc.) so I can direct an agent to the closest room that satisfies their needs.
   - As a user of the Matron API, I want to be able to query the distance between any two known rooms so I can optimize a route that traverses a set of rooms.
   - As an intern, I want to upload hospital blueprints so I can use them as reference for building a correctly-scaled graph of my unit.
-  - As an intern without access to my unit's blueprints, I want to visually construct a graph of my unit using nodes marked with room number/type and edges connecting them so that the system knows what routes we can walk.
-  - As an intern, I want to save my graph once I'm done editing it so my hard work is not lost.
+  - As an intern without access to my unit's blueprints, I want to visually construct a graph of my unit using nodes marked with room label/number/type and edges connecting them so that the system knows what routes we can walk.
+  - As an intern, I want to click a button to save my graph once I'm done editing it so my hard work is not lost.
+  - As an intern, I want to scroll through the history of my unit's graph so I can rollback/undo a bad edit.
   - As an intern with a badly drawn unit graph, I want to physically measure the time it takes to walk along the edges of my graph so that the system can rescale it to the correct proportions.
-  - As an intern, I want to load and edit (add and remove nodes and edges from) the graph of my unit to correct errors or let the system know of patients held in ad-hoc location.
+  - As an intern, I want to load and edit (add and remove nodes/labels and edges from) the graph of my unit to correct errors or let the system know of patients held in ad-hoc location.
   - As an intern, I want to be notified of obvious mistakes in my graph such as unlabelled rooms or inaccessible areas so I can correct them.
-  - As an intern, I want to box-select multiple rooms/nodes in the graph and drag them around so I can more easily fix large scaling innaccuracies in my graph.
-  - As an intern, I want to click to open a pie menu to select the tool I'm currently using in the graph editor so I can quickly switch between adding nodes, box-selecting nodes, lasso selecting nodes, drawing edges, or editing room numbers.
-  - As a hospital manager, I want to open the graphs of multiple distinct hospital units and draw edges between them so the schedules of nurses working across multiple units can be optimized.
-  
+  - As an intern, I want to box-select multiple rooms/nodes in the graph and drag them around so I can more easily fix large multi-node scaling innaccuracies in my graph.
+   - As an intern, I want draw a free-form shape around a set of nodes in the graph editor to lasso-select an irregular set of rooms so I can more easily fix multi-node scaling innaccuracies in my graph.
+  - As an intern, I want to click on the graph editor to create a new node and type in its room number/label so system knows which physical room that node corresponds to.
+  - As an intern, I want to set the type of a newly created node via a context-menu that lists the existing types (eg., patientroom, supplyroom, workstation) and has an option that allows me to add a new custom type via the keyboard.
+  - As an intern, I want to click to open a pie menu to select the tool I'm currently using in the graph editor so I can quickly switch between adding nodes, box-selecting nodes, lasso selecting nodes, drawing edges, or editing room labels/numbers/types.
+  - As a hospital manager, I want to open the graphs of multiple distinct hospital units and draw edges between them so the schedules of nurses working across multiple units can be optimized.  
 ----
 
 ## Process Details
