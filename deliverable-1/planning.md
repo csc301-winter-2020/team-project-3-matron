@@ -73,7 +73,7 @@ Database (<TBD>) : its responsibilities consist of storing images of blueprints,
 
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
 
-Our testing method will follow the Test Driven Development. People will need to write unittests first before they start writing code. This will encourage people to design what they will create before jumping into writing codes. 
+Our testing method will follow the Test Driven Development. People will need to write unittests first before they start writing code. This will encourage people to design what they will create before jumping into writing codes. Only when people passes all the unittests people can move on to add new functions and features. Furthermore, there must be a unittest for every functions we write to thoroughly ensure no bug is there. 
 We will also use continuous integration method. We will perform code reviews and manually deploy onto Heroku. We will only deploy master-branch/working-app onto Heroku. 
 
 #### Q5: What are the user stories that make up the MVP?
@@ -200,7 +200,7 @@ Although all team members are experienced with computer science, and will be fre
 * **John: Tester and unittest assistant**
   * *Responsibilities:*
     * Writing unittests and making sure the unittests works for people who have already written it
-    * Debugging if unittest does not work and refactor codes
+    * Debugging if unittest does not work and refactoring
   * *Strengths:*
     * Able write in python, SQL, javascript, html/css.
     * Likes to test and debug code - (good ability to pay attention to details).
