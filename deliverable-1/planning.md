@@ -73,6 +73,9 @@ Database (mongoDB) : its responsibiliies consist of storing images of blueprints
 
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
 
+The testing strategy will be the continuous delivery. We will deploy on Heroku after we do code review to test it. 
+For the unittests, everybody needs to write a unittests before they write the functions. Ideally, everybody needs to think about what functions/objects are required for the app before they start writing the code. 
+
 #### Q5: What are the user stories that make up the MVP?
 
  * At least 5 user stories concerning the main features of the application - note that this can broken down further
@@ -193,6 +196,7 @@ Although all team members are experienced with computer science, and will be fre
   * *Responsibilities:*
     * Writing unittests and making sure the unittests works for people who have already written it
     * Debugging if unittest does not work
+    * Help refactor codes while looking over unittests. 
   * *Strengths:*
     * Able write in python, SQL, javascript, html/css.
     * Likes to test and debug code - (good ability to pay attention to details).
