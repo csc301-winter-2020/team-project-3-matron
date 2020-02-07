@@ -63,7 +63,7 @@ Finally, integrating our plugin with their scheduling system will save the nurse
  * Will you be using third party applications or APIs? If so, what are they?
  * What is your testing strategy?
  
-The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use <TBD> as our DBMS which will be hosted on <TBD>. We will also be using the <insert name/s> javascript library to create and render the graphs in the graph builder interface.
+The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use Neo4J as our DBMS which will be hosted on Heroku. We will also be using the <insert name/s> javascript library to create and render the graphs in the graph builder interface.
 
 high level components of our project consists of:
 
@@ -173,7 +173,7 @@ Although all team members are experienced with computer science, and will be fre
     * Handling GIT conflicts such as merging.
 * **Ilan: Backend Logic Developer, Assistant Cheerleader**
   * *Responsibilities:*
-    * Handling of data structures and back end logic
+    * Processing of data structures and back end logic
     * Ensuring correctness of product's algorithms
     * Debugging and creating test cases during development of back end logic
   * *Strengths:*
