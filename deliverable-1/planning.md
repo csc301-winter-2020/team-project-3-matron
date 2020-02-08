@@ -63,18 +63,17 @@ Finally, integrating our plugin with their scheduling system will save the nurse
  * Will you be using third party applications or APIs? If so, what are they?
  * What is your testing strategy?
  
-The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use Neo4J as our DBMS which will be hosted on Heroku. We will also be using the <insert name/s> javascript library to create and render the graphs in the graph builder interface.
+The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use Neo4J as our DBMS which will be hosted on Heroku. We will also be using D3 to create and render the graphs in the graph builder interface and use 3D-Force Graphs to automatically rescale them.
 
-high level components of our project consists of:
+High level components of our project consists of:
 
 The webserver, which the users will be directly interacting with. This webserver will be written with Flask and will be responsible for serving webpages as well as communicating with our database.
 
-Database (Neo4J) : its responsibilities consist of storing images of blueprints, meta data for a graph that our user would create through our graph builder interface, as well as the actual graph the user has created it self.
+Database (Neo4J) : Responsible for storing blueprint image files, and past/current versions of each graph the user has made (for rollback purposes) and related metadata.
 
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
 
-
-We will also use continuous integration method. We will perform code reviews and manually deploy onto Heroku. We will only deploy master-branch/working-app onto Heroku. 
+We will also use continuous integration method. We will perform code reviews and manually deploy onto Heroku. We will only deploy master-branch/working-app onto Heroku primarily for partner demonstration purposes
 
 #### Q5: What are the user stories that make up the MVP?
 
