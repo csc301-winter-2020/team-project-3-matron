@@ -93,10 +93,9 @@ We will also use continuous integration method. We will perform code reviews and
   - As an intern, I want to load and edit (add and remove nodes/labels and edges from) the graph of my unit to correct errors or let the system know of patients held in ad-hoc location.
   - As an intern, I want to be notified of obvious mistakes in my graph such as unlabelled rooms or inaccessible areas so I can correct them.
   - As an intern, I want to box-select multiple rooms/nodes in the graph and drag them around so I can more easily fix large multi-node scaling innaccuracies in my graph.
-   - As an intern, I want draw a free-form shape around a set of nodes in the graph editor to lasso-select an irregular set of rooms so I can more easily fix multi-node scaling innaccuracies in my graph.
   - As an intern, I want to click on the graph editor to create a new node and type in its room number/label so system knows which physical room that node corresponds to.
   - As an intern, I want to set the type of a newly created node via a context-menu that lists the existing types (eg., patientroom, supplyroom, workstation) and has an option that allows me to add a new custom type via the keyboard.
-  - As an intern, I want to click to open a pie menu to select the tool I'm currently using in the graph editor so I can quickly switch between adding nodes, box-selecting nodes, lasso selecting nodes, drawing edges, or editing room labels/numbers/types.
+  - As an intern, I want to click to open a pie menu to select the tool I'm currently using in the graph editor so I can quickly switch between adding nodes, box-selecting nodes, drawing edges, or editing room labels/numbers/types.
   - As a hospital manager, I want to open the graphs of multiple distinct hospital units and draw edges between them so the schedules of nurses working across multiple units can be optimized.  
 ----
 
