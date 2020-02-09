@@ -145,9 +145,10 @@ Although all team members are experienced with computer science, and will be fre
     * Documenting code
     * Flask
     * noSQL databases
-* **Adit: `TODO: role`**
+* **Adit: Front-end developer, UX designer**
   * *Responsibilities:*
-    * `TODO`
+    * Designing and implementing visual and interactive elements, in particular resposible for all pages except for the graph builder interface.
+    * Deciding the look and layout of the web application
   * *Strengths:*
     * Front end development HTML, CSS, JS, and graphic design
     * Good experience with databases SQL and noSQL
