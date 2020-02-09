@@ -73,7 +73,7 @@ Database (Neo4J) : Responsible for storing blueprint image files, and past/curre
 
 A pattern that we would like to use is the DOA (data access object that we discussed in class)
 
-We will also use continuous integration method. We will perform code reviews and manually deploy onto Heroku. We will only deploy master-branch/working-app onto Heroku primarily for partner demonstration purposes
+Our main testing method is unittest. We will also use continuous integration method. This is to say, we will perform code reviews and manually deploy the app onto Heroku to examine the app and look for any bugs which can be seen from the U.I. level. We will only deploy master-branch/working-app onto Heroku primarily for partner demonstration purposes
 
 #### Q5: What are the user stories that make up the MVP?
 
