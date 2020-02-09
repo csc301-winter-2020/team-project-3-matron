@@ -63,15 +63,15 @@ Finally, integrating our plugin with their scheduling system will save the nurse
  * Will you be using third party applications or APIs? If so, what are they?
  * What is your testing strategy?
  
-The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use Neo4J as our DBMS, which is a non-relation graph-based database and will be hosted on Heroku. We will also be using the D3 javascript library to create and render the graphs in the graph builder interface and use 3D-Force Graphs to automatically rescale them.
+The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use Neo4J as our DBMS, which is a non-relation graph-based database and will be hosted on Heroku. We will also be using the D3 javascript library to create and render the graphs in the graph editor interface and use 3D-Force Graphs to automatically rescale them using error minimization heuristics on the known edge lengths.
 
 High level components of our project consists of:
 
-The webserver, which the users will be directly interacting with. This webserver will be written with Flask and python and will be responsible for serving webpages, communicating with our database, and performing any logic such as pathfinding on the graph.
+The webserver, which the existing scheduling software will be directly interacting with through an API. This webserver will be written with Python/Flask and will be responsible for serving our frontend webpages (graph editor, etc.), communicating with our database (to fetch saved graphs, etc.), and handling graph pathfinding logic.
 
 Database (Neo4J) : Responsible for storing blueprint image files, and past/current versions of each graph the user has made (for rollback purposes) and related metadata.
 
-A pattern that we would like to use is the DOA (data access object that we discussed in class)
+A pattern that we would like to use is the DOA (data access object that we discussed in class) so that the DBMS can be switch out later with minimal hassle.
 
 Our main testing method is unittest. We will also use continuous integration method. This is to say, we will perform code reviews and manually deploy the app onto Heroku to examine the app and look for any bugs which can be seen from the U.I. level. We will only deploy master-branch/working-app onto Heroku primarily for partner demonstration purposes after it has been thouroughly tested and received approval from the main tester.
 
