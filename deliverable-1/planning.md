@@ -57,12 +57,22 @@ The second type of user will be the interns employed by the hospital. They're jo
     * Provide users with more accurate and/or informative data (what kind of data? Why is it useful to them?)
     * Does this application exist in another form? If so, how does your differ and provide value to the users?
     * How does this align with your partner's organization's values/mission/mandate?
-    
-There are many benefits to using this plugin, the main one being there is no existing software that currently replicates its functionality in a hospital environment. The existing scheduling system does not have any way to take distances into account at all, and is forced to build the Nurses' schedules solely from other factors. Our product will alleviate this by being able to provide the distance between any two rooms in the hospital, meaning that there will no longer be any inefficient schedules with too much walking.
+   
+As far as we or our partner knows, there's currently no existing solution for the walk-time minimization of nurse schedules. Our system will enable such a solution to materialize by allowing scheduling systems to query the distance (in seconds) between a given room and all other rooms, or between two given rooms.
 
-In addition, there is also no easy way to digitally represent the physical layout of the hospital which is why factoring in distance when making schedules is currently so difficult. This will also be solved by our product by providing a clean and simple user interface for creating virtual blueprints of the hospital. They will be able to build it on top of existing blueprints, or completely from scratch for maximum ease of use and flexability.
+Currently, nurse schedules are utterly spatially unoptimized and at best, are based solely on patient-related factors like acuity, etc. as existing scheduling systems have no knowledge of the space in which their workers operate. Nurses must thus embark on an effectively random tour of patient rooms. Since the current scheduling scheme in most hospitals approximates a worst-case tour, the combined Matron system can thus only serve to improve matters.
 
-Finally, integrating our plugin with their scheduling system will save the nurses large amounts of time which will directly translate to a lighter workoad and less stress. This will allow them to better aid their patients which directly helps the hospitals values of doing their best at helping their patients recover.
+We offer a user-friendly graph editor that allows non-technical users to easily build and edit virtual maps of physical spaces ontop of blueprint backdrops if available. The integrity of such maps is maintained by error checking heuristics that warn the user of inaccessible areas, unlabelled nodes, etc. and a version history that allows users to rollback mistakes saved into the map.
+
+Uniquely, our system sports a robust and novel global edge-rescaling feature that dynamically streches/contracts areas of the graph based on a select-few known edge lengths via force-driven simulations.
+
+As explained in Q1, nurses are not obligated to follow their schedules exactly, and thus there exists an upper bound on the extent to which the combined Matron system can reduce the walk-time of nurses, but the bound is not known. As such, hospital administrators who wish to improve the health, morale, and efficiency of their nurses can choose to deploy the Matron system on a unit-by-unit basis to see what effect it has.
+
+<!--There are many benefits to using this plugin, the main one being there is no existing software that currently replicates its functionality in a hospital environment. The existing scheduling system does not have any way to take distances into account at all, and is forced to build the Nurses' schedules solely from other factors. Our product will alleviate this by being able to provide the distance between any two rooms in the hospital, meaning that there will no longer be any inefficient schedules with too much walking.-->
+
+<!--In addition, there is also no easy way to digitally represent the physical layout of the hospital which is why factoring in distance when making schedules is currently so difficult. This will also be solved by our product by providing a clean and simple user interface for creating virtual blueprints of the hospital. They will be able to build it on top of existing blueprints, or completely from scratch for maximum ease of use and flexability.-->
+
+<!--Finally, integrating our plugin with their scheduling system will save the nurses large amounts of time which will directly translate to a lighter workoad and less stress. This will allow them to better aid their patients which directly helps the hospitals values of doing their best at helping their patients recover.-->
 
 #### Q4: How will you build it?
 
