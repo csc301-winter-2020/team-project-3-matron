@@ -1,22 +1,9 @@
 # Team 3 - Matron
-> _Note:_ This document is meant to evolve throughout the planning phase of your project.   That is, it makes sense for you commit regularly to this file while working on the project (especially edits/additions/deletions to the _Highlights_ section). Most importantly, it is a reflection of all the planning you work you've done in the first iteration. 
  > **This document will serve as a master plan between your team, your partner and your TA.**
 
 ## Product Details
  
 #### Q1: What are you planning to build?
-
- > Short (1 - 2 min' read)
- * Start with a single sentence, high-level description of the product.
- * Be clear - Describe the problem you are solving in simple terms.
- * Be concrete. For example:
-    * What are you planning to build? Is it a website, mobile app,
-   browser extension, command-line app, etc.?      
-    * When describing the problem/need, give concrete examples of common use cases.
-    * Assume your the reader knows nothing about the problem domain and provide the necessary context. 
- * Focus on *what* your product does, and avoid discussing *how* you're going to implement it.      
-   For example: This is not the time or the place to talk about which programming language and/or framework you are planning to use.
- * **Feel free (and very much encouraged) to include useful diagrams, mock-ups and/or links**.
 
 Our project involves building a system that allows users to create and edit to-scale virtual blueprints of hospital units/wings so that our backend API can be queried to find the relative distances between rooms. This system will then act as a plugin to an existing scheduling system that considers the distances we return in trying to optimize nurse's schedules to minimize total walking distance.
 
@@ -30,18 +17,7 @@ It's important to note that nurse schedules are very flexible and that nurses mu
 
 Hospital administrators can choose to deploy our combined systems on a unit-by-unit basis to trial the improvement in patient outcomes, nurse morale, etc.
 
-<!--The motivation is that nurses in hospitals have a perceived increased workload based off of how much and how long they are required to walk to perform their duties. This in turn may increase stress, cause burnout and lower the quality of the work they perform, affecting their patients. Our job is to help minimize the amount of traveling a nurse is required to do in a given work day to prevent this from happening. Our partner has informed us that they currently have a scheduler which does not take into account the distances between each of the tasks it assigns, so the schedule may provide tasks in an order which causes excessive travelling.-->
-
-<!--With this information at hand, we are to design a plug-in for the existing scheduling software that the hospital administrator/interns are already using. This plugin will be used to create virtual blueprints of the hospital, which will then integrate with the existing scheduler to calculate the distance between parts of the hospital. These calculations will be used to generate more efficient schedules with less overall walking required, which will alleviate a large portion of the nurses' perceived workload. In addition, the virtual blueprint will be able to be edited to reflect periods of overcrowding in the hospital, for example when patients are forced to stay in the hallways.-->
-
-<!--In the end, our plug-in is to aid in their pre-existing scheduling software by providing the traveling distance to further optimize nurse schedules and increase overall quality of work by diminishing the effect of exhaustion caused by excessive walking.-->
-
 #### Q2: Who are your target users?
-
-  > Short (1 - 2 min' read max)
- * Be specific (e.g. a 'a third-year university student studying Computer Science' and not 'a student')
- * **Feel free (but not obligated) to use personas.         
-   You can create your personas as part of this Markdown file, or add a link to an external site (for example, [Xtensio](https://xtensio.com/user-persona/)).**
    
 Hospital managers/administrators in charge of scheduling their worker's tasks. Such users would naturally wish to improve the efficiency of their workforce and one means to that end is the minimization of their worker's stepcount via Matron. Managers would use Matron in place of their existing scheduling system and would interact with our specific plugin to review the graphs constructed by interns to check for mistakes or to optionally add nodes to the graph at the end of the shift to accommodate patients stored in ad hoc locations.
 
@@ -50,15 +26,6 @@ Hospital interns in a unit implementing Matron would spend the most time directl
 Finally, nurses who feel frustrated having to walk past rooms they must later visit will benefit from the full Matron system powered by our distance calculations. These users would rarely interact with our system outside of potentially adding nodes to again accommodate patients stored in ad hoc locations at the end of their shifts. However, these individuals will see by far the most benefit from our system via their now spatially optimized schedules printed by Matron at the start of their shift.
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
-
-> Short (1 - 2 min' read max)
- * We want you to "connect the dots" for us - Why does your product (as described in your answer to Q1) fits the needs of your users (as described in your answer to Q2)?
- * Explain the benefits of your product explicitly & clearly. For example:
-    * Save users time (how much?)
-    * Allow users to discover new information (which information? And, why couldn't they discover it before?)
-    * Provide users with more accurate and/or informative data (what kind of data? Why is it useful to them?)
-    * Does this application exist in another form? If so, how does your differ and provide value to the users?
-    * How does this align with your partner's organization's values/mission/mandate?
    
 As far as we or our partner knows, there's currently no existing solution for the walk-time minimization of nurse schedules. Our system will enable such a solution to materialize by allowing scheduling systems to query the distance (in seconds) between a given room and all other rooms, or between two given rooms.
 
@@ -70,20 +37,7 @@ Uniquely, our system sports a robust and novel global edge-rescaling feature tha
 
 As explained in Q1, nurses are not obligated to follow their schedules exactly, and thus there exists an upper bound on the extent to which the combined Matron system can reduce the walk-time of nurses, but the bound is not known. As such, hospital administrators who wish to improve the health, morale, and efficiency of their nurses can choose to deploy the Matron system on a unit-by-unit basis to see what effect it has.
 
-<!--There are many benefits to using this plugin, the main one being there is no existing software that currently replicates its functionality in a hospital environment. The existing scheduling system does not have any way to take distances into account at all, and is forced to build the Nurses' schedules solely from other factors. Our product will alleviate this by being able to provide the distance between any two rooms in the hospital, meaning that there will no longer be any inefficient schedules with too much walking.-->
-
-<!--In addition, there is also no easy way to digitally represent the physical layout of the hospital which is why factoring in distance when making schedules is currently so difficult. This will also be solved by our product by providing a clean and simple user interface for creating virtual blueprints of the hospital. They will be able to build it on top of existing blueprints, or completely from scratch for maximum ease of use and flexability.-->
-
-<!--Finally, integrating our plugin with their scheduling system will save the nurses large amounts of time which will directly translate to a lighter workoad and less stress. This will allow them to better aid their patients which directly helps the hospitals values of doing their best at helping their patients recover.-->
-
 #### Q4: How will you build it?
-
-> Short (1-2 min' read max)
- * What is the technology stack? Specify any and all languages, frameworks, libraries, PaaS products or tools. 
- * How will you deploy the application?
- * Describe the architecture - what are the high level components or patterns you will use? Diagrams are useful here. 
- * Will you be using third party applications or APIs? If so, what are they?
- * What is your testing strategy?
  
 The plugin will be built using Python and Flask for the backend, and HTML5 and Javascript for the interactive frontend interface. We will also use Neo4J as our DBMS, which is a non-relation graph-based database and will be hosted on Heroku. We will also be using the D3 Javascript library to create and render the graphs in the graph editor interface and use 3D-Force Graphs to automatically rescale them using error minimization heuristics on the known edge lengths.
 
@@ -99,12 +53,6 @@ Our main testing method is unittest. We will also use continuous integration met
 
 #### Q5: What are the user stories that make up the MVP?
 
- * At least 5 user stories concerning the main features of the application - note that this can broken down further
- * You must follow proper user story format (as taught in lecture) ```As a <user of the app>, I want to <do something in the app> in order to <accomplish some goal>```
- * If you have a partner, these must be reviewed and accepted by them
- * The user stories should be written in Github and each one must have clear acceptance criteria.
- 
- Tentative User Stories:
   - As a user of the Matron API, I want to see the distances between a given room and all other rooms of a given type (patientroom, supplyroom, workstation, etc.) so my scheduling software knows how best to plan a nurses day.
   - As a user of the Matron API, I want to be able to query the distance between any two known rooms so I can optimize a route that traverses a set of rooms.
   - As an intern, I want to upload hospital blueprints so I can use them as reference for building a correctly-scaled graph of my unit.
@@ -124,16 +72,6 @@ Our main testing method is unittest. We will also use continuous integration met
 ## Process Details
 
 #### Q6: What are the roles & responsibilities on the team?
-
-Describe the different roles on the team and the responsibilities associated with each role. 
- * Roles should reflect the structure of your team and be appropriate for your project. Not necessarily one role to one team member.
-
-List each team member and:
- * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
- * 3 technical strengths and weaknesses each (e.g. languages, frameworks, libraries, development methodologies, etc.)
- 
-Although all team members are experienced with computer science, and will be free to contribute wherever their skills are needed, the roles here reflect which components they'll be in charge of and mainly focusing on.
- 
  
 * **Saad: Project Manager and Team Lead**
   * *Responsibilities:*
@@ -161,7 +99,7 @@ Although all team members are experienced with computer science, and will be fre
       * Uses the recorded time deltas to correct the scaling on an existing map graph  
   * *Strengths:*
     * Javascript/Java/Python
-    * Computer graphics, OpenGL
+    * Computer graphics/physics simulation
     * Theoretical comp sci, graph theory/algorithms
   * *Weaknesses:*
     * Documenting code
@@ -233,16 +171,6 @@ Although all team members are experienced with computer science, and will be fre
 
 
 #### Q7: What operational events will you have as a team?
-
-Describe meetings (and other events) you are planning to have. 
- * When and where? Recurring or ad hoc? In-person or online?
- * What's the purpose of each meeting?
- * Other events could be coding sessions, code reviews, quick weekly sync meeting online, etc.
- * You must have at least 2 meetings with your project partner (if you have one). Describe them here:
-   * What did you discuss during the meetings?
-   * What were the outcomes of each meeting?
-   * You must provide meeting minutes.
-   * You must have a regular meeting schedule established by the second meeting.  
    
 We plan to have team meetings once a week that all members are required to attend either in person or by call. Through a two-stage voting process we've decided on Thursday 5-6 as our regular meeting time, as it was the time that worked for 6/7 of our group members. For the group members who can't make it, they will call in using Discord so they can still contribute to group discussions. The location may change, but it will generally be a group study room booked in advance by the team lead - we've found that larger rooms with whiteboards and tv screens help us organize better.
 
@@ -255,15 +183,6 @@ The first meeting with our project partner was mainly to get everyone introduced
 The second meeting was conducted online before the due date of the first Deliverable. Here, we wanted to confirm all of our user stories and other product details we had written in the Deliverable. This meeting went quite quickly as the partner approved the majority of user stories we had come up, and the group had a good sense of the partner's goals of the product from the first meeting. As the group thinks of more user stories, the partner liaison continually confirms them with the partner via email but so far they've all been approved other than minor changes.
   
 #### Q8: What artifacts will you use to self-organize?
-
-List/describe the artifacts you will produce in order to organize your team.       
-
- * Artifacts can be To-Do lists, Task boards, schedule(s), meeting minutes, etc.
- * We want to understand:
-   * How do you keep track of what needs to get done?
-   * How do you prioritize tasks?
-   * How do tasks get assigned to team members?
-   * How do you determine the status of work from inception to completion?
    
 Our team's primary means of internal communication is via Discord. Our group's server has 5 total text channels split into two categories:
 
@@ -282,18 +201,14 @@ Our team also has a Trello board where we use a modified form of Kanban. We post
 We plan to have a fairly open working culture, where each team member is given a task or role and has freedom to handle it however they see fit. We've divided the project into general roles such as frontend, backend, database, etc. and each member will oversee and do any research, design, and implementation on any area they're in charge of. We'll have weekly meetings and consistent communication on our Discord server to ensure team members are organized and completing their tasks, and the team lead will oversee the Trello board to keep the project on track. When they merge a pull request to the master branch, we will require 3 code reviews to ensure only quality code is committed and that each team member has a sense of the overall state of the project.
 
 **Communications:**
- * What is the expected frequency? What methods/channels are appropriate? 
- * If you have a partner project, what is your process (in detail) for communicating with your partner?
  
 Between group members, minimum of once a week because we have a weekly meetings. On average, we expect to speak with each other regarding the project about once every other day via our Discord server or in person. For emergencies, we've all shared our phone numbers with each other except for 1 group member who didn't consent. Our expected frequency of communications with the partner is biweekly, as per the partners preference, with a Skype call or via email for immediate requests. We have a dedicated partner liaison who will be responsible for keeping the partner up to date on our progress and sending emails if we have any questions.
 
 **Meetings:**
- * How are people held accountable for attending meetings, completing action items? Is there a moderator or process?
  
 If a group member doesn't attend a meeting or complete an assigned action item, the team lead will contact them and ask for justification about why they didn't attend. We have various ways to contact each other if needed including our official Discord server, email, phone number, or just in person if needed. The team lead is willing to step in if needed, and in extreme cases the TA or course coordinators would be contacted to find a resolution. Since each team member has a distinct role, we take it seriously if they don't contribute since covering their workload would be quite difficult.
  
 **Conflict Resolution:**
- * List at least three team scenarios/conflicts you discussed in lecture and how you decided you will resolve them. Indecisions? Non-responsive team members? Any other scenarios you can think of?
 
  * Team indecision:
       * In terms of development the first course of action would be to have a vote and see if there's a clear consensus. If not, then the team member(s) that are in charge of the implementation of the feature will have the final say in the design decision. If this is a decision we believe the partner would have insight on, we will contact them and they will have final say. This is because we believe that the person who has to actually code a feature should have more control over the specifications of that feature.
@@ -308,17 +223,6 @@ If a group member doesn't attend a meeting or complete an assigned action item, 
    * **Just unproductive/unresponsive:** A team member who is just not doing their part will be handled as described before. We will first contact them normally, through Discord, email, phone, or in person. If this does not help, the team lead and course coordinators may get involved.
 ----
 ### Highlights
-
-Specify 3 - 5 key decisions and/or insights that came up during your meetings
-and/or collaborative process.
-
- * Short (5 min' read max)
- * Decisions can be related to the product and/or the team process.
-    * Mention which alternatives you were considering.
-    * Present the arguments for each alternative.
-    * Explain why the option you decided on makes the most sense for your team/product/users.
- * Essentially, we want to understand how (and why) you ended up with your current product and process plan.
- * This section is useful for important information regarding your decision making process that may not necessarily fit in other sections. 
  
 The first issue that repeatedly came up was how we would gather data about the distances between rooms when said information was not given or known by the users. We had a variety of options for how we would gather this data including gps tracking, accelerometer data (step counting), and time measurements from something like a stopwatch or timer. Each of these had their various pros and cons. For example, gps tracking would give the most accurate distance information under ideal conditions but might be completely unfeasible deep inside large buildings (like a hospital). Accelerometer data is still fairly accurate to a degree and would not depend on the gps quality but would require some averaging to account for different peoples' strides. Time is the simplest metric and would not require use of separate hardware such as a gps unit or accelerometer. Ultimately, we decided on using time as the distance metric since 1. we wouldn't need to implement a mobile solution to gather the distance information 2. It would be able to account for additional factors like hallway traffic. 3. It's less dependent on external factors such as gps and accelerometer quality. 
 
