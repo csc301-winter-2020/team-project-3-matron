@@ -18,9 +18,9 @@
    For example: This is not the time or the place to talk about which programming language and/or framework you are planning to use.
  * **Feel free (and very much encouraged) to include useful diagrams, mock-ups and/or links**.
 
-Our project is to build a plugin which users can use to build a virtual blueprint and calculate the distance between any two rooms in a hospital wing.
+Our project involves building a system that allows users to create and edit to-scale virtual blueprints of hospital units/wings so that our backend API can be queried to find the relative distances between rooms. This system will then act as a plugin to an existing scheduling system that considers the distances we provide in trying to optimize nurse schedules.
 
-The problem presented to us is that nurses in hospitals have a perceived increased workload based off of how much and how long they are required to walk to perform their duties. This in turn may increase stress, cause burnout and lower the quality of the work they perform, affecting their patients. Our job is to help minimize the amount of traveling a nurse is required to do in a given work day to prevent this from happening. Our partner has informed us that they currently have a scheduler which does not take into account the distances between each of the tasks it assigns, so the schedule may provide tasks in an order which causes excessive travelling.
+The motivation is that nurses in hospitals have a perceived increased workload based off of how much and how long they are required to walk to perform their duties. This in turn may increase stress, cause burnout and lower the quality of the work they perform, affecting their patients. Our job is to help minimize the amount of traveling a nurse is required to do in a given work day to prevent this from happening. Our partner has informed us that they currently have a scheduler which does not take into account the distances between each of the tasks it assigns, so the schedule may provide tasks in an order which causes excessive travelling.
 
 With this information at hand, we are to design a plug-in for the existing scheduling software that the hospital administrator/interns are already using. This plugin will be used to create virtual blueprints of the hospital, which will then integrate with the existing scheduler to calculate the distance between parts of the hospital. These calculations will be used to generate more efficient schedules with less overall walking required, which will alleviate a large portion of the nurses' perceived workload. In addition, the virtual blueprint will be able to be edited to reflect periods of overcrowding in the hospital, for example when patients are forced to stay in the hallways.
 
@@ -71,7 +71,7 @@ The webserver, which the existing scheduling software will be directly interacti
 
 Database (Neo4J) : Responsible for storing blueprint image files, and past/current versions of each graph the user has made (for rollback purposes) and related metadata.
 
-A pattern that we would like to use is the DOA (data access object that we discussed in class) so that the DBMS can be switch out later with minimal hassle.
+A pattern that we would like to use is the DOA (data access object that we discussed in class) so that the DBMS can be swapped out later with minimal hassle.
 
 Our main testing method is unittest. We will also use continuous integration method. This is to say, we will perform code reviews and manually deploy the app onto Heroku to examine the app and look for any bugs which can be seen from the U.I. level. We will only deploy master-branch/working-app onto Heroku primarily for partner demonstration purposes after it has been thouroughly tested and received approval from the main tester.
 
