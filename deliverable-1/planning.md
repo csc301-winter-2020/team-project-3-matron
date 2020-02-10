@@ -43,9 +43,11 @@ Hospital admininstrators can choose to deploy our combined systems on a unit-by-
  * **Feel free (but not obligated) to use personas.         
    You can create your personas as part of this Markdown file, or add a link to an external site (for example, [Xtensio](https://xtensio.com/user-persona/)).**
    
-The first type of user for our application is the hospital manager. This would be any hospital staff in an administrative position who's in charge of scheduling tasks for the other hospital staff. Their goal is to try and optimize nurse schedules as much as possible, which our product would help them achieve by allowing them to take distance into account when creating schedules.
+Hospital managers/administrators in charge of scheduluing their worker's tasks. Such users would naturally wish to improve the efficiency of their workforce and one means to that end is the minimization of their worker's stepcount via Matron. Managers would use Matron in place of their existing scheduling system and would interact with our specific plugin to review the graphs constructed by interns to check for mistakes or to optionally add nodes to the graph at the end of the shift to accomodate patients stored in ad hoc locations.
 
-The second type of user will be the interns employed by the hospital. They're job will be to translate the real, physical layout of the hospital into a virtual blueprint on our plugin. Before the hospital manager can benefit from optimized schedules, an intern will have to use the product to create virtual blueprints of the hospital to be used by the pathfinding system.
+Hospital interns in a unit implementing Matron would spend the most time directly interacting with the graph editor portion of our plugin. They would be responsible for translating the physical layout of their workspace into a virtual graph and ensuring the accuracy of its edge lengths via blueprint reference or physical path timing. The Matron scheduling optimizer requires such graphs to produce time/step optimized schedules that benefit nurses and, by extension, managers and patients.
+
+Finally, nurses who feel frustrated having to walk past rooms they must later visit will benefit from the full Matron system powered by our distance calculations. These users would rarely interact with our system outside of potentially adding nodes to again accomodate patients stored in ad hoc locations at the end of their shifts. However, these individuals will see by far the most benefit from our system via their now spacially optimized schedules printed by Matron at the start of their shift.
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
