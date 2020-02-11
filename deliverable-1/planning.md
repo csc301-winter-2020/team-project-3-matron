@@ -54,6 +54,7 @@ Our main testing method is unittest. We will also use continuous integration met
 #### Q5: What are the user stories that make up the MVP?
 
   - As a user of the Matron API, I want to see the distances between a given room and all other rooms of a given type (patientroom, supplyroom, workstation, etc.) so my scheduling software knows how best to plan a nurses day.
+      - Create a backend function that takes a room number and returns a list of all rooms labels/types sorted by distance from the source
   - As a user of the Matron API, I want to be able to query the distance between any two known rooms so I can optimize a route that traverses a set of rooms.
   - As an intern, I want to upload hospital blueprints so I can use them as reference for building a correctly-scaled graph of my unit.
   - As an intern without access to my unit's blueprints, I want to visually construct a graph of my unit using nodes marked with room label/number/type and edges connecting them so that the system knows what routes we can walk.
