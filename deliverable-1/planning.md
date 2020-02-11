@@ -76,8 +76,11 @@ Our main testing method is unittest. We will also use continuous integration met
   - As an intern, I want to click on the graph editor canvas to create a new node and type in its room number/label so system knows which physical room that node corresponds to.
       - With the node creation tool selected, clicking on the canvas should create a node and open a context menu that lets the user type in the name/number/label of that node/room.
   - As an intern, I want to set the type of a newly created node via a context-menu that lists the existing types (eg., patientroom, supplyroom, workstation) and has an option that allows me to add a new custom type via the keyboard.
+      - After the user creates a node and enters it's label, a new context menu opens that lists the existing types of room (for convenience) and has an option to enter a new one
   - As an intern, I want to click to open a pie menu to select the tool I'm currently using in the graph editor so I can quickly switch between adding nodes, box-selecting nodes, drawing edges, or editing room labels/numbers/types.
+      - Create a pie context menu UI around the cursor to switch tools in the graph editor
   - As a hospital manager, I want to open the graphs of multiple distinct hospital units and draw edges between them so the schedules of nurses working across multiple units can be optimized.
+      - Have a page that lists all the unit graphs and allows them to be imported into each other
 ----
 
 ## Process Details
