@@ -56,15 +56,25 @@ Our main testing method is unittest. We will also use continuous integration met
   - As a user of the Matron API, I want to see the distances between a given room and all other rooms of a given type (patientroom, supplyroom, workstation, etc.) so my scheduling software knows how best to plan a nurses day.
       - Create a backend function that takes a room number and returns a list of all rooms labels/types sorted by distance from the source
   - As a user of the Matron API, I want to be able to query the distance between any two known rooms so I can optimize a route that traverses a set of rooms.
+      - Create a function that takes two room numbers/labels and returns a float indicating the distance between them in seconds
   - As an intern, I want to upload hospital blueprints so I can use them as reference for building a correctly-scaled graph of my unit.
+      - Create a UI that lets users upload local image files (jpeg, png, etc.) and loads them into the background of the graph editor canvas so nodes/edges can be drawn ontop of it. Reduce the opacity of the image to make the graph easier to see.
   - As an intern without access to my unit's blueprints, I want to visually construct a graph of my unit using nodes marked with room label/number/type and edges connecting them so that the system knows what routes we can walk.
+      - Have a zoomable/pannable canvas UI that nodes/edges can be drawn ontop of to construct a graph.
   - As an intern, I want to click a button to save my graph once I'm done editing it so my hard work is not lost.
+      - Add a save button that sends an encoding of the graph to the backend for storage in our Neo4j database
   - As an intern, I want to scroll through the history of my unit's graph so I can rollback/undo a bad edit.
+      - Add a sidebar that lists previous versions of the graph stored on the graph with timestamps that lets the user click them to load
   - As an intern with a badly drawn unit graph, I want to physically measure the time it takes to walk along the edges of my graph so that the system can rescale it to the correct proportions.
+      - Have a webpage the user can optionally load onto their mobile phone that tells them what specific rooms to walk between. Have a button that the user presses at the start and end of each leg of the journey. Use the time deltas to fix the scaling of those edges
   - As an intern, I want to load and edit (add and remove nodes/labels and edges from) the graph of my unit to correct errors or let the system know of patients held in ad-hoc location.
+      - Allow users to load, edit, and then resave graphs they've previously worked on
   - As an intern, I want to be notified of obvious mistakes in my graph such as unlabeled rooms or inaccessible areas so I can correct them.
+      - Have little red popups that show users where errors exist in their graph so they can fix them
   - As an intern, I want to box-select multiple rooms/nodes in the graph and drag them around so I can more easily fix large multi-node scaling inaccuracies in my graph.
+      - Have a box-select tool that lets the user click and drag to draw a box, once they let go all nodes in the box should be selected and can then be moved around as a group
   - As an intern, I want to click on the graph editor canvas to create a new node and type in its room number/label so system knows which physical room that node corresponds to.
+      - With the node creation tool selected, clicking on the canvas should create a node and open a context menu that lets the user type in the name/number/label of that node/room.
   - As an intern, I want to set the type of a newly created node via a context-menu that lists the existing types (eg., patientroom, supplyroom, workstation) and has an option that allows me to add a new custom type via the keyboard.
   - As an intern, I want to click to open a pie menu to select the tool I'm currently using in the graph editor so I can quickly switch between adding nodes, box-selecting nodes, drawing edges, or editing room labels/numbers/types.
   - As a hospital manager, I want to open the graphs of multiple distinct hospital units and draw edges between them so the schedules of nurses working across multiple units can be optimized.
