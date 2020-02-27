@@ -7,9 +7,9 @@ let cy = cytoscape({
 	},
 	style: [
 		{
-			selector: "node",
+			selector: "node[label]",
 			style: {
-				"label": "data(id)"
+				"label": "data(label)"
 			}
 		},
 		{
@@ -20,8 +20,8 @@ let cy = cytoscape({
 				'height': 12,
 				'shape': 'ellipse',
 				'overlay-opacity': 0,
-					'border-width': 12,
-					'border-opacity': 0
+				'border-width': 12,
+				'border-opacity': 0
 			}
 		},
 		{
@@ -63,19 +63,50 @@ let cy = cytoscape({
 	wheelSensitivity: 0.2
 });
 
-var eh = cy.edgehandles();
+var eh = cy.edgehandles({
+	snap: true
+});
 
 let i = 0;
 cy.on("tap", function(e) {
 	if (e.target == cy) {
-		cy.add({
+		let node = {
 			data: {
-				id: i++
+				id: i,
+				label: "Room 301"
 			},
 			renderedPosition: {
 				x: e.renderedPosition.x,
 				y: e.renderedPosition.y
 			}
+		}
+		cy.add(node);
+
+		let cynode = cy.getElementById(i);
+
+		console.log(cynode);
+
+		let popper = cynode.popper({
+		  content: () => {
+		    let div = document.createElement('div');
+		    div.innerHTML = 'Node spec input fields';
+		    document.body.appendChild(div);
+		    return div;
+		  }
 		});
+
+		//HOW THE FORM CAN CHANGE THE NODE LABEL
+		cynode.data("label", "new labelelele");
+
+		let update = () => {
+		  popper.scheduleUpdate();
+		};
+		cynode.on('position', update);
+		cy.on('pan zoom resize', update);
+
+		i += 1;
+
+		console.log(cy.elements().jsons());
+		console.log(cy.json());
 	}
 });
