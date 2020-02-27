@@ -5,6 +5,28 @@ let cy = cytoscape({
 	layout: {
 		name: "preset"
 	},
+	elements: [
+		{
+			data: {
+				id: -1,
+				label: "Test"
+			},
+			renderedPosition: {
+				x: 0,
+				y: 0
+			}
+		},
+		{
+			data: {
+				id: -2,
+				label: "Test2"
+			},
+			renderedPosition: {
+				x: 1000,
+				y: 1000
+			}
+		}
+	],
 	style: [
 		{
 			selector: "node[label]",
@@ -63,8 +85,22 @@ let cy = cytoscape({
 	wheelSensitivity: 0.2
 });
 
-var eh = cy.edgehandles({
+let eh = cy.edgehandles({
 	snap: true
+});
+
+let bg = cy.cyCanvas({
+	zIndex: -1
+})
+
+let canvas = bg.getCanvas();
+let ctx = canvas.getContext("2d");
+
+
+let img = new Image();
+img.src = "https://johnsonportables.com/wp-content/uploads/2017/03/wmc-blueprint.jpg";
+cy.on("render cyCanvas.resize", evt => {
+	drawbackground();
 });
 
 let i = 0;
@@ -110,3 +146,13 @@ cy.on("tap", function(e) {
 		console.log(cy.json());
 	}
 });
+
+function drawbackground() {
+	console.log(bg);
+	bg.resetTransform(ctx);
+	bg.clear(ctx);
+	bg.setTransform(ctx);
+
+	ctx.save();
+	ctx.drawImage(img, 0, 0);
+}
