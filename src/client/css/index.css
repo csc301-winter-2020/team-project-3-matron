@@ -13,3 +13,11 @@
 	position: fixed;
 	padding: 10px;
 }
+
+#node_label_input{
+	width: 120px;
+}
+
+#node_info{
+	display: none;
+}

@@ -96,6 +96,11 @@ let bg = cy.cyCanvas({
 let canvas = bg.getCanvas();
 let ctx = canvas.getContext("2d");
 
+$('.ui.dropdown')
+  .dropdown({
+
+  })
+;
 
 let img = new Image();
 img.src = "https://johnsonportables.com/wp-content/uploads/2017/03/wmc-blueprint.jpg";
@@ -106,6 +111,7 @@ cy.on("render cyCanvas.resize", evt => {
 let i = 0;
 cy.on("tap", function(e) {
 	if (e.target == cy) {
+
 		let node = {
 			data: {
 				id: i,
@@ -120,14 +126,14 @@ cy.on("tap", function(e) {
 
 		let cynode = cy.getElementById(i);
 
-		console.log(cynode);
+		//console.log(cynode);
 
 		let popper = cynode.popper({
 		  content: () => {
-		    let div = document.createElement('div');
-		    div.innerHTML = 'Node spec input fields';
-		    document.body.appendChild(div);
-		    return div;
+			let info = document.querySelector('#node_info');
+			info.style.display = "block";
+			document.body.appendChild(info);
+		    return info;
 		  }
 		});
 
@@ -142,13 +148,17 @@ cy.on("tap", function(e) {
 
 		i += 1;
 
-		console.log(cy.elements().jsons());
-		console.log(cy.json());
+		//console.log(cy.elements().jsons());
+		//console.log(cy.json());
+	} else {
+		// might be useful
+		const selected_node = cy.$(':selected')[0];
 	}
 });
 
+
 function drawbackground() {
-	console.log(bg);
+	//console.log(bg);
 	bg.resetTransform(ctx);
 	bg.clear(ctx);
 	bg.setTransform(ctx);
