@@ -153,14 +153,13 @@ let ghost = {
 
 cy.on("tap", function(e) {
 	let target = e.target;
-	
-	ghost.disable();
 
 	if (target == cy) {
 		if (!ghost.enabled) {
 			addNode(e.position.x, e.position.y);
 		}
 		
+		ghost.disable();
 		unselectAll();
 		return;
 	}
@@ -169,6 +168,7 @@ cy.on("tap", function(e) {
 		unselectAll();
 	}
 
+	ghost.disable();
 	toggleSelected(target);	
 });
 
@@ -199,6 +199,7 @@ cy.on("cxttapend", function(e) {
 			ghost.source = newNode;
 			ghost.updateCursor(e.position.x, e.position.y);
 			ghost.redraw();
+			return;
 		}
 	} else {
 		if (!hovered) {
