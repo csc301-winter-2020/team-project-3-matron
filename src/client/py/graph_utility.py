@@ -2,7 +2,7 @@ import json
 import sys
 from typing import *
 
-Graph = List[Dict[str, Any]]
+Graph = List[Dict[str, Dict]]
 IDTable = Dict[str, int]
 AdjacencyMap = Dict[str, List[Tuple[str, float]]]
 
