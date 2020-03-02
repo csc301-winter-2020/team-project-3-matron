@@ -1,10 +1,9 @@
 import json
-import sys
 from typing import *
 
-Graph = List[Dict[str, Dict]]
+Graph = List[Dict[str, Any]]
 IDTable = Dict[str, int]
-AdjacencyMap = Dict[str, List[Tuple[str, float]]]
+AdjacencyMap = Dict[str, List[Tuple[str, str, float]]]
 
 
 def hash_graph(graph: Graph) -> IDTable:
@@ -18,19 +17,15 @@ def hash_graph(graph: Graph) -> IDTable:
     return id_table
 
 
-def get_graph() -> [None, Graph]:
+def get_graph(json_str: str) -> Union[None, Graph]:
     """
     Return graph inputted in json form from command line args
     """
-    if len(sys.argv) != 2:
-        print("Error: get_graph failed, invalid argument count.")
-        return None
     try:
-        json_graph = sys.argv[1]
+        graph = json.loads(json_str)
     except json.JSONDecodeError:
         print("Error: get_graph failed, invalid json argument.")
         return None
-    graph = json.loads(json_graph)
     return graph
 
 
@@ -46,14 +41,12 @@ def get_adjacency_map(graph: Graph) -> AdjacencyMap:
     for obj in graph:
         if obj["group"] == "edges":
             source_id, target_id = obj["data"]["source"], obj["data"]["target"]
-            source = None if source_id not in id_table else graph[id_table[source_id]]
-            target = None if target_id not in id_table else graph[id_table[target_id]]
-            if source not in adj_table:
-                adj_table[source] = []
-            if target not in adj_table:
-                adj_table[target] = []
-            adj_table[source].append((target, obj["data"]["weight"]))
-            adj_table[target].append((source, obj["data"]["weight"]))
+            if source_id not in adj_table:
+                adj_table[source_id] = []
+            if target_id not in adj_table:
+                adj_table[target_id] = []
+            adj_table[source_id].append((target_id, obj["data"]["id"], obj["data"]["weight"]))
+            adj_table[target_id].append((source_id, obj["data"]["id"],  obj["data"]["weight"]))
     return adj_table
 
 
@@ -65,7 +58,7 @@ def get_edge_weight(id_a: str, id_b: str, adj_map: AdjacencyMap) -> float:
     if id_a not in adj_map:
         return -1
     adj_list = adj_map[id_a]
-    for cur_id, cur_w in adj_list:
+    for cur_id, cur_edge, cur_w in adj_list:
         if cur_id == id_b:
             return cur_w
     return -1
