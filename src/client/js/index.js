@@ -227,10 +227,10 @@ cy.on("cxttapend", function(e) {
 			}
 
 			let intersectPos = window.finiteLinesIntersect(
-				ghost.source.position().x,
-				ghost.source.position().y,
 				e.position.x,
 				e.position.y,
+				e.position.x + (target.position().y - source.position().y),
+				e.position.y + (source.position().x - target.position().x),
 
 				source.position().x,
 				source.position().y,

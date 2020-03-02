@@ -3618,6 +3618,23 @@
 
     return hypSq - adjSq;
   };
+  var mySqdistToFiniteLine = function mySqdistToFiniteLine(x, y, x1, y1, x2, y2) {
+    var offset = [x - x1, y - y1];
+    var line = [x2 - x1, y2 - y1];
+    var lineSq = line[0] * line[0] + line[1] * line[1];
+    var hypSq = offset[0] * offset[0] + offset[1] * offset[1];
+    var dotProduct = offset[0] * line[0] + offset[1] * line[1];
+    var adjSq = dotProduct * dotProduct / lineSq;
+
+    if (dotProduct < 0) {
+      return false;
+    }
+    if (adjSq > lineSq) {
+      false;
+    }
+    return true;
+  };
+  window.mySqdistToFiniteLine = mySqdistToFiniteLine;
   var pointInsidePolygonPoints = function pointInsidePolygonPoints(x, y, points) {
     var x1, y1, x2, y2;
     var y3; // Intersect with vertical line through (x, y)
