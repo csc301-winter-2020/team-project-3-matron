@@ -84,6 +84,11 @@ class Graph:
             strs.append(str(edge))
         return ', '.join(strs)
 
+    def __eq__(self, other):
+        if type(other) != type(self):
+            return False
+        return str(other) == str(self)
+
     def get_node(self, id: str) -> Node:
         return self.nodes[self._node_id_map[id]]
 
