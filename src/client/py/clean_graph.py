@@ -2,7 +2,6 @@
 Clean up graph to the minimal number of hallway nodes
 """
 from .graph_utility import *
-from sys import argv
 
 
 def find_removable_edge(graph: Graph, id_table: IDTable) -> Union[None, str]:
@@ -80,10 +79,11 @@ def clean_graph(graph: Graph) -> Graph:
 
 
 if __name__ == '__main__':
-    if len(argv) < 2:
-        print("usage: python {} <json graph dump>".format(argv[0]))
+    args = get_sys_args()
+    if len(args) < 2:
+        print("usage: python {} <json graph dump>".format(args[0]))
         exit(1)
-    graph = get_graph(argv[1])
+    graph = get_graph(args[1])
     if graph is not None:
         clean_graph(graph)
     print(json.dumps(graph))

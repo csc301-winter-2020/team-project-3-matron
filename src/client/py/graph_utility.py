@@ -1,9 +1,17 @@
 import json
+import sys
 from typing import *
 
 Graph = List[Dict[str, Any]]
 IDTable = Dict[str, int]
 AdjacencyMap = Dict[str, List[Tuple[str, str, float]]]
+
+
+def get_sys_args() -> List[str]:
+    """
+    Return command line arguments.
+    """
+    return sys.argv
 
 
 def hash_graph(graph: Graph) -> IDTable:
