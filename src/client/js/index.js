@@ -188,6 +188,17 @@ cy.on("cxttapend", function(e) {
 			ghost.source = hovered;
 			ghost.updateCursor(e.position.x, e.position.y);
 			ghost.redraw();
+			return;
+		}
+
+		if (target == cy) {
+			let newNode = addNode(e.position.x, e.position.y);
+			newNode.data("type", "hallway");
+
+			ghost.enable();
+			ghost.source = newNode;
+			ghost.updateCursor(e.position.x, e.position.y);
+			ghost.redraw();
 		}
 	} else {
 		if (!hovered) {
