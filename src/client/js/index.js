@@ -230,6 +230,7 @@ cy.on("cxttapend", function(e) {
 
 			cy.remove(hovered);
 			let newNode = addNode(intersectPos[0], intersectPos[1]);
+			newNode.data("type", "hallway");
 			addEdge(newNode, source);
 			addEdge(newNode, target);
 			addEdge(newNode, ghost.source);
