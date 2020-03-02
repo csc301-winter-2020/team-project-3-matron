@@ -3939,7 +3939,10 @@
         return [];
       }
     }
-  }; // math.polygonIntersectLine( x, y, basePoints, centerX, centerY, width, height, padding )
+  }; 
+  window.finiteLinesIntersect = finiteLinesIntersect;
+
+  // math.polygonIntersectLine( x, y, basePoints, centerX, centerY, width, height, padding )
   // intersect a node polygon (pts transformed)
   //
   // math.polygonIntersectLine( x, y, basePoints, centerX, centerY )
@@ -22307,8 +22310,8 @@
 
     var zoom = r.cy.zoom();
     var hasCompounds = r.cy.hasCompoundNodes();
-    var edgeThreshold = (isTouch ? 24 : 8) / zoom;
-    var nodeThreshold = (isTouch ? 8 : 2) / zoom;
+    var edgeThreshold = (isTouch ? 24 : 8)*(window.edgeThreshMultiplier || 1) / zoom;
+    var nodeThreshold = (isTouch ? 8 : 2)*(window.nodeThreshMultiplier || 1) / zoom;
     var labelThreshold = (isTouch ? 8 : 2) / zoom;
     var minSqDist = Infinity;
     var nearEdge;
