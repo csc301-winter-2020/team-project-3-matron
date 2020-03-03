@@ -1,10 +1,23 @@
+"""
+Filled with useful definitons. Not to be directly used in routing, but feel free
+to read for reference.
+"""
+
 import json
 import sys
 import heapq
 from typing import *
 
+# Key: room id
+# Value: List of tuples (d, id) where id is the id of a room, and d is the distance to it
 AdjacencyMap = Dict[str, List[Tuple[float, str]]]
+
+# (d, vs) where d is the length of a path and vs is a list of room ids
 Path = Tuple[float, List[str]]
+
+# Key: room type
+# Value: ascending-order tuples (d, id) similar to Adjacency map
+RoomDistanceMap = Dict[str, List[Tuple[float, str]]]
 
 
 def get_sys_args() -> List[str]:
@@ -15,6 +28,9 @@ def get_sys_args() -> List[str]:
 
 
 class GraphObject:
+    """
+    General object within a graph (not to be used directly)
+    """
 
     def __init__(self, json_obj: Dict):
         self.json_data = json_obj
@@ -39,6 +55,10 @@ class GraphObject:
 
 
 class Node(GraphObject):
+    """
+    A node to be found within a graph. Either represents a connective hallway
+    node or some type of room.
+    """
 
     def __init__(self, json_obj: Dict):
         if json_obj["group"] != "nodes":
@@ -50,6 +70,10 @@ class Node(GraphObject):
 
 
 class Edge(GraphObject):
+    """
+    An edge to connect two Node objects. Represents a stretch of hallway with a
+    defined length (weight).
+    """
 
     def __init__(self, json_obj: Dict):
         if json_obj["group"] != "edges":
@@ -76,6 +100,9 @@ class Edge(GraphObject):
 
 
 class Graph:
+    """
+    A graph to represent a floor plan. Contains nodes and edges.
+    """
 
     edges: List[Edge]
     nodes: List[Node]
@@ -115,6 +142,10 @@ class Graph:
         return self.edges[self._edge_id_map[id]]
 
     def update_internal_maps(self) -> None:
+        """
+        Must be used anytime the nodes or edges lists are edited to ensure the
+        get_node and get_edge functions work correctly.
+        """
         node_index, edge_index = 0, 0
         self._node_id_map = {}
         self._edge_id_map = {}
@@ -123,7 +154,10 @@ class Graph:
         for i, edge in enumerate(self.edges):
             self._edge_id_map[edge.get_id()] = i
 
-    def json_dump(self):
+    def json_dump(self) -> List[Dict]:
+        """
+        Return a json dump of this object.
+        """
         objs = []
         for node in self.nodes:
             objs.append(node.json_data)
@@ -132,6 +166,10 @@ class Graph:
         return json.dumps(objs)
 
     def compute_adjacency_map(self) -> AdjacencyMap:
+        """
+        Calculate and return an adjacency map. See the top of the file for the
+        format of the map.
+        """
         map = {}
         for edge in self.edges:
             source = edge.get_source()
@@ -143,4 +181,3 @@ class Graph:
                 map[target] = []
             map[target].append((edge.get_weight(), source))
         return map
-
