@@ -1,5 +1,6 @@
 import json
 import sys
+import heapq
 from typing import *
 
 
@@ -113,8 +114,19 @@ class Graph:
         return json.dumps(objs)
 
 
+def dijkstra(graph: Graph, s_id: str, e_id: str) -> Tuple[List[str], float]:
+    """
+    TODO: Implement Dijkstra's algorithm
+    Return a 2-tuple, where the first element is a list of node id's
+    on the shortest path from start to end, and the second element
+    is the  sum of edge weights along this shortest path.
+    """
+    pass
+
+
 def get_sys_args() -> List[str]:
     """
     Return command line arguments.
     """
     return sys.argv
+
