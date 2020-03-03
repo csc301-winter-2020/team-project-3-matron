@@ -19,10 +19,24 @@ def index():
 @app.route('/blueprint/<int:floor_number>/<int:wing_number>')
 def get_blueprint(floor_number, wing_number):
     # TODO
+    raise NotImplementedError
     return blueprints[zip(floor_number, wing_number)]
+
+@app.route('/graph/<int:floor_number>/<int:wing_number>')
+def get_graph(floor_number, wing_number):
+    # TODO
+    raise NotImplementedError    
 
 # TODO add functions to store and save current blue prints
 # to the MongoDB server
+@app.route('/blueprint/<int:floor_number>/<int:wing_number>', methods=['POST'])
+def saveBlueprint(floor_number, wing_number):
+    raise NotImplementedError
+
+# TODO add functions store and save graph to MongoDB server
+@app.route('/graph/<int:floor_number>/<int:wing_number>', methods=['POST'])
+def saveGraph(floor_number, wing_number):
+    raise NotImplementedError
 
 if __name__ == '__main__':
     # TODO make this part fetch all items from the server and parse them into 
