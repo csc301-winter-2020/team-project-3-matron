@@ -270,7 +270,13 @@ cy.on("box", "elements", function(e) {
 })
 
 window.addEventListener("keydown", function(e) {
-	if (event.code == "Escape") {
+	console.log(e.code);
+
+	if (e.code == "Escape") {
 		ghost.disable();
+	}
+
+	if (e.code == "KeyX") {
+		cy.remove(cy.$(":selected"));
 	}
 });
