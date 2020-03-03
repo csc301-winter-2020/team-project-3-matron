@@ -2,7 +2,7 @@
 Clean up graph to the minimal number of hallway nodes
 """
 
-from .graph_utility import *
+from .utility import *
 
 
 def find_removable_edge(graph: Graph) -> Union[None, str]:
@@ -48,7 +48,7 @@ def remove_edge(graph: Graph, edge_id: str) -> None:
     graph.update_internal_maps()
 
 
-def clean_graph(graph: Graph):
+def clean_graph(graph: Graph) -> None:
     """
     Given graph, return a form of graph with minimal hallway nodes while still
     preserving connectivity and total edge weight between any two room nodes.
@@ -57,6 +57,16 @@ def clean_graph(graph: Graph):
     while cur_edge is not None:
         remove_edge(graph, cur_edge)
         cur_edge = find_removable_edge(graph)
+
+
+def clean_and_dump(json_graph: List[Dict]) -> List[Dict]:
+    """
+    Calls clean_graph on graph and returns a json dump of the
+    newly-cleaned graph.
+    """
+    graph = Graph(json_graph)
+    clean_graph(graph)
+    return graph.json_dump()
 
 
 if __name__ == '__main__':

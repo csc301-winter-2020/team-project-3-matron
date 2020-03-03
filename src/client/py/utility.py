@@ -3,6 +3,9 @@ import sys
 import heapq
 from typing import *
 
+AdjacencyMap = Dict[str, List[Tuple[float, str]]]
+Path = Tuple[float, List[str]]
+
 
 def get_sys_args() -> List[str]:
     """
@@ -78,8 +81,16 @@ class Graph:
     nodes: List[Node]
 
     def __init__(self, json_data: List[Dict]):
+
         self.nodes = []
         self.edges = []
+
+        for json_obj in json_data:
+            if json_obj["group"] == "nodes":
+                self.nodes.append(Node(json_obj))
+            else:
+                self.edges.append(Edge(json_obj))
+
         self._node_id_map = {}
         self._edge_id_map = {}
         self.update_internal_maps()
@@ -120,7 +131,7 @@ class Graph:
             objs.append(edge.json_data)
         return json.dumps(objs)
 
-    def get_adjacency_map(self) -> Dict[str, List[Tuple[float, str]]]:
+    def get_adjacency_map(self) -> AdjacencyMap:
         map = {}
         for edge in self.edges:
             source = edge.get_source()
@@ -133,34 +144,3 @@ class Graph:
             map[target].append((edge.get_weight(), source))
         return map
 
-
-def dijkstra(graph: Graph, s_id: str, e_id: str) -> Tuple[float, List[str]]:
-    """
-    Return a 2-tuple, where the first element is the weight along
-    the shortest path from start to end, as given by s_id and e_id,
-    respectively. The second element is the list of id's of the
-    nodes along this shortest path. Return (-1, []) if no path
-    exists between start and end.
-    """
-    adjacency_map = graph.get_adjacency_map()
-    open_paths = [(0, [s_id])]
-
-    def get_succs(path: Tuple[float, List[str]]) -> List[Tuple[float, List[str]]]:
-        succs = []
-        cur_weight = path[0]
-        path_nodes = path[1]
-        adj_nodes = adjacency_map[path_nodes[-1]]
-        for weight, node in adj_nodes:
-            succ = (cur_weight + weight, path_nodes + [node])
-            succs.append(succ)
-        return succs
-
-    while len(open_paths) > 0:
-        cur_path = open_paths.pop(0)
-        if cur_path[1][-1] == e_id:
-            return cur_path
-        else:
-            cur_succs = get_succs(cur_path)
-            for s in cur_succs:
-                heapq.heappush(open_paths, s)
-    return -1, []
