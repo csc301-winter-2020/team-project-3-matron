@@ -131,7 +131,7 @@ class Graph:
             objs.append(edge.json_data)
         return json.dumps(objs)
 
-    def get_adjacency_map(self) -> AdjacencyMap:
+    def compute_adjacency_map(self) -> AdjacencyMap:
         map = {}
         for edge in self.edges:
             source = edge.get_source()

@@ -14,7 +14,7 @@ def dijkstra(graph: Graph, s_id: str, e_id: str, adjacency_map: AdjacencyMap = N
     exists between start and end.
     """
     if adjacency_map is None:
-        adjacency_map = graph.get_adjacency_map()
+        adjacency_map = graph.compute_adjacency_map()
     open_paths = [(0, [s_id])]
 
     def get_succs(path: Path) -> List[Path]:
@@ -38,7 +38,7 @@ def dijkstra(graph: Graph, s_id: str, e_id: str, adjacency_map: AdjacencyMap = N
     return -1, []
 
 
-def find_dist_from_start(graph: Graph, start_id: str) -> Dict[List[Tuple[float, str]]]:
+def find_dist_from_start(graph: Graph, start_id: str) -> Union[None, Dict[List[Tuple[float, str]]]]:
     """
     Given graph and the id of a start node, return a json object containing distances
     from the start to all non-hallway nodes in graph. Format of output:
@@ -48,4 +48,17 @@ def find_dist_from_start(graph: Graph, start_id: str) -> Dict[List[Tuple[float, 
         A list of tuples (d, id) where id is the id of a room with the specified room type,
         and d is the distance (sum of edge weights) between it and the start room.
     """
-    pass
+    adj_map = graph.compute_adjacency_map()
+    room_distances = {}
+    for node in graph.nodes:
+        if node.get_type() not in room_distances:
+            room_distances[node.get_type()] = []
+        shortest_path = dijkstra(graph, start_id, node.get_id())
+        if shortest_path[0] == -1:
+            # No path, graph isn't connected! That's bad
+            raise ValueError("No connection between nodes with ids '{}' and '{}'".format(start_id, node.get_id()))
+        else:
+            room_distances[node.get_type()].append(shortest_path)
+    for type in room_distances.keys():
+        room_distances[type] = sorted(room_distances[type])
+    return room_distances
