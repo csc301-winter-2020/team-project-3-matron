@@ -23,6 +23,12 @@ let cyStyle = [
 		}
 	},
 	{
+		selector: ".noEvent",
+		style: {
+			"events": "no"
+		}
+	},
+	{
 		selector: ".ghostCursor",
 		style: {
 			"visibility": "hidden",
@@ -119,6 +125,7 @@ let ghost = {
 	source: -1,
 	cursor: -1,
 	edge: -1,
+	snapPos: -1,
 	enable: function() {
 		this.enabled = true;
 		if (this.cursor != -1) {
@@ -126,10 +133,11 @@ let ghost = {
 		}
 		this.cursor = addNode(0,0);
 		this.cursor.addClass("ghostCursor");
-		setHoverThresh(5, 30);
+		setHoverThresh(5, 25);
 	},
 	disable: function() {
 		this.enabled = false;
+		this.source.removeClass("noEvent");
 		if (this.cursor != -1) {
 			cy.remove(this.cursor);
 		}
@@ -144,10 +152,27 @@ let ghost = {
 			this.edge.addClass("ghostEdge");
 		}
 	},
+	setSource: function(src) {
+		if (this.source != -1) {
+			this.source.removeClass("noEvent");
+		}
+		this.source = src;
+		this.source.addClass("noEvent");
+	},
 	updateCursor: function(x,y) {
-		if (this.cursor != -1) {
+		if (this.cursor == -1) {return;}
+
+		// let hovered = cy.$(".hover")[0];
+
+		// if (hovered) {
+		// 	if (hovered.group() == "nodes") {
+		// 		this.snapPos = {x:hovered.position().x, y:hovered.position().y};
+		// 	} else {
+		// 		//this.snapPos = 
+		// 	}
+		// } else {
 			this.cursor.position({x:x, y:y});
-		}		
+		//}	
 	}
 }
 
@@ -185,7 +210,9 @@ cy.on("cxttapend", function(e) {
 		if (hovered && hovered.group() == "nodes") {
 			
 			ghost.enable();
-			ghost.source = hovered;
+			ghost.setSource(hovered);
+			// ghost.source = hovered;
+			// ghost.source.addClass("noEvent");
 			ghost.updateCursor(e.position.x, e.position.y);
 			ghost.redraw();
 			return;
@@ -196,7 +223,9 @@ cy.on("cxttapend", function(e) {
 			newNode.data("type", "hallway");
 
 			ghost.enable();
-			ghost.source = newNode;
+			ghost.setSource(newNode);
+			// ghost.source = newNode;
+			// ghost.source.addClass("noEvent");
 			ghost.updateCursor(e.position.x, e.position.y);
 			ghost.redraw();
 			return;
@@ -206,19 +235,27 @@ cy.on("cxttapend", function(e) {
 			let newNode = addNode(e.position.x, e.position.y);
 			newNode.data("type", "hallway");
 			addEdge(ghost.source, newNode);
-			ghost.source = newNode;
+			ghost.setSource(newNode)
+			// ghost.source.removeClass("noEvent");
+			// ghost.source = newNode;
+			// ghost.source.addClass("noEvent");
 			ghost.redraw();
 			return;
 		}
 
 		if (hovered.group() == "nodes") {
 			addEdge(ghost.source, hovered);
-			ghost.source = hovered;
+			ghost.setSource(hovered);
+			// ghost.source.removeClass("noEvent");
+			// ghost.source = hovered;
+			// ghost.source.addClass("noEvent");
 			ghost.redraw();
 			return;
 		}
 
 		if (hovered.group() == "edges") {
+			// ghost.source.removeClass("noEvent");
+
 			let source = hovered.source();
 			let target = hovered.target();
 
@@ -246,7 +283,9 @@ cy.on("cxttapend", function(e) {
 			addEdge(newNode, source);
 			addEdge(newNode, target);
 			addEdge(newNode, ghost.source);
-			ghost.source = newNode;
+			// ghost.source = newNode;
+			ghost.setSource(newNode);
+			// ghost.source.addClass("noEvent");
 			ghost.redraw();
 		}
 	}
@@ -264,14 +303,17 @@ cy.on("mouseout", "elements", function(e) {
 	e.target.removeClass("hover");
 });
 
+cy.on("boxstart", function(e) {
+	console.log("penis");
+	ghost.disable();
+})
+
 cy.on("box", "elements", function(e) {
 	let target = e.target;
 	toggleSelected(target);
 })
 
 window.addEventListener("keydown", function(e) {
-	console.log(e.code);
-
 	if (e.code == "Escape") {
 		ghost.disable();
 	}
