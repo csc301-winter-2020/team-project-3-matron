@@ -1,5 +1,7 @@
 from flask import Flask, request
 from flask_pymongo import PyMongo
+import datetime
+from time import gmtime, strftime, mktime
 import dao
 import os
 
@@ -15,32 +17,47 @@ def index():
 
 # used to acquire the appropriate blue_print for a
 # specific wing of a specific floor
-@app.route('/blueprint/<string:name>/request')
-def get_blueprint(name):
+@app.route('/blueprint/<string:name>', methods=['GET', 'POST'])
+def blueprint(name):
     # TODO
+    if request.method == 'POST':
+        blueprint = request.get_json()
+    elif request.method == 'GET':
+
+    else:
+        print("Invalid request type!")
     raise NotImplementedError
 
-@app.route('/graph/<string:name>/request')
-def get_graph(name):
-    # TODO
-    raise NotImplementedError    
 
-# TODO add functions to store and save current blue prints
-# to the MongoDB server
-@app.route('/blueprint/<string:name>/save')
-def saveBlueprint(name):
-    raise NotImplementedError
+@app.route('/graph/<string:name>', methods=['GET', 'POST'])
+def graph(name):
+    if request.method == 'POST':
+        g = request.get_json()
+        time = mktime(gmtime(0))
+        graph = { "time" : time, "graph" : g}
+        dao.save_graph(name, graph)
+    elif request.method == 'GET':
+        dao.get_latest(name)
+    else:
+        print("Invalid request type!")  
 
-# TODO add functions store and save graph to MongoDB server
-@app.route('/graph/<string:name>/save')
-def saveGraph(name):
-    raise NotImplementedError
 
-# TODO retrieve a list of all versions of a specific graph
 @app.route('/graph/<string:name>/requestAll')
 def get_all_versions(name):
-    raise NotImplementedError
+    times = []
+
+    graphs = dao.get_all_versions(name)
+    for(graph in graphs):
+        times.append(strftime("%d %m %Y %H: %M: %S", gmtime(graph["time"])))
+    return times
+
+
+@app.route('/graph/<string:name>/<date>')
+def get_version(name, date):
+    utc_time = datetime.strptime(date, "%d %m %Y %H: %M: %S")
+    epoch = timegm(utc_time)
+    return dao.get_version(name, epoch)
+    
 
 if __name__ == '__main__':
-    # TODO make this part fetch all items from the server and parse them into 
-    dao = MangoDAO("matron", "<password>")
+    dao = MongoDAO("matron", "<password>")
