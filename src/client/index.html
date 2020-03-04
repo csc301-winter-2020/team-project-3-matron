@@ -25,38 +25,67 @@
 			<a class="item"> Option 2 </a>
 			<a class="item"> Option 3 </a>
 		  </div>
+
+
 <!-- 		  <p class="debug">DebugInfo: Click to add nodes, drag edge handles to create edges (TODO: rewrite), pan/zoom/boxselect work</p> -->
 		<div id="cy"></div>
 
-		
+		<div id="select_floor" class="ui card centered">
+			<div class="content">
+			  <div class="header"> Select floor</div>
+			</div>
+			<div class="content">
+				<div class="ui fluid search selection dropdown">
+					<input type="hidden" name="country">
+					<i class="dropdown icon"></i>
+					<div class="default text"> floors </div>
+					<div class="menu">
+					<div class="item" data-value="0">floor1 B-wing</div>
+					<div class="item" data-value="1">floor3 C-wing</div>			
+				  </div>
+				</div>
+
+
+			</div>
+			<div class="extra content">
+				<button id="edit_floor" class="fluid ui button"> Edit </button>
+			</div>
+		</div>
+
 		<div id="node_info" class="ui cards" >
 			<div class="card">
 			  <div class="content">
 				<div class="ui form">
 					<div class="inline fields">
 					  <div class="five wide field">
-						<label>Label</label>
+						<label id="create_node_label_1"> Label: </label>
 						<input id="node_label_input" type="text" placeholder="Enter a label">
 					  </div>
 
 					</div>
-					<div class="field">
-						<label> Node type </label>
-						<div class="ui selection dropdown">
-							<input type="hidden" name="node_type">
+
+					<div class="inline fields">
+						<label>Type: </label>
+						<div class="ui fluid search selection dropdown">
+
+							<input type="hidden" id="node_type" name="node_type">
 							<i class="dropdown icon"></i>
 							<div class="default text"> type </div>
-							<div class="menu">
+							<div id="type_list" class="menu">
 								<div class="item" data-value="1"> <a class="ui green empty circular label"></a>Supply </div>
 								<div class="item" data-value="0"> <a class="ui orange empty circular label"></a> Treatment </div>
 							</div>
 						</div>
+
 					</div>
 
 				  </div>
 			  </div>
 			</div>
 		</div>
+
+
+
 
 
 
