@@ -1,0 +1,29 @@
+{
+  "name": "team-project-3-matron",
+  "version": "1.0.0",
+  "description": "just testing the testing framework",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "module",
+    "url": "git+https://github.com/csc301-winter-2020/team-project-3-matron.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/csc301-winter-2020/team-project-3-matron/issues"
+  },
+  "homepage": "https://github.com/csc301-winter-2020/team-project-3-matron#readme",
+  "devDependencies": {
+    "jasmine": "^3.5.0"
+  },
+  "dependencies": {
+    "jasmine-node": "^3.0.0",
+    "requirejs": "^2.3.6"
+  }
+}

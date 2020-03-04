@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jasmine Spec Runner v3.5.0</title>
+
+  <link rel="shortcut icon" type="image/png" href="../node_modules/jasmine-core/images">
+  <link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+
+  <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+  <script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+  <script src="../node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+	<script src="../src/client/js/lib/cytoscape.umd.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.js"></script>
+	<script src="../src/client/js/lib/cytoscape-edgehandles.js"></script>
+  <script>
+    describe('Testing tests', () => {
+      it('here is expectation example', () => {
+        function getOpposite(bool) {
+          return !bool;
+          
+          const result = getOpposite(bool);
+
+          expect(result).toBe(true);
+        }
+
+      })
+    })
+
+    describe('testing a function from index.js', () => {
+      it('testing a test function from index.js', () => {
+          function testingTestFunction() {
+          var i = test();
+          expect(i).toBe(1);
+        }
+
+      })
+    })
+    
+  </script>
+
+
+  
+
+</head>
+
+<body>
+	  <div id="cy"></div>
+  <script src="../src/client/js/index.js"></script>
+</body>
+</html>
