@@ -15,6 +15,12 @@ let cyStyle = [
 		}
 	},
 	{
+		selector: ":active",
+		style: {
+			"overlay-opacity": "0"
+		}
+	},
+	{
 		selector: ".hover",
 		style: {
 			"border-width": "5px",
@@ -51,6 +57,10 @@ let cyStyle = [
 		}
 	}
 ]
+
+let defaulttHoverThresh = [5,1];
+let ghostHOverThresh = [25, 5];
+setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
 
 let cy = cytoscape({
 	container: document.getElementById("cy"),
@@ -135,7 +145,7 @@ let ghost = {
 		}
 		this.cursor = addNode(0,0);
 		this.cursor.addClass("ghostCursor");
-		setHoverThresh(5, 25);
+		setHoverThresh(ghostHOverThresh[0], ghostHOverThresh[1]);
 	},
 	disable: function() {
 		this.enabled = false;
@@ -145,7 +155,7 @@ let ghost = {
 		if (this.cursor != -1) {
 			cy.remove(this.cursor);
 		}
-		setHoverThresh(1,1);
+		setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
 	},
 	redraw: function() {
 		if (this.source != -1) {
@@ -201,9 +211,9 @@ cy.on("tap", function(e) {
 	toggleSelected(target);	
 });
 
-function setHoverThresh(edge, node) {
-	window.edgeThreshMultiplier = edge;
+function setHoverThresh(node, edge) {
 	window.nodeThreshMultiplier = node;
+	window.edgeThreshMultiplier = edge;
 }
 
 cy.on("cxttapend", function(e) {
