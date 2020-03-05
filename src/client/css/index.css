@@ -31,3 +31,20 @@
 	left: 0%;
 	bottom: 50%;
   }
+
+#search_bar{
+	position: fixed;
+	right: 0%;
+	padding-top: 5px;
+	padding-right: 10px;
+}
+
+.hide{
+	display: none;
+}
+
+#create_floor {
+	margin-top: 10px;
+	margin-left: 25%;
+
+}

@@ -18,9 +18,22 @@ let input;
 
 
 const edit_floor_btn = document.querySelector('#edit_floor');
+const create_floor_btn = document.querySelector('#create_floor');
 
 edit_floor_btn.addEventListener('click', (e) => {
+	load_graph_editor('none');
+});
 
+create_floor_btn.addEventListener('click', (e) => {
+	img_src = document.querySelector('#img');
+
+	load_graph_editor(img_src)
+});
+
+
+
+
+function load_graph_editor(){
 	document.querySelector('#select_floor').style.display = 'none';
 	cy = cytoscape({
 		container: document.getElementById("cy"),
@@ -191,24 +204,20 @@ edit_floor_btn.addEventListener('click', (e) => {
 			  };
 		  }
 		}
-	  });
+	});
+}
 
-});
-
+let new_floor;
 floor_input.addEventListener("keyup", function(event) {
 	
-	const new_type = floor_input.value;
 	document.querySelector('.message').innerText = 'press enter create new floor';
 	if (event.keyCode === 13) {
 		event.preventDefault();
-		console.log(types.indexOf(new_type));
-
-		console.log(new_type);
-		if (new_type != ""){
-			if (confirm("Create a new floor " + new_type + " ?")){
-				return true;
-			};
-		}
+		new_floor = floor_input.value;
+		document.querySelector('#create_floor_inputs').style.display = "block";
+		document.querySelector('#edit_floor').style.display = 'none';
+		document.querySelector('#floor_select').style.display = 'none';
+		document.querySelector('#select_floor_header').innerText = 'Create floor';
 	}
 });
 
