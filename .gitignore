@@ -1,0 +1,7 @@
+# environment
+/env
+./env
+env/
+
+# misc
+.DS_store
