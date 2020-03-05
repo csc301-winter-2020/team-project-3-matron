@@ -124,3 +124,4 @@ def all_distances(graph_name):
 
 if __name__ == '__main__':
     dao = MongoDAO("matron", "<password>")
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
