@@ -1,5 +1,7 @@
 import pymongo
 import json
+import bson
+from bson.binary import Binary
 
 class MongoDAO:
    """
@@ -70,7 +72,10 @@ class MongoDAO:
 
    
    def save_blueprint(self, graphname, blueprint):
-      return None
+      encoded = Binary(blueprint.read())
+      new = {'$set': {'graph':graphname, 'image':encoded}}
+      result = self.blueprint_collection.update_one({'graph':graphname}, new, upsert=True)
+      return result.modified_count == 1
 
 
    def delete_version(self, graphname, date):
@@ -83,6 +88,7 @@ class MongoDAO:
    def delete_graph(self, graphname):
       """deletes the collection corresponding to the graph labelled by graphname from the database"""
       collection = self.graphdb[graphname]
+      self.blueprint_collection.delete_one({'graph':graphname})
       return collection.drop()
 
 
@@ -114,6 +120,6 @@ class MongoDAO:
 
    def get_blueprint(self, graphname):
       """returns the blueprint for the given graph"""
-      return None
-   
+      blueprint = self.blueprint_collection.find_one({'graph':graphname}, {'_id':0})
+      return bytearray(blueprint['image'])
 
