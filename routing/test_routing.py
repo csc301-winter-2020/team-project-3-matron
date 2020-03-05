@@ -1,8 +1,8 @@
 import pytest
 from flask import Flask 
-import sys
-sys.path.append('../routing')
-from routing import app
+#import sys
+#sys.path.append('../routing')
+#from routing import app
 
 
 def test_base_route():
