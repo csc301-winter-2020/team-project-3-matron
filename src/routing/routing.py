@@ -16,7 +16,13 @@ dao = None
 
 @app.route('/')
 def index():
-    return '<h1>Hello!</h1>'
+    return render_template("index.html")
+
+
+# TODO will return a list of all the graph names saved to the server
+@app.route('/graph/names')
+def get_graph_names():
+    raise NotImplementedError
 
 # used to acquire the appropriate blue_print for a
 # specific wing of a specific floor
@@ -114,12 +120,6 @@ def all_distances(graph_name):
     """
     graph = request.get_json()
     return find_all_dist_and_dump(graph)
-
-
-# TODO calculate distance between 2 specific rooms
-@app.route('/graph/<string:graph_name>/<string:room_name0>/<string:room_name1>')
-def retrieve_distance(graph_name, room_name0, room_name1):
-    raise NotImplementedError
 
 
 if __name__ == '__main__':
