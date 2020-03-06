@@ -8,7 +8,7 @@ from clean_graph import clean_and_dump
 from distance import find_dist_and_dump, find_all_dist_and_dump
 from flask import Flask, request, jsonify, send_file, render_template
 
-app = Flask(__name__, template_folder='../templates', static_folder='../static')
+app = Flask(__name__)
 
 url = "mongodb+srv://matron:<password>@matron-db-pxltz.azure.mongodb.net/test?retryWrites=true&w=majority"
 password = "zO0J376wJeEmR4xc"
