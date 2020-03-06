@@ -366,29 +366,32 @@ $('.ui.dropdown').dropdown({
 	}	
 });
 
+// Create/Select Buttons
+const edit_floor_btn = document.querySelector('#edit_floor');
+const create_floor_btn = document.querySelector('#create_floor');
+edit_floor_btn.addEventListener('click', (e) => {
+	let graphMap = getMapFromServer($('.ui.dropdown').dropdown("get value"));
+	// now load the graph and image returned by the server
+
+	document.querySelector('#select_floor').style.display = 'none';
+});
+create_floor_btn.addEventListener('click', (e) => {
+	img_src = document.querySelector('#img');
+	// load empty graph with this img (we'll send it to server on save)
+
+	document.querySelector('#select_floor').style.display = 'none';
+});
+
+
+
+
 const new_type_btn = document.querySelector('#add_new_type');
 const types = ['Supply', 'Treatment'];
 
 const floor_input = document.querySelector('.search').childNodes[5];
 
-console.log(floor_input);
-
 // initialized later
 let input;
-
-
-const edit_floor_btn = document.querySelector('#edit_floor');
-const create_floor_btn = document.querySelector('#create_floor');
-
-edit_floor_btn.addEventListener('click', (e) => {
-	load_graph_editor('none');
-});
-
-create_floor_btn.addEventListener('click', (e) => {
-	img_src = document.querySelector('#img');
-
-	load_graph_editor(img_src)
-});
 
  // hard coded colors for new types :
 const colors = ['green', 'orange', 'red', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
