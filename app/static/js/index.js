@@ -325,3 +325,91 @@ window.addEventListener("keydown", function(e) {
 		cy.remove(cy.$(":selected"));
 	}
 });
+
+function load_graph_editor() {
+	document.querySelector('#select_floor').style.display = 'none';
+}
+
+const info = document.querySelector('#node_info');
+const node_label_input = document.querySelector('#node_label_input').value = '';
+
+// required for dropdown animation of semantic ui
+$('.ui.dropdown').dropdown({});
+
+const new_type_btn = document.querySelector('#add_new_type');
+const types = ['Supply', 'Treatment'];
+
+const floor_input = document.querySelector('.search').childNodes[5];
+
+// initialized later
+let input;
+
+
+const edit_floor_btn = document.querySelector('#edit_floor');
+const create_floor_btn = document.querySelector('#create_floor');
+
+edit_floor_btn.addEventListener('click', (e) => {
+	load_graph_editor('none');
+});
+
+create_floor_btn.addEventListener('click', (e) => {
+	img_src = document.querySelector('#img');
+
+	load_graph_editor(img_src)
+});
+
+let new_floor;
+floor_input.addEventListener("keyup", function(event) {
+	
+	let x = document.querySelector('.message');
+
+	if (x != null) {
+		console.log("null");
+		document.querySelector('#create_floor_inputs').style.display = "block";
+		document.querySelector('#edit_floor').style.display = 'none';
+		document.querySelector('#select_floor_header').innerText = 'Create floor';
+	} else {
+		document.querySelector('#create_floor_inputs').style.display = "none";
+		document.querySelector('#edit_floor').style.display = 'block';
+		document.querySelector('#select_floor_header').innerText = 'Select floor';
+	}
+
+	// if (event.keyCode === 13) {
+	// 	event.preventDefault();
+	// 	new_floor = floor_input.value;
+	// 	document.querySelector('#create_floor_inputs').style.display = "block";
+	// 	document.querySelector('#edit_floor').style.display = 'none';
+	// 	document.querySelector('#floor_select').style.display = 'none';
+	// 	document.querySelector('#select_floor_header').innerText = 'Create floor';
+	// }
+});
+
+
+ // hard coded colors for new types :
+const colors = ['green', 'orange', 'red', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
+function add_new_node_type(name){
+	// make the element, with a possible hard coded color option
+	// append the element to the list
+	types.push(name)
+	info.style.display = "none";
+	const type_list = document.querySelector('#type_list');
+	let div = document.createElement('div');
+	div.innerHTML = `<div class="item" data-value="${types.length}"> <a class="ui ${colors[types.length]} empty circular label"></a> ${name} </div>`;
+	type_list.appendChild(div.firstChild);
+}
+
+function drawbackground() {
+	//console.log(bg);
+	bg.resetTransform(ctx);
+	bg.clear(ctx);
+	bg.setTransform(ctx);
+
+	ctx.save();
+	ctx.drawImage(img, 0, 0);
+}
+
+function clear_label_inputs(){
+	console.log('clearing label inputs');
+	document.querySelector('#node_label_input').value = '';
+	document.querySelector('.search').childNodes[5].value = '';
+}

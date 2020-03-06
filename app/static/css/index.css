@@ -47,12 +47,15 @@ body {
 	display: none;
 }
 
-#create_floor {
+/*#create_floor {
 	margin-top: 10px;
 	margin-left: 25%;
-
-}
+}*/
 
 .icon {
 	margin: 0;
+}
+
+.message {
+	display: none;
 }
