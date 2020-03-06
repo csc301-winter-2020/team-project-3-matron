@@ -72,7 +72,9 @@ def graph(name):
         else:
             return jsonify(failure)
     elif request.method == 'GET':
-        return jsonify({'graphs': dao.get_latest(name), 'status': 200})
+        data = dao.get_latest(name)
+        graph = data['graph']
+        return jsonify({'graph': graph, 'status': 200})
     elif request.method == 'DELETE':
         if dao.delete_graph(name):
             return jsonify(success)
@@ -108,7 +110,9 @@ def graph_version(name, date):
     utc_time = datetime.strptime(date, "%d %m %Y %H: %M: %S")
     epoch = timegm(utc_time)
     if request.method == 'GET':
-        return jsonify({'graph': dao.get_version(name, epoch), 'status': 200})
+        data = dao.get_version(name, epoch)
+        graph = data['graph']
+        return jsonify({'graph': graph, 'status': 200})
     elif request.metohd == 'DELETE':
         if dao.delete_version(name, epoch):
             return jsonify(success)
