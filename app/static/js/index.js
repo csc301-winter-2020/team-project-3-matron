@@ -397,7 +397,7 @@ create_floor_btn.addEventListener('click', (e) => {
 
 // Popper stuff
 const type_list = document.querySelector('#type_list');
-const colors = ['green', 'orange', 'red', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
+const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
 
 let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
 // should really get from server returned map, we need to store manually alongside cy.json();
@@ -423,14 +423,12 @@ set_type_btn.addEventListener("click", (e) => {
 
 	console.log(input_label, input_type);
 
-	if (types.some(type => type.name == input_type)) {
-		console.log("old type");
-		popperNode.data("label", input_label);
-		popperNode.data("type", input_type);
-	} else {
-		console.log("new type");
+	if (!types.some(type => type.name == input_type)) {
 		add_new_node_type(input_type);
 	}
+
+	popperNode.data("label", input_label);
+	popperNode.data("type", input_type);
 
 	console.log(popperNode);
 
@@ -443,6 +441,7 @@ function add_new_node_type(type_name){
 	div.innerHTML = `<div class="item" data-value="${type_name}"> <a class="ui ${color} empty circular label"></a> ${type_name} </div>`;
 	type_list.appendChild(div.firstChild);
 	types.push({name: type_name, color: color});
+	cy.style().selector("node[type = '" + type_name + "']").style({"background-color": color}).update();
 }
 
 function clear_label_inputs(){
