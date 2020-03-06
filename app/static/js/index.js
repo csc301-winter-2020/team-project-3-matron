@@ -412,26 +412,28 @@ $("#type_select").dropdown({
 
 const set_type_btn = document.querySelector('#set_type');
 set_type_btn.addEventListener("click", (e) => {
-	console.log(document.querySelector('#node_label_input').value);
-	console.log($("#type_select").dropdown("get value"));
+
+	let input_label = document.querySelector('#node_label_input').value;
+	let input_type = $("#type_select").dropdown("get value");
+
+	console.log(input_label, input_type);
+
+	if (types.some(type => type.name == input_type)) {
+		console.log("old type");
+	} else {
+		console.log("new type");
+		add_new_node_type(input_type);
+	}
+
+	info.style.display = "none";
 });
 
-const floor_input = document.querySelector('.search').childNodes[5];
-
-// initialized later
-let input;
-
- // hard coded colors for new types :
-
-function add_new_node_type(name){
-	// make the element, with a possible hard coded color option
-	// append the element to the list
-	types.push(name)
-	info.style.display = "none";
-	
+function add_new_node_type(type_name){
+	let color = colors[types.length%colors.length];
 	let div = document.createElement('div');
-	div.innerHTML = `<div class="item" data-value="${types.length}"> <a class="ui ${colors[types.length]} empty circular label"></a> ${name} </div>`;
+	div.innerHTML = `<div class="item" data-value="${type_name}"> <a class="ui ${color} empty circular label"></a> ${type_name} </div>`;
 	type_list.appendChild(div.firstChild);
+	types.push({name: type_name, color: color});
 }
 
 function clear_label_inputs(){
