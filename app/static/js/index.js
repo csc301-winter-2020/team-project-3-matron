@@ -56,7 +56,7 @@ let cyStyle = [
 		}
 	}
 ]
-
+let current_graph = '';
 let defaulttHoverThresh = [5,1];
 let ghostHOverThresh = [25, 5];
 setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
@@ -346,8 +346,18 @@ window.addEventListener("keydown", function(e) {
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
+const save_btn = document.querySelector('#save_icon');
+save_btn.addEventListener('click', saveGraph);
+
 function saveGraph() {
-	return {cyGraph: cy.json(), types: types};
+	console.log('saving graph....');
+	let current_draft = {cyGraph: cy.json(), types: types};
+	console.log(current_draft);
+	let url = `graph/${current_graph}`;
+	fetch(url, {
+	  method: 'post',
+	  body: JSON.stringify(current_draft)
+	});
 }
 
 function getMapFromServer(name) {
@@ -358,7 +368,7 @@ function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
 		values = [];
 		
-		data.graphs.forEach((name) => values.push({name: name, value: name}));
+		data.graph.forEach((name) => values.push({name: name, value: name}));
 
 		$("#floor_search").dropdown({
 			allowAdditions: true, 
@@ -387,19 +397,18 @@ function getMapNamesFromServer() {
 }
 getMapNamesFromServer();
 
+
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
+
+
+
 edit_floor_btn.addEventListener('click', (e) => {
-	let graph_name = $("#floor_search").dropdown("get value");
-
-	fetch('graph/adit', {
-		method: 'get',
-	}).then(response => {
-		console.log(response)
+	current_graph = $("#floor_search").dropdown("get value");
+	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+		// load the graph at this point.
+		console.log(data);
 	});
-
-	// now load the graph and image returned by the server
-	console.log(graph_name);
 
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
@@ -414,7 +423,7 @@ create_floor_btn.addEventListener('click', (e) => {
 	graph = {};
 	fetch(url, {
 	  method: 'post',
-	  body: JSON.stringify({"data": '3'})
+	  body: JSON.stringify({})
 	});
 
 	document.querySelector('#select_floor').style.display = 'none';
@@ -483,10 +492,4 @@ function add_new_node_type(type_name){
 
 function clear_label_inputs(){
 	$("#type_select").dropdown("restore defaults");
-}
-
-function save_graph(name){
-	let url = `http://localhost:5000/graph/${name}`;
-	const create_request = new Request(url, {method: 'POST', body: '{"foo": "bar"}'});
-	fetch(create_request).then(response => console.log(response));
 }

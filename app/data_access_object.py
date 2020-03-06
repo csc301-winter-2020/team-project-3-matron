@@ -1,14 +1,11 @@
 import pymongo
-import json
 import gridfs
 
 
 class MongoDAO:
     """
    The MongoDAO object, used to interface with a given MongoDB database
-
    Attributes:
-
    client : MongoClient
       used to connect to the database server
    graphdb : Database
@@ -19,9 +16,7 @@ class MongoDAO:
       used to save and retrieve blueprints
    meta_collect : Collection
       used to view metadata for stored blueprints
-
    Methods:
-
    save_graph : bool
       saves latest version of a graph in the database
       returns true if successful, false otherwise
@@ -31,9 +26,9 @@ class MongoDAO:
    delete_graph : bool
       deletes all records of a graph from the database
       returns true if successful, false otherwise
-   get_latest : json
+   get_latest : Dict
       returns the latest version of the specified graph
-   get_version : json
+   get_version : Dict
       returns a specified version of the specified graph
    get_all_versions : [int]
       returns a list of past versions for the requested graph
@@ -68,8 +63,10 @@ class MongoDAO:
         if collection.estimated_document_count() >= 10:
             dates = collection.find({}, {'_id': 0, 'date': 1})
             stripped = [date['date'] for date in dates]
+            stripped.sort()
             del_result = collection.delete_one({'date': stripped[0]})
             delete = del_result.deleted_count == 1
+
         ins_result = collection.insert_one(graph)
         return ins_result.acknowledged and delete
 
@@ -95,7 +92,7 @@ class MongoDAO:
         return collection.drop()
 
     def get_latest(self, graphname):
-        """returns a json object for the latest version of the specified graph"""
+        """returns a dictionary for the latest version of the specified graph"""
         collection = self.graphdb[graphname]
         dates = collection.find({}, {'_id': 0, 'date': 1})
         stripped = [date['date'] for date in dates]
@@ -103,7 +100,7 @@ class MongoDAO:
         return document
 
     def get_version(self, graphname, date):
-        """returns a json object for the given version of the specified graph"""
+        """returns a dictionary for the given version of the specified graph"""
         collection = self.graphdb[graphname]
         document = collection.find_one({'date': date}, {'_id': 0})
         return document
