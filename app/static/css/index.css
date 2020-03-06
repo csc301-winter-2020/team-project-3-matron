@@ -3,9 +3,13 @@
 	padding: 0;
 }
 
+body {
+	overflow: hidden;
+}
+
 #cy {
-	width: 80vw;
-	height: 80vh;
+	width: 100vw;
+	height: 100vh;
 	display: block;
 }
 
@@ -47,4 +51,8 @@
 	margin-top: 10px;
 	margin-left: 25%;
 
+}
+
+.icon {
+	margin: 0;
 }
