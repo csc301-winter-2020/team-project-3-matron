@@ -1,7 +1,5 @@
 import pymongo
 import json
-import bson
-from bson.binary import Binary
 import gridfs
 
 class MongoDAO:
