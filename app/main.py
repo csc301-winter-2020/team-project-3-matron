@@ -65,7 +65,7 @@ def graph(name):
     """
     if request.method == 'POST':
         g = request.get_json(force=True)
-        time = mktime(gmtime(0))
+        time = timegm(gmtime(0))
         graph = {"date": time, "graph": g}
         if dao.save_graph(name, graph):
             return jsonify(success)
