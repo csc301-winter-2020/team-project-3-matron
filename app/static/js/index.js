@@ -75,6 +75,11 @@ function mod(n, m) {
 	return ((n%m)+m)%m;
 }
 
+function setHoverThresh(node, edge) {
+	window.nodeThreshMultiplier = node;
+	window.edgeThreshMultiplier = edge;
+}
+
 function unselectAll() {
 	cy.$(":selected").forEach(e => {
 		e.selectify();
@@ -175,18 +180,7 @@ let ghost = {
 	},
 	updateCursor: function(x,y) {
 		if (this.cursor == -1) {return;}
-
-		// let hovered = cy.$(".hover")[0];
-
-		// if (hovered) {
-		// 	if (hovered.group() == "nodes") {
-		// 		this.snapPos = {x:hovered.position().x, y:hovered.position().y};
-		// 	} else {
-		// 		//this.snapPos = 
-		// 	}
-		// } else {
-			this.cursor.position({x:x, y:y});
-		//}	
+		this.cursor.position({x:x, y:y});
 	}
 }
 
@@ -195,7 +189,24 @@ cy.on("tap", function(e) {
 
 	if (target == cy) {
 		if (!ghost.enabled) {
-			addNode(e.position.x, e.position.y);
+			let newNode = addNode(e.position.x, e.position.y);
+
+			let popper = newNode.popper({
+				content: () => {
+					let node_input_card = document.querySelector('#node_info');
+					node_input_card.style.display = "block";
+					document.body.appendChild(node_input_card);
+					clear_label_inputs();
+					return node_input_card;
+				}
+			});
+
+			let update = () => {
+				popper.scheduleUpdate();
+			};
+
+			newNode.on("position", update);
+			cy.on("pan zoom resize", update);
 		}
 		
 		ghost.disable();
@@ -210,11 +221,6 @@ cy.on("tap", function(e) {
 	ghost.disable();
 	toggleSelected(target);	
 });
-
-function setHoverThresh(node, edge) {
-	window.nodeThreshMultiplier = node;
-	window.edgeThreshMultiplier = edge;
-}
 
 cy.on("cxttapend", function(e) {
 	let target = e.target;
@@ -322,17 +328,19 @@ window.addEventListener("keydown", function(e) {
 	}
 
 	if (e.code == "KeyX") {
-		cy.remove(cy.$(":selected"));
+		let selected = cy.$(":selected");
+		cy.remove(selected);
+
 	}
 });
-
-function load_graph_editor() {
-	document.querySelector('#select_floor').style.display = 'none';
-}
 
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
+
+function getGraph() {
+	return cy.json();
+}
 
 function getMapFromServer(name) {
 	return [];
@@ -342,7 +350,7 @@ function getMapNamesFromServer() {
 	return [{name: "lel", value: "lel"}, {name: "kek", value: "kek"}];
 }
 values = getMapNamesFromServer()
-$('.ui.dropdown').dropdown({
+$("#floor_search").dropdown({
 	allowAdditions: true, 
 	hideAdditions: false,
 	values: values,
@@ -363,18 +371,19 @@ $('.ui.dropdown').dropdown({
 
 			// load blueprint if one has been uploaded
 		}
-	}	
+	}
 });
 
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
-const create_floor_btn = document.querySelector('#create_floor');
 edit_floor_btn.addEventListener('click', (e) => {
 	let graphMap = getMapFromServer($('.ui.dropdown').dropdown("get value"));
 	// now load the graph and image returned by the server
 
 	document.querySelector('#select_floor').style.display = 'none';
 });
+
+const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
@@ -383,10 +392,31 @@ create_floor_btn.addEventListener('click', (e) => {
 });
 
 
+// Popper stuff
+const type_list = document.querySelector('#type_list');
+const colors = ['green', 'orange', 'red', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
 
+let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
+// should really get from server returned map, we need to store manually alongside cy.json();
 
-const new_type_btn = document.querySelector('#add_new_type');
-const types = ['Supply', 'Treatment'];
+for (let i=0; i<types.length; i++) {
+	let div = document.createElement('div');
+	div.innerHTML = `<div class="item" data-value="${i}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
+	type_list.appendChild(div.firstChild);
+}
+
+$("#type_select").dropdown({
+	allowAdditions: true, 
+	hideAdditions: false
+});
+
+const set_type_btn = document.querySelector('#set_type');
+set_type_btn.addEventListener("click", (e) => {
+	console.log(e);
+});
+
+//const new_type_btn = document.querySelector('#add_new_type');
+// const types = ['Supply', 'Treatment'];
 
 const floor_input = document.querySelector('.search').childNodes[5];
 
@@ -394,13 +424,13 @@ const floor_input = document.querySelector('.search').childNodes[5];
 let input;
 
  // hard coded colors for new types :
-const colors = ['green', 'orange', 'red', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
+
 function add_new_node_type(name){
 	// make the element, with a possible hard coded color option
 	// append the element to the list
 	types.push(name)
 	info.style.display = "none";
-	const type_list = document.querySelector('#type_list');
+	
 	let div = document.createElement('div');
 	div.innerHTML = `<div class="item" data-value="${types.length}"> <a class="ui ${colors[types.length]} empty circular label"></a> ${name} </div>`;
 	type_list.appendChild(div.firstChild);
