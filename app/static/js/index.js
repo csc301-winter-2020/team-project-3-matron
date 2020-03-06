@@ -330,8 +330,6 @@ function load_graph_editor() {
 	document.querySelector('#select_floor').style.display = 'none';
 }
 
-
-
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
@@ -341,8 +339,6 @@ function getMapNamesFromServer() {
 
 values = getMapNamesFromServer()
 
-// required for dropdown animation of semantic ui
-//$('.ui.dropdown').dropdown({});
 $('.ui.dropdown').dropdown({
 	allowAdditions: true, 
 	hideAdditions: false,
@@ -353,15 +349,15 @@ $('.ui.dropdown').dropdown({
 function onChange(e) {
 	console.log(e);
 
-	// If e is not undefined, this is a new value
-	if (e != "undefined") {
-		document.querySelector('#create_floor_inputs').style.display = "block";
-		document.querySelector('#edit_floor').style.display = 'none';
-		document.querySelector('#select_floor_header').innerText = 'Create floor';
-	} else {
+	// If e is undefined, then it exists in our DB
+	if (e == "undefined") {
 		document.querySelector('#create_floor_inputs').style.display = "none";
 		document.querySelector('#edit_floor').style.display = 'block';
 		document.querySelector('#select_floor_header').innerText = 'Select floor';
+	} else {
+		document.querySelector('#create_floor_inputs').style.display = "block";
+		document.querySelector('#edit_floor').style.display = 'none';
+		document.querySelector('#select_floor_header').innerText = 'Create floor';
 	}
 }
 
@@ -388,37 +384,6 @@ create_floor_btn.addEventListener('click', (e) => {
 
 	load_graph_editor(img_src)
 });
-
-let new_floor;
-floor_input.addEventListener("keyup", function(event) {
-	// console.log(floor_input);
-	// let x = document.querySelector('.message');
-
-	// if (x != null) {
-	// 	console.log("null");
-	// 	document.querySelector('#create_floor_inputs').style.display = "block";
-	// 	document.querySelector('#edit_floor').style.display = 'none';
-	// 	document.querySelector('#select_floor_header').innerText = 'Create floor';
-	// } else {
-
-	// }
-
-	//console.log($("#floor_search").dropdown({}));
-
-	// if (event.keyCode === 13) {
-	// 	event.preventDefault();
-	// 	new_floor = floor_input.value;
-	// 	document.querySelector('#create_floor_inputs').style.display = "block";
-	// 	document.querySelector('#edit_floor').style.display = 'none';
-	// 	document.querySelector('#floor_select').style.display = 'none';
-	// 	document.querySelector('#select_floor_header').innerText = 'Create floor';
-	// }
-});
-
-floor_input.addEventListener("focusout", function(event) {
-	console.log("focus lost");
-});
-
 
  // hard coded colors for new types :
 const colors = ['green', 'orange', 'red', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
