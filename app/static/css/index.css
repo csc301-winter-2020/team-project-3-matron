@@ -63,3 +63,7 @@ body {
 #select_floor {
 	transform: translateY(-50%);
 }
+
+#node_info {
+	display: none;
+}

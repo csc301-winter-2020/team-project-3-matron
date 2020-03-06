@@ -187,6 +187,10 @@ let popperNode = -1;
 cy.on("tap", function(e) {
 	let target = e.target;
 
+	if (popperNode != -1) {
+		return;
+	}
+
 	if (target == cy) {
 		if (!ghost.enabled) {
 			let newNode = addNode(e.position.x, e.position.y);
@@ -226,6 +230,10 @@ cy.on("tap", function(e) {
 cy.on("cxttapend", function(e) {
 	let target = e.target;
 	let hovered = cy.$(".hover")[0];
+
+	if (popperNode != -1) {
+		return;
+	}
 
 	if (!ghost.enabled) {
 		if (hovered && hovered.group() == "nodes") {
@@ -433,6 +441,8 @@ set_type_btn.addEventListener("click", (e) => {
 	console.log(popperNode);
 
 	info.style.display = "none";
+	popperNode = -1;
+	console.log(info.style.display);
 });
 
 function add_new_node_type(type_name){
