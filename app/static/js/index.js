@@ -206,8 +206,12 @@ cy.on("tap", function(e) {
 				}
 			});
 
-			newNode.on("position", popper.scheduleUpdate());
-			cy.on("pan zoom resize", popper.scheduleUpdate());
+			let update = () => {
+				popper.scheduleUpdate();
+			};
+
+			newNode.on("position", update);
+			cy.on("pan zoom resize", update);
 		}
 		
 		ghost.disable();
@@ -462,7 +466,8 @@ set_type_btn.addEventListener("click", (e) => {
 
 	popperNode.data("label", input_label);
 	popperNode.data("type", input_type);
-	popperNode.removeListener("position");
+	popperNode.off("position");
+	cy.off("pan zoom resize");
 	popperNode = -1;
 	info.style.display = "none";
 });
