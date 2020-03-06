@@ -3,7 +3,6 @@ let cyStyle = [
 		selector: "node",
 		style: {
 			"label": "data(label)",
-			"background-color": 'blue'
 		}
 	},
 	{
@@ -184,12 +183,14 @@ let ghost = {
 	}
 }
 
+let popperNode = -1;
 cy.on("tap", function(e) {
 	let target = e.target;
 
 	if (target == cy) {
 		if (!ghost.enabled) {
 			let newNode = addNode(e.position.x, e.position.y);
+			popperNode = newNode;
 
 			let popper = newNode.popper({
 				content: () => {
@@ -405,6 +406,8 @@ for (let i=0; i<types.length; i++) {
 	let div = document.createElement('div');
 	div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
 	type_list.appendChild(div.firstChild);
+
+	cy.style().selector("node[type = '" + types[i].name + "']").style({"background-color": types[i].color}).update();
 }
 
 $("#type_select").dropdown({
@@ -422,10 +425,14 @@ set_type_btn.addEventListener("click", (e) => {
 
 	if (types.some(type => type.name == input_type)) {
 		console.log("old type");
+		popperNode.data("label", input_label);
+		popperNode.data("type", input_type);
 	} else {
 		console.log("new type");
 		add_new_node_type(input_type);
 	}
+
+	console.log(popperNode);
 
 	info.style.display = "none";
 });
