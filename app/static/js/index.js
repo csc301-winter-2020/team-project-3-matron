@@ -330,16 +330,47 @@ function load_graph_editor() {
 	document.querySelector('#select_floor').style.display = 'none';
 }
 
+
+
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
+function getMapNamesFromServer() {
+	return [{name: "lel"}, {name: "kek"}];
+}
+
+values = getMapNamesFromServer()
+
 // required for dropdown animation of semantic ui
-$('.ui.dropdown').dropdown({});
+//$('.ui.dropdown').dropdown({});
+$('.ui.dropdown').dropdown({
+	allowAdditions: true, 
+	hideAdditions: false,
+	onChange: onChange,
+	values: values
+});
+
+function onChange(e) {
+	console.log(e);
+
+	// If e is not undefined, this is a new value
+	if (e != "undefined") {
+		document.querySelector('#create_floor_inputs').style.display = "block";
+		document.querySelector('#edit_floor').style.display = 'none';
+		document.querySelector('#select_floor_header').innerText = 'Create floor';
+	} else {
+		document.querySelector('#create_floor_inputs').style.display = "none";
+		document.querySelector('#edit_floor').style.display = 'block';
+		document.querySelector('#select_floor_header').innerText = 'Select floor';
+	}
+}
 
 const new_type_btn = document.querySelector('#add_new_type');
 const types = ['Supply', 'Treatment'];
 
 const floor_input = document.querySelector('.search').childNodes[5];
+
+console.log(floor_input);
 
 // initialized later
 let input;
@@ -360,19 +391,19 @@ create_floor_btn.addEventListener('click', (e) => {
 
 let new_floor;
 floor_input.addEventListener("keyup", function(event) {
-	
-	let x = document.querySelector('.message');
+	// console.log(floor_input);
+	// let x = document.querySelector('.message');
 
-	if (x != null) {
-		console.log("null");
-		document.querySelector('#create_floor_inputs').style.display = "block";
-		document.querySelector('#edit_floor').style.display = 'none';
-		document.querySelector('#select_floor_header').innerText = 'Create floor';
-	} else {
-		document.querySelector('#create_floor_inputs').style.display = "none";
-		document.querySelector('#edit_floor').style.display = 'block';
-		document.querySelector('#select_floor_header').innerText = 'Select floor';
-	}
+	// if (x != null) {
+	// 	console.log("null");
+	// 	document.querySelector('#create_floor_inputs').style.display = "block";
+	// 	document.querySelector('#edit_floor').style.display = 'none';
+	// 	document.querySelector('#select_floor_header').innerText = 'Create floor';
+	// } else {
+
+	// }
+
+	//console.log($("#floor_search").dropdown({}));
 
 	// if (event.keyCode === 13) {
 	// 	event.preventDefault();
@@ -382,6 +413,10 @@ floor_input.addEventListener("keyup", function(event) {
 	// 	document.querySelector('#floor_select').style.display = 'none';
 	// 	document.querySelector('#select_floor_header').innerText = 'Create floor';
 	// }
+});
+
+floor_input.addEventListener("focusout", function(event) {
+	console.log("focus lost");
 });
 
 
@@ -396,16 +431,6 @@ function add_new_node_type(name){
 	let div = document.createElement('div');
 	div.innerHTML = `<div class="item" data-value="${types.length}"> <a class="ui ${colors[types.length]} empty circular label"></a> ${name} </div>`;
 	type_list.appendChild(div.firstChild);
-}
-
-function drawbackground() {
-	//console.log(bg);
-	bg.resetTransform(ctx);
-	bg.clear(ctx);
-	bg.setTransform(ctx);
-
-	ctx.save();
-	ctx.drawImage(img, 0, 0);
 }
 
 function clear_label_inputs(){
