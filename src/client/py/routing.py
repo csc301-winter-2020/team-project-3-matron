@@ -13,15 +13,17 @@ url = "mongodb+srv://matron:<password>@matron-db-pxltz.azure.mongodb.net/test?re
 password = "zO0J376wJeEmR4xc"
 dao = None
 
+
 @app.route('/')
 def index():
     return render_template("index.html")
 
 
-# TODO will return a list of all the graph names saved to the server
 @app.route('/graph/names')
 def get_graph_names():
-    raise NotImplementedError
+    """acquires all graph names"""
+    return dao.get_all_names()
+
 
 # used to acquire the appropriate blue_print for a
 # specific wing of a specific floor
@@ -35,7 +37,14 @@ def blueprint(name):
         img = request.files['image']
         return dao.save_blueprint(name, img)
     elif request.method == 'GET':
-        return dao.get_blueprint(name)
+        byte_array = dao.get_blueprint(name)
+        with open(name + ".png", "wb") as write_file:
+            write_file.write(byte_array)
+        
+        try:
+            return send_file(name + ".png", attachment_filename=name + ".png")
+        except Exception as e:
+            return str(e)
     else:
         print("Invalid request type!")
         return jsonify({'status': 400})
@@ -119,6 +128,13 @@ def all_distances(graph_name):
     """
     graph = request.get_json()
     return find_all_dist_and_dump(graph)
+
+
+@app.route('/graph/clean')
+def clean_graph():
+    """cleans the graph"""
+    graph = request.get_json()
+    return clean_and_dump(graph)
 
 
 if __name__ == '__main__':
