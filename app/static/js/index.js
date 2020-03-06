@@ -346,7 +346,6 @@ window.addEventListener("keydown", function(e) {
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
-
 function getGraph() {
 	return cy.json();
 }
@@ -356,53 +355,52 @@ function getMapFromServer(name) {
 }
 
 function getMapNamesFromServer() {
-	fetch('graph/names').then((resp) => resp.json()) // Transform the data into json
-	.then(function(data) {
-  		// Create and append the li's to the ul
-		values = []
-		for (let i = 0; i < data.graphs.length; i++){
-			values.push({name: data.graphs[i], value: data.graphs[i]});
-		}
+	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
+		values = [];
+		
+		data.graphs.forEach((name) => values.push({name: name, value: name}));
 
-		$('.ui.dropdown').dropdown({
+		$("#floor_search").dropdown({
 			allowAdditions: true, 
 			hideAdditions: false,
 			values: values,
 			onChange: function(value, name) {
 				console.log(value, name);
-		
+
 				// if exists in list
 				if (values.some(value => value.name == name)) {
 					document.querySelector('#create_floor_inputs').style.display = "none";
 					document.querySelector('#edit_floor').style.display = 'block';
 					document.querySelector('#select_floor_header').innerText = 'Select unit';
-		
+
 					getMapFromServer(value);
 				} else {
 					document.querySelector('#create_floor_inputs').style.display = "block";
 					document.querySelector('#edit_floor').style.display = 'none';
 					document.querySelector('#select_floor_header').innerText = 'Create unit';
-		
+
 					// load blueprint if one has been uploaded
 				}
-			}	
+			}
 		});
-  });
+	});
 }
-
-getMapNamesFromServer()
+getMapNamesFromServer();
 
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
-	let graph_name = $('.ui.dropdown').dropdown("get value")[0];
+	let graph_name = $("#floor_search").dropdown("get value");
+
 	fetch('graph/adit', {
 		method: 'get',
-	  }).then(response => {
-		  console.log(response)
-	  });
+	}).then(response => {
+		console.log(response)
+	});
+
 	// now load the graph and image returned by the server
 	console.log(graph_name);
+
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
 });
@@ -414,12 +412,11 @@ create_floor_btn.addEventListener('click', (e) => {
 	const graph_name = ($('.ui.dropdown').dropdown("get value")[0]);
 	let url = `graph/${graph_name}`;
 	graph = {};
-
 	fetch(url, {
 	  method: 'post',
 	  body: JSON.stringify({"data": '3'})
 	});
-	
+
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
 });
@@ -428,13 +425,16 @@ create_floor_btn.addEventListener('click', (e) => {
 function getImageData() {
 	const file = document.querySelector('input[type=file]').files[0];
 	const reader = new FileReader();
-
 	reader.addEventListener("load", function () {
 	  // convert image file to base64 string
 	  //data = reader.result;
 	  //console.log(reader.result);
 	}, false);
 }
+
+// Popper stuff
+const type_list = document.querySelector('#type_list');
+const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
 
 let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
 // should really get from server returned map, we need to store manually alongside cy.json();
@@ -484,15 +484,11 @@ function add_new_node_type(type_name){
 }
 
 function clear_label_inputs(){
-	console.log('clearing label inputs');
-	document.querySelector('#node_label_input').value = '';
-	document.querySelector('.search').childNodes[5].value = '';
+	$("#type_select").dropdown("restore defaults");
 }
-
 
 function save_graph(name){
 	let url = `http://localhost:5000/graph/${name}`;
 	const create_request = new Request(url, {method: 'POST', body: '{"foo": "bar"}'});
-	fetch(create_request)
-	.then(response => console.log(response));
+	fetch(create_request).then(response => console.log(response));
 }
