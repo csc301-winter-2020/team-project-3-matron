@@ -4,7 +4,7 @@ For routing, use find_dist_and_dump and find_all_dist_and_dump. See documentatio
 Find the distance between any two nodes in a given graph, with a list of node id pairs.
 """
 
-from .utility import *
+from utility import *
 import json
 
 

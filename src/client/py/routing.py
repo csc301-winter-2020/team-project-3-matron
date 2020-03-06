@@ -1,13 +1,14 @@
-from flask import Flask, request, jsonify
-import datetime
+from datetime import datetime
+import os
+from calendar import timegm
 from time import gmtime, strftime, mktime
-import os, io, sys
 
-import dao
+from data_access_object import MongoDAO
 from clean_graph import clean_and_dump
 from distance import find_dist_and_dump, find_all_dist_and_dump
+from flask import Flask, request, jsonify, send_file, render_template
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../')
 
 url = "mongodb+srv://matron:<password>@matron-db-pxltz.azure.mongodb.net/test?retryWrites=true&w=majority"
 password = "zO0J376wJeEmR4xc"
@@ -40,7 +41,7 @@ def blueprint(name):
         byte_array = dao.get_blueprint(name)
         with open(name + ".png", "wb") as write_file:
             write_file.write(byte_array)
-        
+
         try:
             return send_file(name + ".png", attachment_filename=name + ".png")
         except Exception as e:
@@ -52,7 +53,7 @@ def blueprint(name):
 
 @app.route('/graph/<string:name>', methods=['GET', 'POST', 'DELETE'])
 def graph(name):
-    """ 
+    """
     fetches a saved graph or save a new graph into the database
     depending on the request type
 
@@ -61,22 +62,22 @@ def graph(name):
     if request.method == 'POST':
         g = request.get_json()
         time = mktime(gmtime(0))
-        graph = { "time" : time, "graph" : g}
+        graph = {"time": time, "graph": g}
         return dao.save_graph(name, jsonify(graph))
     elif request.method == 'GET':
         return dao.get_latest(name)
     elif request.method == 'DELETE':
-        return delete_graph(name)
+        return dao.delete_graph(name)
     else:
-        print("Invalid request type!")  
+        print("Invalid request type!")
 
 
 @app.route('/graph/<string:name>/requestAll')
 def get_all_versions(name):
-    """ 
+    """
     acquires the 10 most recent dates of saves for a particular graph
-    
-    name: name of the graph to retrieve 
+
+    name: name of the graph to retrieve
     """
     times = []
 
@@ -101,9 +102,9 @@ def graph_version(name, date):
     elif request.metohd == 'DELETE':
         return dao.delete_version(name, epoch)
     else:
-        print("Error retreiving graph version: ", name," ", date)
+        print("Error retreiving graph version: ", name, " ", date)
         return jsonify({'status': 400})
-        
+
 
 @app.route('/graph/<string:graph_name>/<string:room>')
 def distances_from_room(graph_name, room):
@@ -121,7 +122,7 @@ def distances_from_room(graph_name, room):
 @app.route('/graph/<string:graph_name>/distances')
 def all_distances(graph_name):
     """
-    retrieves every single distance from every room 
+    retrieves every single distance from every room
     from all rooms for a given hospital wing
 
     graph_name: name of the graph to be inspected

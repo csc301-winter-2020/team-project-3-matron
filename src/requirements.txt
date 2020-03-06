@@ -1,3 +1,8 @@
-Flask==1.0.2
-pymongo
-pymongo[srv]
+Click==7.0
+dnspython==1.16.0
+Flask==1.1.1
+itsdangerous==1.1.0
+Jinja2==2.11.1
+MarkupSafe==1.1.1
+pymongo[srv]==3.10.1
+Werkzeug==1.0.0
