@@ -445,7 +445,5 @@ function add_new_node_type(type_name){
 }
 
 function clear_label_inputs(){
-	console.log('clearing label inputs');
-	document.querySelector('#node_label_input').value = '';
-	document.querySelector('.search').childNodes[5].value = '';
+	$("#type_select").dropdown("restore defaults");
 }
