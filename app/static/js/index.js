@@ -356,7 +356,6 @@ function getMapFromServer(name) {
 }
 
 function getMapNamesFromServer() {
-<<<<<<< HEAD
 	fetch('graph/names').then((resp) => resp.json()) // Transform the data into json
 	.then(function(data) {
   		// Create and append the li's to the ul
@@ -392,48 +391,16 @@ function getMapNamesFromServer() {
 }
 
 getMapNamesFromServer()
-=======
-	return [{name: "lel", value: "lel"}, {name: "kek", value: "kek"}];
-}
-values = getMapNamesFromServer()
-$("#floor_search").dropdown({
-	allowAdditions: true, 
-	hideAdditions: false,
-	values: values,
-	onChange: function(value, name) {
-		console.log(value, name);
-
-		// if exists in list
-		if (values.some(value => value.name == name)) {
-			document.querySelector('#create_floor_inputs').style.display = "none";
-			document.querySelector('#edit_floor').style.display = 'block';
-			document.querySelector('#select_floor_header').innerText = 'Select unit';
-
-			getMapFromServer(value);
-		} else {
-			document.querySelector('#create_floor_inputs').style.display = "block";
-			document.querySelector('#edit_floor').style.display = 'none';
-			document.querySelector('#select_floor_header').innerText = 'Create unit';
-
-			// load blueprint if one has been uploaded
-		}
-	}
-});
->>>>>>> 5b1539aea5773de740da5b8a4002483f8c8b58f5
 
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
-<<<<<<< HEAD
 	let graph_name = $('.ui.dropdown').dropdown("get value")[0];
 	fetch('graph/adit', {
 		method: 'get',
 	  }).then(response => {
 		  console.log(response)
 	  });
-=======
-	let graphMap = getMapFromServer($("#floor_search").dropdown("get value"));
->>>>>>> 5b1539aea5773de740da5b8a4002483f8c8b58f5
 	// now load the graph and image returned by the server
 	console.log(graph_name);
 	document.querySelector('#select_floor').style.display = 'none';
@@ -455,7 +422,6 @@ create_floor_btn.addEventListener('click', (e) => {
 	
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
-<<<<<<< HEAD
 });
 
 // extract the data from the uploaded image file.
@@ -484,45 +450,6 @@ for (let i=0; i<types.length; i++) {
 $("#type_select").dropdown({
 	allowAdditions: true, 
 	hideAdditions: false
-=======
->>>>>>> 5b1539aea5773de740da5b8a4002483f8c8b58f5
-});
-
-const set_type_btn = document.querySelector('#set_type');
-set_type_btn.addEventListener("click", (e) => {
-
-<<<<<<< HEAD
-	let input_label = document.querySelector('#node_label_input').value;
-	let input_type = $("#type_select").dropdown("get value");
-
-	console.log(input_label, input_type);
-
-	if (!types.some(type => type.name == input_type)) {
-		add_new_node_type(input_type);
-	}
-
-	popperNode.data("label", input_label);
-	popperNode.data("type", input_type);
-
-=======
-// Popper stuff
-const type_list = document.querySelector('#type_list');
-const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
-
-let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
-// should really get from server returned map, we need to store manually alongside cy.json();
-
-for (let i=0; i<types.length; i++) {
-	let div = document.createElement('div');
-	div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
-	type_list.appendChild(div.firstChild);
-
-	cy.style().selector("node[type = '" + types[i].name + "']").style({"background-color": types[i].color}).update();
-}
-
-$("#type_select").dropdown({
-	allowAdditions: true, 
-	hideAdditions: false
 });
 
 const set_type_btn = document.querySelector('#set_type');
@@ -540,7 +467,6 @@ set_type_btn.addEventListener("click", (e) => {
 	popperNode.data("label", input_label);
 	popperNode.data("type", input_type);
 
->>>>>>> 5b1539aea5773de740da5b8a4002483f8c8b58f5
 	console.log(popperNode);
 
 	info.style.display = "none";
@@ -558,7 +484,6 @@ function add_new_node_type(type_name){
 }
 
 function clear_label_inputs(){
-<<<<<<< HEAD
 	console.log('clearing label inputs');
 	document.querySelector('#node_label_input').value = '';
 	document.querySelector('.search').childNodes[5].value = '';
@@ -571,7 +496,3 @@ function save_graph(name){
 	fetch(create_request)
 	.then(response => console.log(response));
 }
-=======
-	$("#type_select").dropdown("restore defaults");
-}
->>>>>>> 5b1539aea5773de740da5b8a4002483f8c8b58f5
