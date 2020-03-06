@@ -346,8 +346,8 @@ window.addEventListener("keydown", function(e) {
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
-function getGraph() {
-	return cy.json();
+function saveGraph() {
+	return {cyGraph: cy.json(), types: types};
 }
 
 function getMapFromServer(name) {
