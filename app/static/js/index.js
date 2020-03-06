@@ -381,6 +381,7 @@ edit_floor_btn.addEventListener('click', (e) => {
 	// now load the graph and image returned by the server
 
 	document.querySelector('#select_floor').style.display = 'none';
+	document.querySelector('#cy').style.visibility = 'visible';
 });
 
 const create_floor_btn = document.querySelector('#create_floor');
@@ -389,6 +390,7 @@ create_floor_btn.addEventListener('click', (e) => {
 	// load empty graph with this img (we'll send it to server on save)
 
 	document.querySelector('#select_floor').style.display = 'none';
+	document.querySelector('#cy').style.visibility = 'visible';
 });
 
 
