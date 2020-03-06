@@ -333,37 +333,38 @@ function load_graph_editor() {
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
-function getMapNamesFromServer() {
-	return [{name: "lel"}, {name: "kek"}];
+
+function getMapFromServer(name) {
+	return [];
 }
 
+function getMapNamesFromServer() {
+	return [{name: "lel", value: "lel"}, {name: "kek", value: "kek"}];
+}
 values = getMapNamesFromServer()
-
 $('.ui.dropdown').dropdown({
 	allowAdditions: true, 
 	hideAdditions: false,
-	onChange: onChange,
-	values: values
+	values: values,
+	onChange: function(value, name) {
+		console.log(value, name);
+
+		// if exists in list
+		if (values.some(value => value.name == name)) {
+			document.querySelector('#create_floor_inputs').style.display = "none";
+			document.querySelector('#edit_floor').style.display = 'block';
+			document.querySelector('#select_floor_header').innerText = 'Select unit';
+
+			getMapFromServer(value);
+		} else {
+			document.querySelector('#create_floor_inputs').style.display = "block";
+			document.querySelector('#edit_floor').style.display = 'none';
+			document.querySelector('#select_floor_header').innerText = 'Create unit';
+
+			// load blueprint if one has been uploaded
+		}
+	}	
 });
-
-function onChange(e) {
-	console.log(e);
-
-	// If e is undefined, then it exists in our DB
-	if (e == "undefined") {
-		document.querySelector('#create_floor_inputs').style.display = "none";
-		document.querySelector('#edit_floor').style.display = 'block';
-		document.querySelector('#select_floor_header').innerText = 'Select floor';
-
-		
-	} else {
-		document.querySelector('#create_floor_inputs').style.display = "block";
-		document.querySelector('#edit_floor').style.display = 'none';
-		document.querySelector('#select_floor_header').innerText = 'Create floor';
-
-		
-	}
-}
 
 const new_type_btn = document.querySelector('#add_new_type');
 const types = ['Supply', 'Treatment'];
