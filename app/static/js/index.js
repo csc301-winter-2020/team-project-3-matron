@@ -354,10 +354,14 @@ function onChange(e) {
 		document.querySelector('#create_floor_inputs').style.display = "none";
 		document.querySelector('#edit_floor').style.display = 'block';
 		document.querySelector('#select_floor_header').innerText = 'Select floor';
+
+		
 	} else {
 		document.querySelector('#create_floor_inputs').style.display = "block";
 		document.querySelector('#edit_floor').style.display = 'none';
 		document.querySelector('#select_floor_header').innerText = 'Create floor';
+
+		
 	}
 }
 

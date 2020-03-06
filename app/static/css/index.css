@@ -59,3 +59,7 @@ body {
 .message {
 	display: none;
 }
+
+#select_floor {
+	transform: translateY(-50%);
+}
