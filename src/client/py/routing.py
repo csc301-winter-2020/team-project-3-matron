@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from flask_pymongo import PyMongo
 import datetime
 from time import gmtime, strftime, mktime
 import os, io, sys
@@ -9,9 +8,9 @@ from clean_graph import clean_and_dump
 from distance import find_dist_and_dump, find_all_dist_and_dump
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb+srv://matron:<password>@matron-db-pxltz.azure.mongodb.net/test?retryWrites=true&w=majority"
-mongo = PyMongo(app)
 
+url = "mongodb+srv://matron:<password>@matron-db-pxltz.azure.mongodb.net/test?retryWrites=true&w=majority"
+password = "zO0J376wJeEmR4xc"
 dao = None
 
 @app.route('/')
@@ -123,5 +122,5 @@ def all_distances(graph_name):
 
 
 if __name__ == '__main__':
-    dao = MongoDAO("matron", "<password>")
+    dao = MongoDAO(url, password)
     app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
