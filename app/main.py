@@ -20,10 +20,11 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/graph/names')
+@app.route('/graph/names', methods=['GET'])
 def get_graph_names():
     """acquires all graph names"""
-    return dao.get_all_names()
+    print(dao.get_all_names())
+    return jsonify({'graphs': dao.get_all_names(), 'status': 200})
 
 
 # used to acquire the appropriate blue_print for a
@@ -59,11 +60,13 @@ def graph(name):
 
     name: the name of the graph
     """
+
     if request.method == 'POST':
-        g = request.get_json()
+        g = request.get_json(force=True)
         time = mktime(gmtime(0))
         graph = {"time": time, "graph": g}
-        return dao.save_graph(name, jsonify(graph))
+        print("type of graph is : " + str(type(graph)))
+        return dao.save_graph(name, graph)
     elif request.method == 'GET':
         return dao.get_latest(name)
     elif request.method == 'DELETE':
@@ -140,4 +143,4 @@ def clean_graph():
 
 if __name__ == '__main__':
     dao = MongoDAO(url, password)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 5000))

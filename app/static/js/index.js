@@ -3,7 +3,6 @@ let cyStyle = [
 		selector: "node",
 		style: {
 			"label": "data(label)",
-			"background-color": 'blue'
 		}
 	},
 	{
@@ -73,6 +72,11 @@ let cy = cytoscape({
 
 function mod(n, m) {
 	return ((n%m)+m)%m;
+}
+
+function setHoverThresh(node, edge) {
+	window.nodeThreshMultiplier = node;
+	window.edgeThreshMultiplier = edge;
 }
 
 function unselectAll() {
@@ -175,27 +179,39 @@ let ghost = {
 	},
 	updateCursor: function(x,y) {
 		if (this.cursor == -1) {return;}
-
-		// let hovered = cy.$(".hover")[0];
-
-		// if (hovered) {
-		// 	if (hovered.group() == "nodes") {
-		// 		this.snapPos = {x:hovered.position().x, y:hovered.position().y};
-		// 	} else {
-		// 		//this.snapPos = 
-		// 	}
-		// } else {
-			this.cursor.position({x:x, y:y});
-		//}	
+		this.cursor.position({x:x, y:y});
 	}
 }
 
+let popperNode = -1;
 cy.on("tap", function(e) {
 	let target = e.target;
 
+	if (popperNode != -1) {
+		return;
+	}
+
 	if (target == cy) {
 		if (!ghost.enabled) {
-			addNode(e.position.x, e.position.y);
+			let newNode = addNode(e.position.x, e.position.y);
+			popperNode = newNode;
+
+			let popper = newNode.popper({
+				content: () => {
+					let node_input_card = document.querySelector('#node_info');
+					node_input_card.style.display = "block";
+					document.body.appendChild(node_input_card);
+					clear_label_inputs();
+					return node_input_card;
+				}
+			});
+
+			let update = () => {
+				popper.scheduleUpdate();
+			};
+
+			newNode.on("position", update);
+			cy.on("pan zoom resize", update);
 		}
 		
 		ghost.disable();
@@ -211,14 +227,13 @@ cy.on("tap", function(e) {
 	toggleSelected(target);	
 });
 
-function setHoverThresh(node, edge) {
-	window.nodeThreshMultiplier = node;
-	window.edgeThreshMultiplier = edge;
-}
-
 cy.on("cxttapend", function(e) {
 	let target = e.target;
 	let hovered = cy.$(".hover")[0];
+
+	if (popperNode != -1) {
+		return;
+	}
 
 	if (!ghost.enabled) {
 		if (hovered && hovered.group() == "nodes") {
@@ -322,92 +337,162 @@ window.addEventListener("keydown", function(e) {
 	}
 
 	if (e.code == "KeyX") {
-		cy.remove(cy.$(":selected"));
+		let selected = cy.$(":selected");
+		cy.remove(selected);
+
 	}
 });
-
-function load_graph_editor() {
-	document.querySelector('#select_floor').style.display = 'none';
-}
 
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
+
+function getGraph() {
+	return cy.json();
+}
 
 function getMapFromServer(name) {
 	return [];
 }
 
 function getMapNamesFromServer() {
-	return [{name: "lel", value: "lel"}, {name: "kek", value: "kek"}];
-}
-values = getMapNamesFromServer()
-$('.ui.dropdown').dropdown({
-	allowAdditions: true, 
-	hideAdditions: false,
-	values: values,
-	onChange: function(value, name) {
-		console.log(value, name);
-
-		// if exists in list
-		if (values.some(value => value.name == name)) {
-			document.querySelector('#create_floor_inputs').style.display = "none";
-			document.querySelector('#edit_floor').style.display = 'block';
-			document.querySelector('#select_floor_header').innerText = 'Select unit';
-
-			getMapFromServer(value);
-		} else {
-			document.querySelector('#create_floor_inputs').style.display = "block";
-			document.querySelector('#edit_floor').style.display = 'none';
-			document.querySelector('#select_floor_header').innerText = 'Create unit';
-
-			// load blueprint if one has been uploaded
+	fetch('graph/names').then((resp) => resp.json()) // Transform the data into json
+	.then(function(data) {
+  		// Create and append the li's to the ul
+		values = []
+		for (let i = 0; i < data.graphs.length; i++){
+			values.push({name: data.graphs[i], value: data.graphs[i]});
 		}
-	}	
-});
+
+		$('.ui.dropdown').dropdown({
+			allowAdditions: true, 
+			hideAdditions: false,
+			values: values,
+			onChange: function(value, name) {
+				console.log(value, name);
+		
+				// if exists in list
+				if (values.some(value => value.name == name)) {
+					document.querySelector('#create_floor_inputs').style.display = "none";
+					document.querySelector('#edit_floor').style.display = 'block';
+					document.querySelector('#select_floor_header').innerText = 'Select unit';
+		
+					getMapFromServer(value);
+				} else {
+					document.querySelector('#create_floor_inputs').style.display = "block";
+					document.querySelector('#edit_floor').style.display = 'none';
+					document.querySelector('#select_floor_header').innerText = 'Create unit';
+		
+					// load blueprint if one has been uploaded
+				}
+			}	
+		});
+  });
+}
+
+getMapNamesFromServer()
 
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
-const create_floor_btn = document.querySelector('#create_floor');
 edit_floor_btn.addEventListener('click', (e) => {
-	let graphMap = getMapFromServer($('.ui.dropdown').dropdown("get value"));
+	let graph_name = $('.ui.dropdown').dropdown("get value")[0];
+	fetch('graph/adit', {
+		method: 'get',
+	  }).then(response => {
+		  console.log(response)
+	  });
 	// now load the graph and image returned by the server
-
+	console.log(graph_name);
 	document.querySelector('#select_floor').style.display = 'none';
+	document.querySelector('#cy').style.visibility = 'visible';
 });
+
+const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
+	const graph_name = ($('.ui.dropdown').dropdown("get value")[0]);
+	let url = `graph/${graph_name}`;
+	graph = {};
 
+	fetch(url, {
+	  method: 'post',
+	  body: JSON.stringify({"data": '3'})
+	});
+	
 	document.querySelector('#select_floor').style.display = 'none';
+	document.querySelector('#cy').style.visibility = 'visible';
 });
 
+// extract the data from the uploaded image file.
+function getImageData() {
+	const file = document.querySelector('input[type=file]').files[0];
+	const reader = new FileReader();
 
+	reader.addEventListener("load", function () {
+	  // convert image file to base64 string
+	  //data = reader.result;
+	  //console.log(reader.result);
+	}, false);
+}
 
+let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
+// should really get from server returned map, we need to store manually alongside cy.json();
 
-const new_type_btn = document.querySelector('#add_new_type');
-const types = ['Supply', 'Treatment'];
-
-const floor_input = document.querySelector('.search').childNodes[5];
-
-// initialized later
-let input;
-
- // hard coded colors for new types :
-const colors = ['green', 'orange', 'red', 'yellow', 'olive', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
-function add_new_node_type(name){
-	// make the element, with a possible hard coded color option
-	// append the element to the list
-	types.push(name)
-	info.style.display = "none";
-	const type_list = document.querySelector('#type_list');
+for (let i=0; i<types.length; i++) {
 	let div = document.createElement('div');
-	div.innerHTML = `<div class="item" data-value="${types.length}"> <a class="ui ${colors[types.length]} empty circular label"></a> ${name} </div>`;
+	div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
 	type_list.appendChild(div.firstChild);
+
+	cy.style().selector("node[type = '" + types[i].name + "']").style({"background-color": types[i].color}).update();
+}
+
+$("#type_select").dropdown({
+	allowAdditions: true, 
+	hideAdditions: false
+});
+
+const set_type_btn = document.querySelector('#set_type');
+set_type_btn.addEventListener("click", (e) => {
+
+	let input_label = document.querySelector('#node_label_input').value;
+	let input_type = $("#type_select").dropdown("get value");
+
+	console.log(input_label, input_type);
+
+	if (!types.some(type => type.name == input_type)) {
+		add_new_node_type(input_type);
+	}
+
+	popperNode.data("label", input_label);
+	popperNode.data("type", input_type);
+
+	console.log(popperNode);
+
+	info.style.display = "none";
+	popperNode = -1;
+	console.log(info.style.display);
+});
+
+function add_new_node_type(type_name){
+	let color = colors[types.length%colors.length];
+	let div = document.createElement('div');
+	div.innerHTML = `<div class="item" data-value="${type_name}"> <a class="ui ${color} empty circular label"></a> ${type_name} </div>`;
+	type_list.appendChild(div.firstChild);
+	types.push({name: type_name, color: color});
+	cy.style().selector("node[type = '" + type_name + "']").style({"background-color": color}).update();
 }
 
 function clear_label_inputs(){
 	console.log('clearing label inputs');
 	document.querySelector('#node_label_input').value = '';
 	document.querySelector('.search').childNodes[5].value = '';
+}
+
+
+function save_graph(name){
+	let url = `http://localhost:5000/graph/${name}`;
+	const create_request = new Request(url, {method: 'POST', body: '{"foo": "bar"}'});
+	fetch(create_request)
+	.then(response => console.log(response));
 }

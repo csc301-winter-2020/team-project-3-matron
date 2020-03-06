@@ -70,8 +70,7 @@ class MongoDAO:
             stripped = [date['date'] for date in dates]
             del_result = collection.delete_one({'date': stripped[0]})
             delete = del_result.deleted_count == 1
-
-        ins_result = collection.insert_one(json.loads(graph))
+        ins_result = collection.insert_one(graph)
         return ins_result.acknowledged and delete
 
     def save_blueprint(self, graphname, blueprint):
@@ -101,13 +100,13 @@ class MongoDAO:
         dates = collection.find({}, {'_id': 0, 'date': 1})
         stripped = [date['date'] for date in dates]
         document = collection.find_one({'date': stripped[-1]}, {'_id': 0})
-        return json.dumps(document)
+        return document
 
     def get_version(self, graphname, date):
         """returns a json object for the given version of the specified graph"""
         collection = self.graphdb[graphname]
         document = collection.find_one({'date': date}, {'_id': 0})
-        return json.dumps(document)
+        return document
 
     def get_all_versions(self, graphname):
         """returns all stored versions of the specified graph, in a list dates for those objects"""
