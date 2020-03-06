@@ -70,19 +70,21 @@
 
 					<div class="inline fields">
 						<label>Type: </label>
-						<div class="ui fluid search selection dropdown">
+						<div id="type_select", class="ui fluid search selection dropdown">
 
 							<input type="hidden" id="node_type" name="node_type">
 							<i class="dropdown icon"></i>
 							<div class="default text"> type </div>
 							<div id="type_list" class="menu">
-								<div class="item" data-value="1"> <a class="ui green empty circular label"></a>Supply </div>
-								<div class="item" data-value="0"> <a class="ui orange empty circular label"></a> Treatment </div>
+							<!-- 	<div class="item" data-value="1"> <a class="ui green empty circular label"></a>Supply </div>
+								<div class="item" data-value="0"> <a class="ui orange empty circular label"></a> Treatment </div> -->
 							</div>
 						</div>
 
 					</div>
-
+					<div>
+					<button id="set_type" class="fluid ui button"> Save node </button>
+					</div>
 				  </div>
 			  </div>
 			</div>
