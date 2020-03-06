@@ -377,7 +377,7 @@ $("#floor_search").dropdown({
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
-	let graphMap = getMapFromServer($('.ui.dropdown').dropdown("get value"));
+	let graphMap = getMapFromServer($("#floor_search").dropdown("get value"));
 	// now load the graph and image returned by the server
 
 	document.querySelector('#select_floor').style.display = 'none';
@@ -401,7 +401,7 @@ let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color
 
 for (let i=0; i<types.length; i++) {
 	let div = document.createElement('div');
-	div.innerHTML = `<div class="item" data-value="${i}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
+	div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
 	type_list.appendChild(div.firstChild);
 }
 
@@ -412,11 +412,9 @@ $("#type_select").dropdown({
 
 const set_type_btn = document.querySelector('#set_type');
 set_type_btn.addEventListener("click", (e) => {
-	console.log(e);
+	console.log(document.querySelector('#node_label_input').value);
+	console.log($("#type_select").dropdown("get value"));
 });
-
-//const new_type_btn = document.querySelector('#add_new_type');
-// const types = ['Supply', 'Treatment'];
 
 const floor_input = document.querySelector('.search').childNodes[5];
 
