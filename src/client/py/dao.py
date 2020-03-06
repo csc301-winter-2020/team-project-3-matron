@@ -2,6 +2,7 @@ import pymongo
 import json
 import bson
 from bson.binary import Binary
+import gridfs
 
 class MongoDAO:
    """
@@ -15,6 +16,10 @@ class MongoDAO:
       used to manipulate graph database entries
    blueprintdb : Database
       used to manipulate blueprint database entries
+   blueprint_fs : GridFS
+      used to save and retrieve blueprints
+   meta_collect : Collection
+      used to view metadata for stored blueprints
 
    Methods:
 
@@ -35,10 +40,9 @@ class MongoDAO:
       returns a list of past versions for the requested graph
    get_all_names : [String]
       returns a list of graph names
-   save_blueprint : bool
+   save_blueprint : None
       saves the blueprint image of a graph
-      returns true if successful, false otherwise
-   get_blueprint : image
+   get_blueprint : File-like object
       returns the blueprint of a graph
    """
    def __init__(self, connection, password):
@@ -50,7 +54,8 @@ class MongoDAO:
 
       # use self.blueprintdb to reference the database of blueprints
       self.blueprintdb = self.client.blueprints
-      self.blueprint_collection = self.blueprintdb['blueprints']
+      self.blueprint_fs = gridfs.GridFS(self.blueprintdb)
+      self.meta_collect = self.blueprintdb.fs.files
 
 
    def save_graph(self, graphname, graph):
@@ -72,10 +77,10 @@ class MongoDAO:
 
    
    def save_blueprint(self, graphname, blueprint):
-      encoded = Binary(blueprint.read())
-      new = {'$set': {'graph':graphname, 'image':encoded}}
-      result = self.blueprint_collection.update_one({'graph':graphname}, new, upsert=True)
-      return result.modified_count == 1
+      existing = self.meta_collect.find_one({"filename":graphname})
+      if existing is not None:
+         self.blueprint_fs.delete(existing['_id'])
+      self.blueprint_fs.put(blueprint, filename=graphname)
 
 
    def delete_version(self, graphname, date):
@@ -87,8 +92,11 @@ class MongoDAO:
 
    def delete_graph(self, graphname):
       """deletes the collection corresponding to the graph labelled by graphname from the database"""
-      collection = self.graphdb[graphname]
-      self.blueprint_collection.delete_one({'graph':graphname})
+      existing = self.meta_collect.find_one({"filename":graphname})
+      if existing is not None:
+         self.blueprint_fs.delete(existing['_id'])
+
+      collection = self.graphdb[graphname]   
       return collection.drop()
 
 
@@ -120,6 +128,5 @@ class MongoDAO:
 
    def get_blueprint(self, graphname):
       """returns the blueprint for the given graph"""
-      blueprint = self.blueprint_collection.find_one({'graph':graphname}, {'_id':0})
-      return bytearray(blueprint['image'])
+      return self.blueprint_fs.find_one({"filename": graphname}).read()
 
