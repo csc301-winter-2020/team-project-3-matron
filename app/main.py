@@ -14,6 +14,9 @@ url = "mongodb+srv://matron:<password>@matron-db-pxltz.azure.mongodb.net/test?re
 password = "zO0J376wJeEmR4xc"
 dao = None
 
+success = {'status': 200}
+failure = {'status': 400}
+
 
 @app.route('/')
 def index():
@@ -23,7 +26,7 @@ def index():
 @app.route('/graph/names')
 def get_graph_names():
     """acquires all graph names"""
-    return dao.get_all_names()
+    return jsonify({'graph': dao.get_all_names(), 'status': 200})
 
 
 # used to acquire the appropriate blue_print for a
@@ -36,7 +39,8 @@ def blueprint(name):
     """
     if request.method == 'POST':
         img = request.files['image']
-        return dao.save_blueprint(name, img)
+        dao.save_blueprint(name, img)
+        return jsonify(success)
     elif request.method == 'GET':
         byte_array = dao.get_blueprint(name)
         with open(name + ".png", "wb") as write_file:
@@ -48,7 +52,7 @@ def blueprint(name):
             return str(e)
     else:
         print("Invalid request type!")
-        return jsonify({'status': 400})
+        return jsonify(failure)
 
 
 @app.route('/graph/<string:name>', methods=['GET', 'POST', 'DELETE'])
@@ -60,14 +64,20 @@ def graph(name):
     name: the name of the graph
     """
     if request.method == 'POST':
-        g = request.get_json()
+        g = request.get_json(force=True)
         time = mktime(gmtime(0))
         graph = {"time": time, "graph": g}
-        return dao.save_graph(name, jsonify(graph))
+        if dao.save_graph(name, graph):
+            return jsonify(success)
+        else:
+            return jsonify(failure)
     elif request.method == 'GET':
-        return dao.get_latest(name)
+        return jsonify({'graphs': dao.get_latest(name), 'status': 200})
     elif request.method == 'DELETE':
-        return dao.delete_graph(name)
+        if dao.delete_graph(name):
+            return jsonify(success)
+        else:
+            return jsonify(failure)
     else:
         print("Invalid request type!")
 
@@ -81,10 +91,10 @@ def get_all_versions(name):
     """
     times = []
 
-    graphs = dao.get_all_versions(name)
-    for graph in graphs:
-        times.append(strftime("%d %m %Y %H: %M: %S", gmtime(graph["time"])))
-    return jsonify(times)
+    epochs = dao.get_all_versions(name)
+    for epoch in epochs:
+        times.append(strftime("%d %m %Y %H: %M: %S", gmtime(epoch)))
+    return jsonify({'times': times, 'status': 200})
 
 
 @app.route('/graph/<string:name>/<date>', methods=['GET', 'DELETE'])
@@ -98,12 +108,15 @@ def graph_version(name, date):
     utc_time = datetime.strptime(date, "%d %m %Y %H: %M: %S")
     epoch = timegm(utc_time)
     if request.method == 'GET':
-        return dao.get_version(name, epoch)
+        return jsonify({'graph': dao.get_version(name, epoch), 'status': 200})
     elif request.metohd == 'DELETE':
-        return dao.delete_version(name, epoch)
+        if dao.delete_version(name, epoch):
+            return jsonify(success)
+        else:
+            return jsonify(failure)
     else:
         print("Error retreiving graph version: ", name, " ", date)
-        return jsonify({'status': 400})
+        return jsonify(failure)
 
 
 @app.route('/graph/<string:graph_name>/<string:room>')
@@ -115,8 +128,12 @@ def distances_from_room(graph_name, room):
     graph_name: the name of the graph
     room:       the name of the room
     """
-    graph = request.get_json()
-    return find_dist_and_dump(graph, room)
+    graph = request.get_json(force=True)
+    try: 
+        res = {'distances': find_dist_and_dump(graph, room), 'status': 200}
+        return jsonify(res)
+    except ValueError:
+        return jsonify({'status': 400, 'info': "non-connected graph!"})
 
 
 @app.route('/graph/<string:graph_name>/distances')
@@ -127,15 +144,19 @@ def all_distances(graph_name):
 
     graph_name: name of the graph to be inspected
     """
-    graph = request.get_json()
-    return find_all_dist_and_dump(graph)
+    graph = request.get_json(force=True)
+    try:
+        res = {'distances': find_all_dist_and_dump(graph), 'status': 200}
+        return jsonify(res)
+    except ValueError:
+        return jsonify({'status': 400, 'info': "non-connected graph!"})
 
 
 @app.route('/graph/clean')
 def clean_graph():
     """cleans the graph"""
-    graph = request.get_json()
-    return clean_and_dump(graph)
+    graph = request.get_json(force=True)
+    return jsonify({'graph': clean_and_dump(graph), 'status': 200})
 
 
 if __name__ == '__main__':
