@@ -400,9 +400,6 @@ getMapNamesFromServer();
 
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
-
-
-
 edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
