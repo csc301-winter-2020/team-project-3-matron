@@ -352,7 +352,7 @@ save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
 	console.log('saving graph....');
 	let current_draft = {cyGraph: cy.json(), types: types};
-	console.log(current_draft);
+	console.log(current_draft, current_graph);
 	let url = `graph/${current_graph}`;
 	fetch(url, {
 	  method: 'post',
@@ -415,8 +415,8 @@ const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
-	const graph_name = ($('.ui.dropdown').dropdown("get value")[0]);
-	let url = `graph/${graph_name}`;
+	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
+	let url = `graph/${current_graph}`;
 	graph = {};
 	fetch(url, {
 	  method: 'post',
