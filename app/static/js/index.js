@@ -212,10 +212,17 @@ cy.on("tap", function(e) {
 
 			newNode.on("position", update);
 			cy.on("pan zoom resize", update);
+
+			unselectAll();
+			newNode.selectify();
+			newNode.select();
+			newNode.unselectify();
+		} else {
+			unselectAll();
 		}
-		
+
 		ghost.disable();
-		unselectAll();
+		
 		return;
 	}
 
@@ -338,8 +345,12 @@ window.addEventListener("keydown", function(e) {
 
 	if (e.code == "KeyX") {
 		let selected = cy.$(":selected");
+		
+		console.log("lel");
+		if (selected.some(e => e == popperNode)) {
+			hidePopper();
+		}
 		cy.remove(selected);
-
 	}
 });
 
@@ -480,11 +491,17 @@ set_type_btn.addEventListener("click", (e) => {
 
 	popperNode.data("label", input_label);
 	popperNode.data("type", input_type);
-	popperNode.off("position");
-	cy.off("pan zoom resize");
-	popperNode = -1;
-	info.style.display = "none";
+	hidePopper();
 });
+
+function hidePopper() {
+	if (popperNode != -1) {
+		popperNode.off("position");
+		cy.off("pan zoom resize");
+		popperNode = -1;
+		info.style.display = "none";
+	}
+}
 
 function add_new_node_type(type_name){
 	let color = colors[types.length%colors.length];
