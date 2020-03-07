@@ -408,8 +408,9 @@ edit_floor_btn.addEventListener('click', (e) => {
 		data.graph.types.forEach((e) => {
 			types.push(e);
 		});
-		fillTypes(types);
-		console.log(data.graph.types);
+		fillTypes();
+		console.log(data.graph);
+		cy.add(data.graph.cyGraph.elements);
 	});
 
 	console.log(types);
