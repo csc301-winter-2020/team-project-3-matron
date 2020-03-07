@@ -1,6 +1,6 @@
 import unittest
-from src.client.py.clean_graph import *
-from src.client.py.tests.test_objs import *
+from clean_graph import *
+from tests.test_objs import *
 
 # Will add more tests later
 
