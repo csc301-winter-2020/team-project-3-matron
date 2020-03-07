@@ -57,6 +57,7 @@ let cyStyle = [
 		}
 	}
 ]
+
 let current_graph = '';
 let defaulttHoverThresh = [5,1];
 let ghostHOverThresh = [25, 5];
@@ -406,6 +407,7 @@ function getMapNamesFromServer() {
 		});
 	});
 }
+
 getMapNamesFromServer();
 
 let file = -1;
@@ -572,4 +574,38 @@ function clear_label_inputs(){
 const matron_btn = document.querySelector('#matron');
 matron_btn.addEventListener("click", (e) => {
 	location.reload();
+});
+
+// might as well cache since could be potentially large
+const all_distances_cache = undefined;
+const distance_btn = document.querySelector('#distance_btn');
+const distance_result_div = document.querySelector('#distance_result_div');
+const distance_icon = document.querySelector('#distance_icon');
+
+distance_icon.addEventListener('click', (e) =>{
+	distance_result_div.style.display = 'none';
+	$('.ui.modal')
+		.modal('show')
+	;
+});
+
+distance_btn.addEventListener('click', (e) =>{
+	distance_result_div.style.display = 'block';
+	let node1 = document.querySelector('#node1').value;
+	let node2 = document.querySelector('#node2').value;
+	// make API call to retrieve distance
+	let distance = -1;
+	if (all_distances_cache != undefined){
+		// get the distance here
+		console.log('return the data');
+	} else {
+		// get the distance here
+		console.log(current_graph);
+		fetch(`graph/${current_graph}/distances`).then((resp) => resp.json()).then(function(data) {
+			console.log(data);
+		});
+
+	}
+	document.querySelector('#dist_result').innerText = "distance : " + distance;
+
 });
