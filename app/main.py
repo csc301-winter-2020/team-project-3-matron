@@ -36,19 +36,21 @@ def blueprint(name):
     fetches a saved blueprint, or saves a new blueprint into the
     database depending on the request type
     """
+    print(request.data)
+
     if request.method == 'POST':
-        img = request.files['image']
-        dao.save_blueprint(name, img)
+        dao.save_blueprint(name, request.data)
         return jsonify(success)
     elif request.method == 'GET':
         byte_array = dao.get_blueprint(name)
-        with open(name + ".png", "wb") as write_file:
-            write_file.write(byte_array)
+        return jsonify(byte_array)
+        # with open(name + ".png", "wb") as write_file:
+        #     write_file.write(byte_array)
 
-        try:
-            return send_file(name + ".png", attachment_filename=name + ".png")
-        except Exception as e:
-            return str(e)
+        # try:
+        #     return send_file(name + ".png", attachment_filename=name + ".png")
+        # except Exception as e:
+        #     return str(e)
     else:
         print("Invalid request type!")
         return jsonify(failure)

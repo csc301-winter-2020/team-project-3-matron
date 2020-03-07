@@ -360,20 +360,23 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
-
 function saveGraph() {
-	console.log('saving graph....');
 	let current_draft = {cyGraph: cy.json(), types: types};
-	console.log(current_draft, current_graph);
 	let url = `graph/${current_graph}`;
 	fetch(url, {
-	  method: 'post',
-	  body: JSON.stringify(current_draft)
+		method: 'post',
+		body: JSON.stringify(current_draft)
 	});
-}
+	if (fileData != -1) {
+		
+		let url = `blueprint/${current_graph}`;
 
-function getMapFromServer(name) {
-	return [];
+		console.log(file);
+		fetch(url, {
+			method: 'post',
+			body: fileData
+		});
+	}
 }
 
 function getMapNamesFromServer() {
@@ -394,14 +397,10 @@ function getMapNamesFromServer() {
 					document.querySelector('#create_floor_inputs').style.display = "none";
 					document.querySelector('#edit_floor').style.display = 'block';
 					document.querySelector('#select_floor_header').innerText = 'Select unit';
-
-					getMapFromServer(value);
 				} else {
 					document.querySelector('#create_floor_inputs').style.display = "block";
 					document.querySelector('#edit_floor').style.display = 'none';
 					document.querySelector('#select_floor_header').innerText = 'Create unit';
-
-					// load blueprint if one has been uploaded
 				}
 			}
 		});
@@ -423,6 +422,12 @@ edit_floor_btn.addEventListener('click', (e) => {
 		fillTypes();
 		console.log(data.graph);
 		cy.add(data.graph.cyGraph.elements);
+	});
+
+	fetch(`blueprint/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+		console.log(data);
+
+		// LOAD INTO CYTOSCAPE
 	});
 
 	console.log(types);
@@ -452,21 +457,16 @@ create_floor_btn.addEventListener('click', (e) => {
 
 
 let file = -1;
+let fileData = -1;
 const reader = new FileReader();
-
 reader.addEventListener("load", function (e) {
 	console.log(e.target.result);
-}, false);
+	fileData = e.target.result;
+	// SHOW IN CYTOSCAPE CANVAS
 
+}, false);
 function getImageData() {
 	file = document.querySelector('input[type=file]').files[0];
-
-	// reader.addEventListener("load", function () {
-	// 	console.log("loaddd");
-	//   // convert image file to base64 string
-	//   //data = reader.result;
-	//   //console.log(reader.result);
-	// }, false);
 }
 
 // Popper stuff
