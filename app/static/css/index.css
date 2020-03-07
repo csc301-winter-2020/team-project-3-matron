@@ -52,6 +52,10 @@ body {
 	margin-bottom: 15px;
 }
 
+#save_icon {
+	margin: 0;
+}
+
 #ico {
 	margin: 0;
 }
