@@ -1,7 +1,6 @@
 from datetime import datetime
 import os
-from calendar import timegm
-from time import gmtime, strftime, mktime
+from time import gmtime, strftime, time
 
 from data_access_object import MongoDAO
 from clean_graph import clean_and_dump
@@ -65,7 +64,7 @@ def graph(name):
     """
     if request.method == 'POST':
         g = request.get_json(force=True)
-        time = timegm(gmtime(0))
+        time = int(time.time())
         graph = {"date": time, "graph": g}
         if dao.save_graph(name, graph):
             return jsonify(success)
