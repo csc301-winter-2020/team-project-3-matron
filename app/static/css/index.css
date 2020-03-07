@@ -67,3 +67,7 @@ body {
 #node_info {
 	display: none;
 }
+
+#matron {
+	cursor: pointer;
+}
