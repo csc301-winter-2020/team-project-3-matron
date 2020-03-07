@@ -397,16 +397,22 @@ function getMapNamesFromServer() {
 }
 getMapNamesFromServer();
 
+let types = [];
 
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-		// load the graph at this point.
-		console.log(data);
+		
+		data.graph.types.forEach((e) => {
+			types.push(e);
+		});
+		fillTypes(types);
+		console.log(data.graph.types);
 	});
 
+	console.log(types);
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
 });
@@ -442,15 +448,16 @@ function getImageData() {
 const type_list = document.querySelector('#type_list');
 const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
 
-let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
-// should really get from server returned map, we need to store manually alongside cy.json();
+// let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
+// // should really get from server returned map, we need to store manually alongside cy.json();
 
-for (let i=0; i<types.length; i++) {
-	let div = document.createElement('div');
-	div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
-	type_list.appendChild(div.firstChild);
-
-	cy.style().selector("node[type = '" + types[i].name + "']").style({"background-color": types[i].color}).update();
+function fillTypes() {
+	for (let i=0; i<types.length; i++) {
+		let div = document.createElement('div');
+		div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
+		type_list.appendChild(div.firstChild);
+		cy.style().selector("node[type = '" + types[i].name + "']").style({"background-color": types[i].color}).update();
+	}
 }
 
 $("#type_select").dropdown({
