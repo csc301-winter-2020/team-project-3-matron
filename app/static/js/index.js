@@ -3,6 +3,7 @@ let cyStyle = [
 		selector: "node",
 		style: {
 			"label": "data(label)",
+			"background-color": 'gray'
 		}
 	},
 	{
@@ -458,7 +459,7 @@ function getImageData() {
 
 // Popper stuff
 const type_list = document.querySelector('#type_list');
-const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
+const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'black'];
 
 // let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
 // // should really get from server returned map, we need to store manually alongside cy.json();
@@ -474,7 +475,13 @@ function fillTypes() {
 
 $("#type_select").dropdown({
 	allowAdditions: true, 
-	hideAdditions: false
+	hideAdditions: false,
+	onChange: function(value, name) {
+		console.log(value, name);
+		if (popperNode != -1) {
+			popperNode.data("type", value);
+		}
+	}
 });
 
 const set_type_btn = document.querySelector('#set_type');
