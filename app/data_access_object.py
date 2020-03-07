@@ -123,4 +123,7 @@ class MongoDAO:
 
     def get_blueprint(self, graphname):
         """returns the blueprint for the given graph"""
-        return self.blueprint_fs.find_one({"filename": graphname}).read().decode("ascii")
+        existing = self.blueprint_fs.find_one({"filename": graphname})
+        if existing is not None:
+            return existing.read().decode("ascii")
+        return -1

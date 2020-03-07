@@ -444,13 +444,15 @@ edit_floor_btn.addEventListener('click', (e) => {
 	fetch(`blueprint/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		console.log(data);
 
-		fileImage = new Image();
-		fileData = data;
-		fileImage.src = fileData;
+		if (data != -1) {
+			fileImage = new Image();
+			fileData = data;
+			fileImage.src = fileData;
 
-		// Force rerender
-		document.querySelector('#cy').style.visibility = 'hidden';
-		document.querySelector('#cy').style.visibility = 'visible';
+			// Force rerender
+			document.querySelector('#cy').style.visibility = 'hidden';
+			document.querySelector('#cy').style.visibility = 'visible';
+		}
 	});
 
 	console.log(types);
