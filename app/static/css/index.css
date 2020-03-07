@@ -3,13 +3,67 @@
 	padding: 0;
 }
 
+body {
+	overflow: hidden;
+}
+
 #cy {
 	width: 100vw;
 	height: 100vh;
-	display: block;
+	visibility: hidden;
 }
 
 .debug {
 	position: fixed;
 	padding: 10px;
+}
+
+#node_label_input{
+	width: 120px;
+}
+
+#node_info{
+	display: none;
+}
+
+#add_new_type{
+	margin-left: 10px;
+}
+
+.centered {
+	position: fixed;
+	left: 0%;
+	bottom: 50%;
+  }
+
+#search_bar{
+	position: fixed;
+	right: 0%;
+	padding-top: 5px;
+	padding-right: 10px;
+}
+
+.hide{
+	display: none;
+}
+
+#file_button {
+	margin-top: 12px;
+	margin-bottom: 15px;
+}
+
+#ico {
+	margin: 0;
+}
+
+.message {
+	display: none;
+}
+
+#select_floor {
+	transform: translateY(-50%);
+}
+
+#node_info {
+	display: none;
 }
