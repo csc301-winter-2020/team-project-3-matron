@@ -64,8 +64,8 @@ def graph(name):
     """
     if request.method == 'POST':
         g = request.get_json(force=True)
-        time = int(time.time())
-        graph = {"date": time, "graph": g}
+        t = int(time())
+        graph = {"date": t, "graph": g}
         if dao.save_graph(name, graph):
             return jsonify(success)
         else:

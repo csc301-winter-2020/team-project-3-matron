@@ -3,7 +3,7 @@ let cyStyle = [
 		selector: "node",
 		style: {
 			"label": "data(label)",
-			"background-color": 'blue'
+			"background-color": 'gray'
 		}
 	},
 	{
@@ -57,7 +57,7 @@ let cyStyle = [
 		}
 	}
 ]
-
+let current_graph = '';
 let defaulttHoverThresh = [5,1];
 let ghostHOverThresh = [25, 5];
 setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
@@ -73,6 +73,11 @@ let cy = cytoscape({
 
 function mod(n, m) {
 	return ((n%m)+m)%m;
+}
+
+function setHoverThresh(node, edge) {
+	window.nodeThreshMultiplier = node;
+	window.edgeThreshMultiplier = edge;
 }
 
 function unselectAll() {
@@ -175,31 +180,50 @@ let ghost = {
 	},
 	updateCursor: function(x,y) {
 		if (this.cursor == -1) {return;}
-
-		// let hovered = cy.$(".hover")[0];
-
-		// if (hovered) {
-		// 	if (hovered.group() == "nodes") {
-		// 		this.snapPos = {x:hovered.position().x, y:hovered.position().y};
-		// 	} else {
-		// 		//this.snapPos = 
-		// 	}
-		// } else {
-			this.cursor.position({x:x, y:y});
-		//}	
+		this.cursor.position({x:x, y:y});
 	}
 }
 
+let popperNode = -1;
 cy.on("tap", function(e) {
 	let target = e.target;
 
+	if (popperNode != -1) {
+		return;
+	}
+
 	if (target == cy) {
 		if (!ghost.enabled) {
-			addNode(e.position.x, e.position.y);
+			let newNode = addNode(e.position.x, e.position.y);
+			popperNode = newNode;
+
+			let popper = newNode.popper({
+				content: () => {
+					let node_input_card = document.querySelector('#node_info');
+					node_input_card.style.display = "block";
+					document.body.appendChild(node_input_card);
+					clear_label_inputs();
+					return node_input_card;
+				}
+			});
+
+			let update = () => {
+				popper.scheduleUpdate();
+			};
+
+			newNode.on("position", update);
+			cy.on("pan zoom resize", update);
+
+			unselectAll();
+			newNode.selectify();
+			newNode.select();
+			newNode.unselectify();
+		} else {
+			unselectAll();
 		}
-		
+
 		ghost.disable();
-		unselectAll();
+		
 		return;
 	}
 
@@ -211,14 +235,13 @@ cy.on("tap", function(e) {
 	toggleSelected(target);	
 });
 
-function setHoverThresh(node, edge) {
-	window.nodeThreshMultiplier = node;
-	window.edgeThreshMultiplier = edge;
-}
-
 cy.on("cxttapend", function(e) {
 	let target = e.target;
 	let hovered = cy.$(".hover")[0];
+
+	if (popperNode != -1) {
+		return;
+	}
 
 	if (!ghost.enabled) {
 		if (hovered && hovered.group() == "nodes") {
@@ -322,6 +345,180 @@ window.addEventListener("keydown", function(e) {
 	}
 
 	if (e.code == "KeyX") {
-		cy.remove(cy.$(":selected"));
+		let selected = cy.$(":selected");
+		
+		console.log("lel");
+		if (selected.some(e => e == popperNode)) {
+			hidePopper();
+		}
+		cy.remove(selected);
 	}
 });
+
+const info = document.querySelector('#node_info');
+const node_label_input = document.querySelector('#node_label_input').value = '';
+
+const save_btn = document.querySelector('#save_icon');
+save_btn.addEventListener('click', saveGraph);
+
+function saveGraph() {
+	console.log('saving graph....');
+	let current_draft = {cyGraph: cy.json(), types: types};
+	console.log(current_draft, current_graph);
+	let url = `graph/${current_graph}`;
+	fetch(url, {
+	  method: 'post',
+	  body: JSON.stringify(current_draft)
+	});
+}
+
+function getMapFromServer(name) {
+	return [];
+}
+
+function getMapNamesFromServer() {
+	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
+		values = [];
+		
+		data.graph.forEach((name) => values.push({name: name, value: name}));
+
+		$("#floor_search").dropdown({
+			allowAdditions: true, 
+			hideAdditions: false,
+			values: values,
+			onChange: function(value, name) {
+				console.log(value, name);
+
+				// if exists in list
+				if (values.some(value => value.name == name)) {
+					document.querySelector('#create_floor_inputs').style.display = "none";
+					document.querySelector('#edit_floor').style.display = 'block';
+					document.querySelector('#select_floor_header').innerText = 'Select unit';
+
+					getMapFromServer(value);
+				} else {
+					document.querySelector('#create_floor_inputs').style.display = "block";
+					document.querySelector('#edit_floor').style.display = 'none';
+					document.querySelector('#select_floor_header').innerText = 'Create unit';
+
+					// load blueprint if one has been uploaded
+				}
+			}
+		});
+	});
+}
+getMapNamesFromServer();
+
+let types = [];
+
+// Create/Select Buttons
+const edit_floor_btn = document.querySelector('#edit_floor');
+edit_floor_btn.addEventListener('click', (e) => {
+	current_graph = $("#floor_search").dropdown("get value");
+	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+		
+		data.graph.types.forEach((e) => {
+			types.push(e);
+		});
+		fillTypes();
+		console.log(data.graph);
+		cy.add(data.graph.cyGraph.elements);
+	});
+
+	console.log(types);
+	document.querySelector('#select_floor').style.display = 'none';
+	document.querySelector('#cy').style.visibility = 'visible';
+});
+
+const create_floor_btn = document.querySelector('#create_floor');
+create_floor_btn.addEventListener('click', (e) => {
+	img_src = document.querySelector('#img');
+	// load empty graph with this img (we'll send it to server on save)
+	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
+	let url = `graph/${current_graph}`;
+	let current_draft = {cyGraph: cy.json(), types: types};
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify({current_draft})
+	});
+
+	document.querySelector('#select_floor').style.display = 'none';
+	document.querySelector('#cy').style.visibility = 'visible';
+});
+
+// extract the data from the uploaded image file.
+function getImageData() {
+	const file = document.querySelector('input[type=file]').files[0];
+	const reader = new FileReader();
+	reader.addEventListener("load", function () {
+	  // convert image file to base64 string
+	  //data = reader.result;
+	  //console.log(reader.result);
+	}, false);
+}
+
+// Popper stuff
+const type_list = document.querySelector('#type_list');
+const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'black'];
+
+// let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
+// // should really get from server returned map, we need to store manually alongside cy.json();
+
+function fillTypes() {
+	for (let i=0; i<types.length; i++) {
+		let div = document.createElement('div');
+		div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
+		type_list.appendChild(div.firstChild);
+		cy.style().selector("node[type = '" + types[i].name + "']").style({"background-color": types[i].color}).update();
+	}
+}
+
+$("#type_select").dropdown({
+	allowAdditions: true, 
+	hideAdditions: false,
+	onChange: function(value, name) {
+		console.log(value, name);
+		if (popperNode != -1) {
+			popperNode.data("type", value);
+		}
+	}
+});
+
+const set_type_btn = document.querySelector('#set_type');
+set_type_btn.addEventListener("click", (e) => {
+
+	let input_label = document.querySelector('#node_label_input').value;
+	let input_type = $("#type_select").dropdown("get value");
+
+	console.log(input_label, input_type);
+
+	if (!types.some(type => type.name == input_type)) {
+		add_new_node_type(input_type);
+	}
+
+	popperNode.data("label", input_label);
+	popperNode.data("type", input_type);
+	hidePopper();
+});
+
+function hidePopper() {
+	if (popperNode != -1) {
+		popperNode.off("position");
+		cy.off("pan zoom resize");
+		popperNode = -1;
+		info.style.display = "none";
+	}
+}
+
+function add_new_node_type(type_name){
+	let color = colors[types.length%colors.length];
+	let div = document.createElement('div');
+	div.innerHTML = `<div class="item" data-value="${type_name}"> <a class="ui ${color} empty circular label"></a> ${type_name} </div>`;
+	type_list.appendChild(div.firstChild);
+	types.push({name: type_name, color: color});
+	cy.style().selector("node[type = '" + type_name + "']").style({"background-color": color}).update();
+}
+
+function clear_label_inputs(){
+	$("#type_select").dropdown("restore defaults");
+}

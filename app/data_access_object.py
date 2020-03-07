@@ -5,9 +5,7 @@ import gridfs
 class MongoDAO:
     """
    The MongoDAO object, used to interface with a given MongoDB database
-
    Attributes:
-
    client : MongoClient
       used to connect to the database server
    graphdb : Database
@@ -18,9 +16,7 @@ class MongoDAO:
       used to save and retrieve blueprints
    meta_collect : Collection
       used to view metadata for stored blueprints
-
    Methods:
-
    save_graph : bool
       saves latest version of a graph in the database
       returns true if successful, false otherwise
