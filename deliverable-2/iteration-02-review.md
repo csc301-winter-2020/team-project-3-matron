@@ -7,8 +7,8 @@
 
 ## Iteration XX - Review & Retrospect
 
- * When: FILL IN THE DATE WHEN YOU ACTUALLY HAD YOUR REVIEW MEETING
- * Where: PHYSICAL LOCATION AND/OR ONLINE
+ * When: Thursday March 5, at 5:00pm
+ * Where: Robarts Group Study Room 3
 
 ## Process - Reflection
 
@@ -23,6 +23,7 @@ List **process-related** (i.e. team organization and how you work) decisions tha
  * Explain why (i.e. give a supporting argument) you consider a decision to be successful.
  * Feel free to refer/link to process artifact(s).
 
+The first successful decision we made was adopting GitHub projects as a mixed kanban/scrum style project management board. The rich integration with other GitHub features such as issues, commits, branches, and pull requests, all of which we made heavy use of, helped it to organize the project extremely well. The projects feature 
 #### Q2. Decisions that did not turn out as well as we hoped
 
 List **process-related** (i.e. team organization and how you work) decisions that, in retrospect, were not as successful as you thought they would be.
