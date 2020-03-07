@@ -564,6 +564,7 @@ function add_new_node_type(type_name){
 
 function clear_label_inputs(){
 	$("#type_select").dropdown("restore defaults");
+	document.querySelector('#node_label_input').value = "";
 }
 
 const matron_btn = document.querySelector('#matron');
