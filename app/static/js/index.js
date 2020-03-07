@@ -436,7 +436,7 @@ edit_floor_btn.addEventListener('click', (e) => {
 		});
 		fillTypes();
 		console.log(data.graph);
-		if (data.graph.cyGraph.elements.length > 0) {
+		if (data.graph.cyGraph.elements.nodes) {
 			cy.add(data.graph.cyGraph.elements);
 		}
 	});
