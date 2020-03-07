@@ -1,0 +1,11 @@
+language: python
+python: "3.8"
+branches:
+    only:
+        - develop
+install:
+    - pip install -r requirements.txt
+before_script:
+    - cd app
+script:
+    - python -m pytest tests/
