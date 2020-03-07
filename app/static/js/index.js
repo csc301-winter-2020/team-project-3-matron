@@ -408,6 +408,21 @@ function getMapNamesFromServer() {
 }
 getMapNamesFromServer();
 
+let file = -1;
+let fileData = -1;
+let fileImage = -1;
+const reader = new FileReader();
+reader.addEventListener("load", function (e) {
+	console.log(e.target.result);
+	fileData = e.target.result;
+
+	fileImage = new Image();
+	fileImage.src = e.target.result;
+}, false);
+function getImageData() {
+	file = document.querySelector('input[type=file]').files[0];
+}
+
 let types = [];
 
 // Create/Select Buttons
@@ -421,13 +436,21 @@ edit_floor_btn.addEventListener('click', (e) => {
 		});
 		fillTypes();
 		console.log(data.graph);
-		cy.add(data.graph.cyGraph.elements);
+		if (data.graph.cyGraph.elements.length > 0) {
+			cy.add(data.graph.cyGraph.elements);
+		}
 	});
 
 	fetch(`blueprint/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		console.log(data);
 
-		// LOAD INTO CYTOSCAPE
+		fileImage = new Image();
+		fileData = data;
+		fileImage.src = fileData;
+
+		// Force rerender
+		document.querySelector('#cy').style.visibility = 'hidden';
+		document.querySelector('#cy').style.visibility = 'visible';
 	});
 
 	console.log(types);
@@ -456,17 +479,25 @@ create_floor_btn.addEventListener('click', (e) => {
 });
 
 
-let file = -1;
-let fileData = -1;
-const reader = new FileReader();
-reader.addEventListener("load", function (e) {
-	console.log(e.target.result);
-	fileData = e.target.result;
-	// SHOW IN CYTOSCAPE CANVAS
+let canvasLayer = cy.cyCanvas({
+	zIndex: -1
+})
+let canvas = canvasLayer.getCanvas();
+let ctx = canvas.getContext("2d");
 
-}, false);
-function getImageData() {
-	file = document.querySelector('input[type=file]').files[0];
+cy.on("render cyCanvas.resize", e => {
+	drawBG();
+});
+
+function drawBG() {
+	if (fileData != -1) {
+		canvasLayer.resetTransform(ctx);
+		canvasLayer.clear(ctx);
+		canvasLayer.setTransform(ctx);
+		ctx.save();
+		ctx.globalAlpha = 0.5;
+		ctx.drawImage(fileImage, 0, 0, fileImage.width, fileImage.height);
+	}
 }
 
 // Popper stuff
