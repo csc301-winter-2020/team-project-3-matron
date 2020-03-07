@@ -1,7 +1,6 @@
 from datetime import datetime
 import os
-from calendar import timegm
-from time import gmtime, strftime, mktime
+from time import gmtime, strftime, time
 
 from data_access_object import MongoDAO
 from clean_graph import clean_and_dump
@@ -60,12 +59,13 @@ def graph(name):
     """
     fetches a saved graph or save a new graph into the database
     depending on the request type
+
     name: the name of the graph
     """
     if request.method == 'POST':
         g = request.get_json(force=True)
-        time = timegm(gmtime(0))
-        graph = {"date": time, "graph": g}
+        t = int(time())
+        graph = {"date": t, "graph": g}
         if dao.save_graph(name, graph):
             return jsonify(success)
         else:
@@ -87,6 +87,7 @@ def graph(name):
 def get_all_versions(name):
     """
     acquires the 10 most recent dates of saves for a particular graph
+
     name: name of the graph to retrieve
     """
     times = []
@@ -101,6 +102,7 @@ def get_all_versions(name):
 def graph_version(name, date):
     """
     retrieves/deletes the specified version dates of a given graph
+
     name: name of the graph
     date: the version date wanted
     """
@@ -125,6 +127,7 @@ def distances_from_room(graph_name, room):
     """
     retrieves all distances of a specific room to the rest
     of the hospital wing
+
     graph_name: the name of the graph
     room:       the name of the room
     """
@@ -141,6 +144,7 @@ def all_distances(graph_name):
     """
     retrieves every single distance from every room
     from all rooms for a given hospital wing
+
     graph_name: name of the graph to be inspected
     """
     graph = request.get_json(force=True)
@@ -160,4 +164,4 @@ def clean_graph():
 
 if __name__ == '__main__':
     dao = MongoDAO(url, password)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))

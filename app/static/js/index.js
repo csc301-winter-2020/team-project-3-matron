@@ -419,8 +419,8 @@ create_floor_btn.addEventListener('click', (e) => {
 	let url = `graph/${current_graph}`;
 	graph = {};
 	fetch(url, {
-	  method: 'post',
-	  body: JSON.stringify({})
+		method: 'post',
+		body: JSON.stringify({})
 	});
 
 	document.querySelector('#select_floor').style.display = 'none';
