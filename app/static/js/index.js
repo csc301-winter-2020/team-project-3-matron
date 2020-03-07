@@ -442,19 +442,31 @@ create_floor_btn.addEventListener('click', (e) => {
 		body: JSON.stringify({current_draft})
 	});
 
+	if (file != -1) {
+		reader.readAsDataURL(file);
+	}
+
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
 });
 
-// extract the data from the uploaded image file.
+
+let file = -1;
+const reader = new FileReader();
+
+reader.addEventListener("load", function (e) {
+	console.log(e.target.result);
+}, false);
+
 function getImageData() {
-	const file = document.querySelector('input[type=file]').files[0];
-	const reader = new FileReader();
-	reader.addEventListener("load", function () {
-	  // convert image file to base64 string
-	  //data = reader.result;
-	  //console.log(reader.result);
-	}, false);
+	file = document.querySelector('input[type=file]').files[0];
+
+	// reader.addEventListener("load", function () {
+	// 	console.log("loaddd");
+	//   // convert image file to base64 string
+	//   //data = reader.result;
+	//   //console.log(reader.result);
+	// }, false);
 }
 
 // Popper stuff

@@ -4,41 +4,45 @@ import gridfs
 
 class MongoDAO:
     """
-   The MongoDAO object, used to interface with a given MongoDB database
-   Attributes:
-   client : MongoClient
-      used to connect to the database server
-   graphdb : Database
-      used to manipulate graph database entries
-   blueprintdb : Database
-      used to manipulate blueprint database entries
-   blueprint_fs : GridFS
-      used to save and retrieve blueprints
-   meta_collect : Collection
-      used to view metadata for stored blueprints
-   Methods:
-   save_graph : bool
-      saves latest version of a graph in the database
-      returns true if successful, false otherwise
-   delete_version : bool
-      deletes a version of a graph from the database
-      returns true if successful, false otherwise
-   delete_graph : bool
-      deletes all records of a graph from the database
-      returns true if successful, false otherwise
-   get_latest : Dict
-      returns the latest version of the specified graph
-   get_version : Dict
-      returns a specified version of the specified graph
-   get_all_versions : [int]
-      returns a list of past versions for the requested graph
-   get_all_names : [String]
-      returns a list of graph names
-   save_blueprint : None
-      saves the blueprint image of a graph
-   get_blueprint : File-like object
-      returns the blueprint of a graph
-   """
+    The MongoDAO object, used to interface with a given MongoDB database
+
+    Attributes:
+
+    client : MongoClient
+        used to connect to the database server
+    graphdb : Database
+        used to manipulate graph database entries
+    blueprintdb : Database
+        used to manipulate blueprint database entries
+    blueprint_fs : GridFS
+        used to save and retrieve blueprints
+    meta_collect : Collection
+        used to view metadata for stored blueprints
+
+    Methods:
+
+    save_graph : bool
+        saves latest version of a graph in the database
+        returns true if successful, false otherwise
+    delete_version : bool
+        deletes a version of a graph from the database
+        returns true if successful, false otherwise
+    delete_graph : bool
+        deletes all records of a graph from the database
+        returns true if successful, false otherwise
+    get_latest : Dict
+        returns the latest version of the specified graph
+    get_version : Dict
+        returns a specified version of the specified graph
+    get_all_versions : [int]
+        returns a list of past versions for the requested graph
+    get_all_names : [String]
+        returns a list of graph names
+    save_blueprint : None
+        saves the blueprint image of a graph
+    get_blueprint : String
+        returns the blueprint of a graph
+    """
 
     def __init__(self, connection, password):
         """Constructor for the mongodb data access object"""
@@ -54,9 +58,9 @@ class MongoDAO:
 
     def save_graph(self, graphname, graph):
         """
-      Saves the newest version of a graph under its corresponding collection
-      If there are 10 versions already stored the oldest version is discarded
-      """
+        Saves the newest version of a graph under its corresponding collection
+        If there are 10 versions already stored the oldest version is discarded
+        """
         collection = self.graphdb[graphname]
         delete = True
 
@@ -74,7 +78,8 @@ class MongoDAO:
         existing = self.meta_collect.find_one({"filename": graphname})
         if existing is not None:
             self.blueprint_fs.delete(existing['_id'])
-        self.blueprint_fs.put(blueprint, filename=graphname)
+        image = bytes(blueprint, encoding="ascii")
+        self.blueprint_fs.put(image, filename=graphname)
 
     def delete_version(self, graphname, date):
         """deletes version of specified graph corresponding to the given date"""
@@ -117,4 +122,4 @@ class MongoDAO:
 
     def get_blueprint(self, graphname):
         """returns the blueprint for the given graph"""
-        return self.blueprint_fs.find_one({"filename": graphname}).read()
+        return self.blueprint_fs.find_one({"filename": graphname}).read().decode("ascii")
