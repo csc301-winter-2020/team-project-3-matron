@@ -423,10 +423,10 @@ create_floor_btn.addEventListener('click', (e) => {
 	// load empty graph with this img (we'll send it to server on save)
 	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
 	let url = `graph/${current_graph}`;
-	graph = {};
+	let current_draft = {cyGraph: cy.json(), types: types};
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({})
+		body: JSON.stringify({current_draft})
 	});
 
 	document.querySelector('#select_floor').style.display = 'none';
