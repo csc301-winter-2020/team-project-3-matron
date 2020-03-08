@@ -5,6 +5,7 @@
 ## Description 
 The application is primarily a web application, to be used as a component in Matron's larger overall system for managing medical care. The problem is that nurse tasks are currently scheduled by a system that does not take into account the spatial locations of rooms in the hospital. This leads to lots of extra workload and inefficiency which can increase nurse stress and negatively affect patient outcomes.
 Our application will specifically handle the input and pathfinding of hospital unit maps, in order to compute the shortest paths between rooms. It's designed to integrate with the existing patient scheduler so that our API can be used to optimize pathfinding for nurses throughout the entire hospital. This will reduce stress in the hospital and help the Matron system to better schedule nurses to complete their tasks.
+In order to optimize the pathfinding, the application maps all possible paths from one location to another to a certain magnitude. This magnitude could be a total number of steps took from the designated start and end locations, or a normalized sum of length of lines connecting the each nodes between the start and the end of a destination. 
 
  * Provide a high-level description of your application and it's value from an end-user's perspective
  * What is the problem you're trying to solve?
@@ -13,8 +14,9 @@ Our application will specifically handle the input and pathfinding of hospital u
 ## Key Features
  * Users can upload an existing map of the unit to use as a guide when building the graph of the rooms.
  * Users can draw and modify the graph of the unit using nodes which are overlaid on the uploaded guide.
- * Users can measure the time it takes to get from any given room to anyther.
+ * Users can measure the time it takes to get from any given room to anythere.
  * All created hospital maps are saved for users to retrieve and further edit.
+ * Possible to obtain the relative distance from one location to another within map drawn or given by the users. 
 
  * Described the key features in the application that the user can access
  * Provide a breakdown or detail for each feature that is most appropriate for your application
@@ -27,6 +29,12 @@ Our application will specifically handle the input and pathfinding of hospital u
  * Provide clear steps for using each feature described above
  * This section is critical to testing your application and must be done carefully and thoughtfully
  
+ As the end-user's perspective, the app can be accessed through any web browsers. Using the chosen web browser, enter https://floating-shore-56001.herokuapp.com/ in the address bar the web access the application. The initial page of the application will have the "select unit" section in the middle and four different buttons on the top left corner. 
+ 
+ The "select unit" section requests the user to choose or type in the specific unit he/she wishes to edit. The choice of the units can be shown by clicking the downward arrow. Once the user decides to edit the graph, it can be done by clicking the "Edit" button. This will allow the user to create nodes by clicking the "left mouse button" on the map chosen by the user. The edges between the nodes can also be created. This involves putting the mouse cursor on a node and "right mouse button" click and putting the mouse cursor on a different node "right mouse button" click again. The two nodes the user "right mouse button" clicked on will be the two ends of the node created. The above procedure can be repeated for the user to create rough blueprint of the map. The application will then edit the map accordingly.
+ 
+ Of the four buttons in the top left corner of the page, the left most one directs the user to the home page of the application. The second left most button is the "save button". This allows the user to save the graph the user editted. the one next to it is the settings button. The right most button allows the user to see the distance between the two locations by inputting its name then clicking the "calculate" button on the right. 
+ 
  ## Development requirements
  The webapp is configured for heroku. The codebase can be directly deployed to heroku, or requirements can be manually installed. In either case, there is the additional requirement of a MongoDB server, which can be provisioned from heroku or elsewhere.
  * Install Python 3.6+
@@ -36,6 +44,9 @@ Our application will specifically handle the input and pathfinding of hospital u
  * If using Heroku, push the current copy of the repo to the heroku-remote
  * If not using heroku, install python dependencies using `pip install -r requirements.txt`
  * To run the server: `python app/main.py`
+
+
+ 
 
  * If a developer were to set this up on their machine or a remote server, what are the technical requirements (e.g. OS, libraries, etc.)?
  * Briefly describe instructions for setting up and running the application (think a true README).
@@ -50,6 +61,8 @@ Describe your Git / GitHub workflow. Essentially, we want to understand how your
  * Once the feature is complete, a pull request to develop is opened.
  * Once tested and reviewed, it can be merged into develop.
  * When it is time to make a release, develop is merged into master, undergoing significant testing and review in the process.
+ * We chose to assign each individual by each features of the app because our teamates were expertized in different set of skills. Furthermore, the branching in the git repository was the optimum way to accomodate people working on different parts of the app. Because it was optimum for only assigned individual or individuals to work on a specific feature, we had to divide the overall task by branching.
+ * The testing before pull request is done to see if the worked on feature can synchronize well with the other parts of the app. If the test fails, the person assigned to that feature (who must be the most knowledgeable about it) can go back to the branch and fix the issue.
 
  * Be concise, yet precise. For example, "we use pull-requests" is not a precise statement since it leaves too many open questions - Pull-requests from where to where? Who reviews the pull-requests? Who is responsible for merging them? etc.
  * If applicable, specify any naming conventions or standards you decide to adopt.
@@ -64,4 +77,5 @@ Describe your Git / GitHub workflow. Essentially, we want to understand how your
  * What type of license will you apply to your codebase?
  * What affect does it have on the development and use of your codebase?
  * Why did you or your partner make this choice?
+
 
