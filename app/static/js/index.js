@@ -589,8 +589,31 @@ distance_icon.addEventListener('click', (e) =>{
 
 distance_btn.addEventListener('click', (e) =>{
 	distance_result_div.style.display = 'block';
-	let node1 = document.querySelector('#node1').value;
-	let node2 = document.querySelector('#node2').value;
+	let node1_label = document.querySelector('#node1').value;
+	let node2_label = document.querySelector('#node2').value;
+
+	if (node1_label == "" || node2_label == "") {
+		document.querySelector('#dist_result').innerText = "Cannot search for empty room.";
+		return;
+	}
+
+	let node1 = cy.$("node[label='" + node1_label + "']");
+	let node2 = cy.$("node[label='" + node2_label + "']");
+
+	if (node1.length == 0 && node2.length == 0) {
+		document.querySelector('#dist_result').innerText = "Neither room was not found.";
+		return;
+	} else if (node1.length == 0) {
+		document.querySelector('#dist_result').innerText = "First room was not found.";
+		return;
+	} else if (node2.length == 0) {
+		document.querySelector('#dist_result').innerText = "Second room was not found.";
+		return;
+	}
+
+	node1 = node1[0].id();
+	node2 = node2[0].id();
+
 	fetch(`graph/distance_two_rooms/${current_graph}/${node1}/${node2}`).then((resp) => resp.json()).then(function(data) {
 		document.querySelector('#dist_result').innerText = "distance : " + data;
 	});	
