@@ -234,6 +234,14 @@ cy.on("tap", function(e) {
 	}
 
 	if (target.group() == "nodes") {
+
+		console.log(target.data("type"));
+
+		if (target.data("type") == "hallway") {
+			toggleSelected(target);	
+			return;
+		}
+
 		popperNode = target;
 
 		let popper = popperNode.popper({
@@ -647,7 +655,7 @@ $("#type_select").dropdown({
 
 			let input_label = document.querySelector('#node_label_input').value;
 			let input_type = $("#type_select").dropdown("get value");
-			if (input_label == "") {
+			if (input_label == "" && input_type != "hallway") {
 				set_type_btn.classList.remove("positive");
 				set_type_btn.classList.add("negative");
 				set_type_btn.innerHTML = "Enter label";
@@ -669,7 +677,7 @@ $("#type_select").dropdown({
 document.querySelector('#node_label_input').addEventListener("input", function(e) {
 	let input_label = document.querySelector('#node_label_input').value;
 	let input_type = $("#type_select").dropdown("get value");
-	if (input_label == "") {
+	if (input_label == "" && input_type != "hallway") {
 		set_type_btn.classList.remove("positive");
 		set_type_btn.classList.add("negative");
 		set_type_btn.innerHTML = "Enter label";
@@ -701,7 +709,12 @@ set_type_btn.addEventListener("click", (e) => {
 		add_new_node_type(input_type);
 	}
 	
-	popperNode.data("label", input_label);
+	if (input_type == "hallway") {
+		popperNode.data("label", "");
+	} else {
+		popperNode.data("label", input_label);
+	}
+	
 	hidePopper();
 	clear_label_inputs();
 });
