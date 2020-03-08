@@ -384,12 +384,18 @@ window.addEventListener("keydown", function(e) {
 	}
 
 	if (e.code == "KeyX") {
+		console.log(document.activeElement);
+		if (document.activeElement != document.body) {
+			return;
+		}
+
 		let selected = cy.$(":selected");
 		
 		console.log(selected);
 		if (selected.some(e => e == popperNode)) {
 			hidePopper();
-		}
+		}		
+
 		cy.remove(selected);
 	}
 });
@@ -588,7 +594,7 @@ function drawBG() {
 
 // Popper stuff
 const type_list = document.querySelector('#type_list');
-const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'black'];
+const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', 'violet', 'purple', 'pink', 'brown', 'black'];
 
 // let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
 // // should really get from server returned map, we need to store manually alongside cy.json();
