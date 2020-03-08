@@ -14,10 +14,10 @@ from copy import deepcopy
 class GraphObjectTest(unittest.TestCase):
 
     def setUp(self):
-        self.go = u.GraphObject(deepcopy(basic_single[0]))
+        self.go = u.GraphObject(deepcopy(basic_single["nodes"][0]))
 
     def test_get_attribute(self):
-        self.assertEqual(self.go.get_attribute("id"), "0", "Could not get id attribute")
+        self.assertEqual(self.go.get_attribute("id"), "bcb73bd1-da17-4294-a5b7-0303298bedab", "Could not get id attribute")
         self.assertEqual(self.go.get_attribute("type"), "room", "Could not get type attribute")
 
     def test_set_attribute(self):
@@ -27,7 +27,7 @@ class GraphObjectTest(unittest.TestCase):
         self.assertEqual(self.go.get_attribute("whatever"), "string", "Could not get a string set arbitrary key")
 
     def test_get_id(self):
-        self.assertEqual(self.go.get_id(), "0", "Could not get initial id")
+        self.assertEqual(self.go.get_id(), "bcb73bd1-da17-4294-a5b7-0303298bedab", "Could not get initial id")
 
     @unittest.skip("Awaiting example label -- none of the test objects have a label")
     def test_get_label(self):
@@ -40,25 +40,25 @@ class GraphObjectTest(unittest.TestCase):
 
 class NodeTest(unittest.TestCase):
     def test_get_type(self):
-        self.go = u.Node(basic_single[0])
+        self.go = u.Node(basic_single["nodes"][0])
         self.assertEqual(self.go.get_type(), "room", "Could not get type")
     def test_value_error(self):
         with self.assertRaises(ValueError):
-            self.n = u.Node(two_rooms_one_hallway_node_json[3])
+            self.n = u.Node(two_rooms_one_hallway_node_json["edges"][0])
 
 class EdgeTest(unittest.TestCase):
     def setUp(self):
-        self.e = u.Edge(deepcopy(two_rooms_one_hallway_node_json[3]))
+        self.e = u.Edge(deepcopy(two_rooms_one_hallway_node_json["edges"][0]))
 
     def test_value_error(self):
         with self.assertRaises(ValueError):
-            _ = u.Edge(basic_single[0])
+            _ = u.Edge(basic_single["nodes"][0])
 
     def test_get_source(self):
-        self.assertEqual(self.e.get_source(), "0", "Could not get source")
+        self.assertEqual(self.e.get_source(), "bdd4ba50-63cf-49c7-be4f-f6e7da694cb8", "Could not get source")
 
     def test_get_target(self):
-        self.assertEqual(self.e.get_target(), "2", "Could not get target")
+        self.assertEqual(self.e.get_target(), "48f4d09d-532f-447a-95f9-ceda50e4823e", "Could not get target")
 
     def test_get_weight(self):
         self.assertEqual(self.e.get_weight(), 1.0, "Could not get weight")
@@ -85,10 +85,10 @@ class GraphTest(unittest.TestCase):
         self.assertEqual(self.g, self.g, "Graph not equal to itself")
 
     def test_get_node(self):
-        self.assertEqual(str(self.g.get_node("0")), str(u.Node(two_rooms_one_hallway_node_json[0])), "Graph node not equal to raw node")
+        self.assertEqual(str(self.g.get_node("0")), str(u.Node(two_rooms_one_hallway_node_json["nodes"][0])), "Graph node not equal to raw node")
 
     def test_get_edge(self):
-        self.assertEqual(str(self.g.get_edge("3")), str(u.Edge(two_rooms_one_hallway_node_json[3])), "Graph edge not equal to raw edge")
+        self.assertEqual(str(self.g.get_edge("3")), str(u.Edge(two_rooms_one_hallway_node_json["edges"][3])), "Graph edge not equal to raw edge")
         
     def test_json_dump(self):
         self.maxDiff = None
