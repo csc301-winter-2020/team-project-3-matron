@@ -616,6 +616,7 @@ function clear_label_inputs(){
 	set_type_btn.classList.remove("positive");
 	set_type_btn.classList.add("negative");
 	set_type_btn.innerHTML = "Enter label";
+	document.querySelector('#node_label_input').focus();
 }
 
 const matron_btn = document.querySelector('#matron');
