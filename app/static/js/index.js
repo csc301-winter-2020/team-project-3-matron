@@ -381,7 +381,10 @@ function saveGraph() {
 }
 
 document.getElementById("floor_search").addEventListener("focusout", function(e) {
-	document.querySelector(".text").firstChild.lastChild.style.display = "none";
+	let selected = document.querySelector(".text").firstChild.lastChild
+	if (selected != null) {
+		selected.style.display = "none";
+	}
 });
 
 function getMapNamesFromServer() {
@@ -413,13 +416,21 @@ function getMapNamesFromServer() {
 					console.log("new");
 				}
 
-				document.querySelector(".text").firstChild.lastChild.style.display = "none";
+				let selected = document.querySelector(".text").firstChild.lastChild
+				if (selected != null) {
+					selected.style.display = "none";
+				}
 			}
 		});
 
 		document.querySelectorAll("#delete_map").forEach((e1) => {
 			e1.addEventListener("click", function(e2) {
-				console.log(e1.parentNode.parentNode.textContent);
+				let name = e1.parentNode.parentNode.textContent;
+				console.log(e1.parentNode.parentNode.remove());
+
+				fetch(`graph/${name}`, {
+					method: 'delete'
+				});
 			})
 		});
 
