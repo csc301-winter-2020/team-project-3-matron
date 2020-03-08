@@ -39,23 +39,20 @@
 			  Distance calculator
 			</div>
 			<div class="popup_content">
-				<div class="ui form">
+				<div class="ui form" id="ts">
 					<div class="inline fields">
-					  <div class="five wide field">
 						<label>Distance from </label>
-						<input id="node1"type="text" placeholder="">
-					  </div>
-					  <label> to </label>
-					  <div class="five wide field">
-						<input id="node2" type="text" placeholder="">
-					  </div>
-					  <button class="positive ui button" id="distance_btn"> calculate </button>
+						<input class="node_input_text" id="node1"type="text" placeholder="">
+					  <label style="margin: 10px;">  to </label>
+						<input class="node_input_text" id="node2" type="text" placeholder="">
+					  <button class="positive ui button" id="distance_btn" style="margin-left: 10px;"> calculate </button>
 
 					</div>
 				</div>
 				<div id="distance_result_div">
 					<hr>
-					<p id="dist_result"></p>
+					<h4 id="dist_result" ></h4>
+					<br>
 				</div>
 
 				
