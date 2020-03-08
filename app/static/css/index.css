@@ -67,3 +67,17 @@ body {
 #node_info {
 	display: none;
 }
+
+#matron {
+	cursor: pointer;
+}
+
+.popup_content {
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-left: 10px;
+}
+
+#distance_result_div{
+	display: none;
+}
