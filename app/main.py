@@ -117,7 +117,7 @@ def graph_version(name, date):
         return jsonify(failure)
 
 
-@app.route('/graph/distance/<string:graph_name>/<string:room>')
+@app.route('/graph/distances_from_room/<string:graph_name>/<string:room>')
 def distances_from_room(graph_name, room):
     """
     retrieves all distances of a specific room to the rest
@@ -135,7 +135,7 @@ def distances_from_room(graph_name, room):
         return jsonify({'status': 400, 'info': "non-connected graph!"})
 
 
-@app.route('/graph/distances/<string:graph_name>')
+@app.route('/graph/all_distances/<string:graph_name>')
 def all_distances(graph_name):
     """
     retrieves every single distance from every room
@@ -153,7 +153,7 @@ def all_distances(graph_name):
     except ValueError:
         return jsonify({'status': 400, 'info': "non-connected graph!"})
 
-@app.route('/graph/distance/rooms/<string:graph_name>/<string:room_name0>/<string:room_name1>')
+@app.route('/graph/distance_two_rooms/<string:graph_name>/<string:room_name0>/<string:room_name1>')
 def distance_two_rooms(graph_name, room_name0, room_name1):
     """
     find the distance between 2 specific rooms on a floor
@@ -162,9 +162,12 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     room_name0: name of the starting room
     room_name1: name of destination room
     """
+    print(graph_name, room_name0, room_name1)
+
     data = dao.get_latest(graph_name)
-    graph = data['graph']
-    path = dijkstra(graph, room_name0, room_name1, None)
+    print(data['graph']['cyGraph']['elements'])
+
+    path = dijkstra(data['graph']['cyGraph']['elements'], room_name0, room_name1, None)
     if info[0] == -1:
         return jsonify({'status': 400, 'info': "path not found"})
     else:

@@ -2,6 +2,7 @@
 /env
 ./env
 env/
+app/__pycache__
 
 # misc
 .DS_store

@@ -601,11 +601,9 @@ distance_btn.addEventListener('click', (e) =>{
 	} else {
 		// get the distance here
 		console.log(current_graph);
-		fetch(`graph/${current_graph}/distances`).then((resp) => resp.json()).then(function(data) {
+		fetch(`graph/distance_two_rooms/${current_graph}/${node1}/${node2}`).then((resp) => resp.json()).then(function(data) {
 			console.log(data);
 		});
-
 	}
 	document.querySelector('#dist_result').innerText = "distance : " + distance;
-
 });
