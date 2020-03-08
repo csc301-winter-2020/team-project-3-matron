@@ -183,14 +183,16 @@ class Graph:
         Calculate and return an adjacency map. See the top of the file for the
         format of the map.
         """
-        map = {}
+        map = dict([(node.get_id(), []) for node in self.nodes])
         for edge in self.edges:
             source = edge.get_source()
             target = edge.get_target()
             if source not in map:
-                map[source] = []
+                raise KeyError('Edge {} has source {}, which is not a node'
+                               .format(edge.get_id(), source))
             map[source].append((edge.get_weight(), target))
             if target not in map:
-                map[target] = []
+                raise KeyError('Edge {} has target {}, which is not a node'
+                               .format(edge.get_id(), source))
             map[target].append((edge.get_weight(), source))
         return map
