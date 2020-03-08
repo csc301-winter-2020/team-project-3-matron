@@ -43,6 +43,8 @@ List any **process-related** (i.e. team organization and how you work) changes y
 
  * Ordered from most to least important.
  * Explain why you are making a change.
+ 
+ One change we are planning to soon make relates to our project's documentation. As the codebase grows more complex and the API needs to be documented for future maintainability, we need to find a centralized place to write our documentation so that it's not just littered in various Discord messages and in our heads. Luckily, GitHub offers its free wiki page which works perfectly for our needs as it also integrates quite well with the other GitHub services we already use. In the coming weeks as we focus more on testing and polishing the product instead of adding new features, team members will be required to write documentation for the components they're in charge of to ensure all features and code is easy to understand.
 
 
 ## Product - Review
@@ -55,3 +57,4 @@ List any **process-related** (i.e. team organization and how you work) changes y
  * What did you learn from the demo from either a process or product perspective?
  * *This section will be marked very leniently so keep it brief and just make sure the points are addressed*
 
+We prepared our demo by loading a sample hospital map we prepared in advance to showcase the various features of our product. We went over many key features such as uploading a blueprint, making a new map, deleting nodes and edges, saving and retreiving maps, and finding distance between rooms. Our partner was happy with our progress, and aside from some bugs we found which we plan to fix, there were no major changes requesting aside from mostly UI changes as we polish up our design. One thing we learned was to practice the demo in advance to ensure no large bugs are found that break the flow of the demo and to rehearse which key features to showcase to keep things running smoothly. We also learned that to a non-technical user, it's important to have a simple and intuitive UI and to test the UI frequently to ensure it's not to difficult to use.
