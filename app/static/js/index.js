@@ -289,7 +289,7 @@ cy.on("cxttapend", function(e) {
 		if (target == cy) {
 			let newNode = addNode(e.position.x, e.position.y);
 			newNode.data("type", "hallway");
-
+			add_new_node_type("hallway");
 			ghost.enable();
 			ghost.setSource(newNode);
 			ghost.updateCursor(e.position.x, e.position.y);
@@ -300,6 +300,7 @@ cy.on("cxttapend", function(e) {
 		if (!hovered) {
 			let newNode = addNode(e.position.x, e.position.y);
 			newNode.data("type", "hallway");
+			add_new_node_type("hallway");
 			addEdge(ghost.source, newNode);
 			ghost.setSource(newNode)
 			ghost.redraw();
@@ -338,6 +339,7 @@ cy.on("cxttapend", function(e) {
 			cy.remove(hovered);
 			let newNode = addNode(intersectPos[0], intersectPos[1]);
 			newNode.data("type", "hallway");
+			add_new_node_type("hallway");
 			addEdge(newNode, source);
 			addEdge(newNode, target);
 			addEdge(newNode, ghost.source);
@@ -675,6 +677,10 @@ function hidePopper() {
 }
 
 function add_new_node_type(type_name){
+	if (types.some(e => e.name == type_name)) {
+		return;
+	}
+
 	let color = colors[types.length%colors.length];
 	let div = document.createElement('div');
 	div.innerHTML = `<div class="item" data-value="${type_name}"> <a class="ui ${color} empty circular label"></a> ${type_name} </div>`;
