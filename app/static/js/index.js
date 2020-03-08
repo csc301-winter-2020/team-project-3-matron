@@ -189,9 +189,9 @@ let popperNode = -1;
 cy.on("tap", function(e) {
 	let target = e.target;
 
-	if (popperNode != -1) {
-		return;
-	}
+	// if (popperNode != -1) {
+	// 	return;
+	// }
 
 	if (target == cy) {
 		if (!ghost.enabled) {
@@ -286,9 +286,9 @@ cy.on("cxttapend", function(e) {
 
 	unselectAll();
 
-	if (popperNode != -1) {
-		return;
-	}
+	// if (popperNode != -1) {
+	// 	return;
+	// }
 
 	if (!ghost.enabled) {
 		if (hovered && hovered.group() == "nodes") {
