@@ -44,13 +44,6 @@ def blueprint(name):
     elif request.method == 'GET':
         byte_array = dao.get_blueprint(name)
         return jsonify(byte_array)
-        # with open(name + ".png", "wb") as write_file:
-        #     write_file.write(byte_array)
-
-        # try:
-        #     return send_file(name + ".png", attachment_filename=name + ".png")
-        # except Exception as e:
-        #     return str(e)
     else:
         print("Invalid request type!")
         return jsonify(failure)
@@ -64,7 +57,6 @@ def graph(name):
 
     name: the name of the graph
     """
-    print("wefwfwrwrfwreferf")
     if request.method == 'POST':
         g = request.get_json(force=True)
         t = int(time())
@@ -189,4 +181,4 @@ def clean_graph():
 
 if __name__ == '__main__':
     dao = MongoDAO(url, password)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
