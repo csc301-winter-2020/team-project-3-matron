@@ -362,6 +362,10 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
+	if (current_graph == "") {
+		return;
+	}
+
 	let current_draft = {cyGraph: cy.json(), types: types};
 	let url = `graph/${current_graph}`;
 	fetch(url, {
@@ -653,6 +657,11 @@ const distance_result_div = document.querySelector('#distance_result_div');
 const distance_icon = document.querySelector('#distance_icon');
 
 distance_icon.addEventListener('click', (e) =>{
+
+	if (current_graph == "") {
+		return
+	}
+
 	distance_result_div.style.display = 'none';
 	$('.ui.modal')
 		.modal('show')
