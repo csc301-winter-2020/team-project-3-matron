@@ -99,3 +99,7 @@ body {
 #delete_map {
 	float: right;	
 }
+
+.delete_map_icon {
+	color: red;
+}

@@ -380,11 +380,15 @@ function saveGraph() {
 	}
 }
 
+document.getElementById("floor_search").addEventListener("focusout", function(e) {
+	document.querySelector(".text").firstChild.lastChild.style.display = "none";
+});
+
 function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
 		values = [];
 		
-		data.graph.forEach((name) => values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='save icon'></i> </a></div>", value: name}));
+		data.graph.forEach((name) => values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name}));
 
 		$("#floor_search").dropdown({
 			allowAdditions: true, 
@@ -409,7 +413,7 @@ function getMapNamesFromServer() {
 					console.log("new");
 				}
 
-				console.log(document.querySelector(".text").firstChild.lastChild.style.display = "none");
+				document.querySelector(".text").firstChild.lastChild.style.display = "none";
 			}
 		});
 
