@@ -4,7 +4,7 @@ For routing usage, use function clean_and_dump.
 Clean up graph to the minimal number of hallway nodes.
 """
 
-from utility import *
+from .utility import *
 
 
 def find_removable_edge(graph: Graph) -> Union[None, str]:
