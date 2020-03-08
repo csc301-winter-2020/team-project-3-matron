@@ -19,15 +19,19 @@ In order to optimize the pathfinding, the application maps all possible paths fr
  * Is there any context required to understand **why** the application solves this problem?
 
 ## Key Features
- * Users can upload an existing map of the unit to use as a guide when building the graph of the rooms.
- * Users can draw and modify the graph of the unit using nodes which are overlaid on the uploaded guide.
- * Users can measure the time it takes to get from any given room to anythere.
- * All created hospital maps are saved for users to retrieve and further edit.
- * Possible to obtain the relative distance from one location to another within map drawn or given by the users. 
-
  * Described the key features in the application that the user can access
  * Provide a breakdown or detail for each feature that is most appropriate for your application
  * This section will be used to assess the value of the features built
+ 
+ Our key features of the project are:
+ * Users can upload an existing map of the unit to use as a guide when building the graph of the rooms.
+      - This is important so that users can build the hospital map on top of the actual blueprint as a guide
+ * Users can draw and modify the graph of the unit using nodes which are overlaid on the uploaded guide.
+      - One of the key features of the application - users must be able to create and edit their hospital graphs
+ * All created hospital maps are saved for users to retrieve and further edit.
+ * Possible to obtain the relative distance from one location to another within map drawn or given by the users. 
+      - This is accessed from the UI right now but will eventually just be called from the API
+ 
 
 ## Instructions
 
