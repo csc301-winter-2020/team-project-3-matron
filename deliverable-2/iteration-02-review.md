@@ -32,6 +32,8 @@ List **process-related** (i.e. team organization and how you work) decisions tha
  * Ordered from most to least important.
  * Explain why (i.e. give a supporting argument) you consider a decision to be unsuccessful
  * Feel free to refer/link to process artifact(s).
+ 
+The first poor decision we made was to use Trello as our Kanban board instead of GitHub projects. Originally, this was because we were not aware that GitHub had it's own project management tool so for the first 2 weeks of the deliverable we were using a Trello page. The reason it worked poorly was because most of the team had never used Trello before, and it was a hassle to have to use an entirely separate service for the Kanban board. This meant that the team wasn't keeping it updated and checking in on it frequently, so the Trello page was frequently out of date and not very useful as a tool to track the overall team progress. When we eventually switched to GitHub projects, we found it worked much better with our workflow and organizational style.
 
 
 #### Q3. Planned changes
