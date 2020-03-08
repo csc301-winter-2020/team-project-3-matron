@@ -61,21 +61,26 @@ In order to optimize the pathfinding, the application maps all possible paths fr
  ## Deployment and Github Workflow
 
 Describe your Git / GitHub workflow. Essentially, we want to understand how your team members shares a codebase, avoid conflicts and deploys the application.
-
- * The two core branches are master and develop. Both core branches are protected, as merging to master requires three code reviews, and merging to develop requires one.
- * When a feature is planned, an issue is created for it, and a card is generated for the project view.
- * Once someone begins working on the feature, they create a branch for the feature, and move the card to "In progress" All code changes relevant to this feature should only be made in this branch.
- * Once the feature is complete, a pull request to develop is opened.
- * Once tested and reviewed, it can be merged into develop.
- * When it is time to make a release, develop is merged into master, undergoing significant testing and review in the process.
- * We chose to assign each individual by each features of the app because our teamates were expertized in different set of skills. Furthermore, the branching in the git repository was the optimum way to accomodate people working on different parts of the app. Because it was optimum for only assigned individual or individuals to work on a specific feature, we had to divide the overall task by branching.
- * The testing before pull request is done to see if the worked on feature can synchronize well with the other parts of the app. If the test fails, the person assigned to that feature (who must be the most knowledgeable about it) can go back to the branch and fix the issue.
-
  * Be concise, yet precise. For example, "we use pull-requests" is not a precise statement since it leaves too many open questions - Pull-requests from where to where? Who reviews the pull-requests? Who is responsible for merging them? etc.
  * If applicable, specify any naming conventions or standards you decide to adopt.
  * Describe your overall deployment process from writing code to viewing a live applicatioon
  * What deployment tool(s) are you using and how
  * Don't forget to **briefly explain why** you chose this workflow or particular aspects of it!
+ 
+Our main process from writing code to a live application is:
+
+ * The two core branches are master and develop. Both core branches are protected, as merging to master requires three code reviews and merging to develop requires one. This is because develop is for fast iterations and new features, but master should reflect a more thorough and polished version of the project.
+ * When a feature is planned, an issue is created for it and a card is generated for the project view.
+ * Once someone begins working on the feature, they create a branch for the feature, and move the card to "In Progress". All code changes relevant to this feature should only be made in this branch.
+ * Once the feature is complete, a pull request from their branch to develop is opened. Any team member is able to test and review the code.
+ * Once tested and reviewed, it can be merged into develop, from where it is automatically deployed to Heroku to test the new feature
+ * When it is time to make a release, develop is merged into master, undergoing significant testing and review in the process. Master also has automatic deployments to Heroku, to use as demos to show the partner
+ 
+ Some additional information:
+ 
+ * We chose to assign tasks by features of the app because we each have expertise in different areas. Using branching in the git repository was the optimal way to accomodate people working on different parts of the app. 
+ * The testing before pull request is done to ensure the new feature will work well with the other parts of the app and is bug free. If the test fails, the person assigned to that feature can go back to the branch and fix the issue and then it can be tested again
+ * We are working on integrating a continuous integration service to automatically run tests, like Travis CI or GitHub actions. Once this is complete, we'll require tests to pass before being able to merge to develop or master.
 
  ## Licenses 
 
@@ -84,5 +89,9 @@ Describe your Git / GitHub workflow. Essentially, we want to understand how your
  * What type of license will you apply to your codebase?
  * What affect does it have on the development and use of your codebase?
  * Why did you or your partner make this choice?
+ 
+ We decided to use the MIT license because we felt it is the one of the best open source licenses available. Firstly, It does not require any derivative works to also use that license unlike GPL. Since we are building an addon for an existing service that may one day need to extend our code, this aspect is appealing to both us and the project partner. It also means other projects that want to build on our code can use it freely without having any licensing restrictions or paying any fees
+ 
+ 
 
 
