@@ -431,13 +431,16 @@ function getMapNamesFromServer() {
 
 		document.querySelectorAll("#delete_map").forEach((e1) => {
 			e1.addEventListener("click", function(e2) {
-				let name = e1.parentNode.parentNode.textContent;
+				let name = e1.parentNode.parentNode.textContent.trim();
 				e1.parentNode.parentNode.remove();
-				// console.log(document.querySelector(".text").firstChild.style.display = "none");
 
 				// reset value of dropdown if current selection gets deleted
-				//$("#floor_search").dropdown("set selected");
-				$("#floor_search").dropdown("restore defaults");
+				let curValue = $("#floor_search").dropdown("get value").trim();
+
+				if (name == curValue) {
+					console.log("match");
+					$("#floor_search").dropdown("restore defaults");
+				}				
 
 				fetch(`graph/${name}`, {
 					method: 'delete'
@@ -472,13 +475,14 @@ const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-		
-		data.graph.types.forEach((e) => {
-			types.push(e);
-		});
+		if (data.graph.types) {
+			data.graph.types.forEach((e) => {
+				types.push(e);
+			});
+		}
 		fillTypes();
-		console.log(data.graph);
 		if (data.graph.cyGraph.elements.nodes) {
+			console.log(data.graph.cyGraph.elements.nodes);
 			cy.add(data.graph.cyGraph.elements);
 		}
 	});
@@ -508,10 +512,10 @@ create_floor_btn.addEventListener('click', (e) => {
 	// load empty graph with this img (we'll send it to server on save)
 	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
 	let url = `graph/${current_graph}`;
-	let current_draft = {cyGraph: cy.json(), types: types};
+	//let current_draft = {cyGraph: cy.json(), types: types};
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({current_draft})
+		body: JSON.stringify({cyGraph: cy.json(), types: types})
 	});
 
 	if (file != -1) {
