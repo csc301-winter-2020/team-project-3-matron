@@ -170,7 +170,7 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     dist = distance(data['graph']['cyGraph']['elements'], room_name0, room_name1)
     print(dist)
 
-    return dist
+    return jsonify(dist)
 
 
 @app.route('/graph/clean')
