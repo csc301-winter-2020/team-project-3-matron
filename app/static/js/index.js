@@ -59,7 +59,7 @@ let cyStyle = [
 ]
 
 let current_graph = '';
-let defaulttHoverThresh = [5,1];
+let defaulttHoverThresh = [8,1];
 let ghostHOverThresh = [25, 5];
 setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
 
@@ -276,6 +276,8 @@ cy.on("cxttapend", function(e) {
 	let target = e.target;
 	let hovered = cy.$(".hover")[0];
 
+	unselectAll();
+
 	if (popperNode != -1) {
 		return;
 	}
@@ -313,8 +315,9 @@ cy.on("cxttapend", function(e) {
 
 		if (hovered.group() == "nodes") {
 			addEdge(ghost.source, hovered);
-			ghost.setSource(hovered);
-			ghost.redraw();
+			// ghost.setSource(hovered);
+			// ghost.redraw();
+			ghost.disable();
 			return;
 		}
 
@@ -347,8 +350,9 @@ cy.on("cxttapend", function(e) {
 			addEdge(newNode, source);
 			addEdge(newNode, target);
 			addEdge(newNode, ghost.source);
-			ghost.setSource(newNode);
-			ghost.redraw();
+			// ghost.setSource(newNode);
+			// ghost.redraw();
+			ghost.disable();
 		}
 	}
 });
