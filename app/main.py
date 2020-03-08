@@ -4,7 +4,7 @@ from time import gmtime, strftime, time
 
 from data_access_object import MongoDAO
 from clean_graph import clean_and_dump
-from distance import find_dist_and_dump, find_all_dist_and_dump, dijkstra
+from distance import find_dist_and_dump, find_all_dist_and_dump, distance
 from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
@@ -167,11 +167,10 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     data = dao.get_latest(graph_name)
     print(data['graph']['cyGraph']['elements'])
 
-    path = dijkstra(data['graph']['cyGraph']['elements'], room_name0, room_name1, None)
-    if info[0] == -1:
-        return jsonify({'status': 400, 'info': "path not found"})
-    else:
-        return jsonify({'status': 200, 'path': info})
+    dist = distance(data['graph']['cyGraph']['elements'], room_name0, room_name1)
+    print(dist)
+
+    return dist
 
 
 @app.route('/graph/clean')
