@@ -1,6 +1,6 @@
 # Team 3 - Matron
 
-## Iteration 03 - Review & Retrospect
+## Iteration 4 - Review & Retrospect
 
  * When: Thursday March 5, at 5:00pm
  * Where: Robarts Group Study Room 3
@@ -35,6 +35,7 @@ List **process-related** (i.e. team organization and how you work) decisions tha
  
 The first poor decision we made was to use Trello as our Kanban board instead of GitHub projects. Originally, this was because we were not aware that GitHub had it's own project management tool so for the first 2 weeks of the deliverable we were using a Trello page. The reason it worked poorly was because most of the team had never used Trello before, and it was a hassle to have to use an entirely separate service for the Kanban board. This meant that the team wasn't keeping it updated and checking in on it frequently, so the Trello page was frequently out of date and not very useful as a tool to track the overall team progress. When we eventually switched to GitHub projects, we found it worked much better with our workflow and organizational style.
 
+Another poor planning decision was leaving project deployment to the end of the deliverable. The idea was that each person would develop their own features and we would integrate the components and deploy the project near the end once everyone had finished. In practice, this led to an inconsistent folder structure that resulted in many merge conflicts, as well as many bugs arising from the integration that now had to be fixed. In addition, some changes had to be made to the overall structure to get the project to work on Heroku which meant a late stage restructuring which took alot of time and introduced even more bugs. If we were to do the project again, we would start with a very basic Flask server and an established folder structure that we know would work with Heroku, and then split from there to each work on our own areas of the project.
 
 #### Q3. Planned changes
 
