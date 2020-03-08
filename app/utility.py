@@ -68,6 +68,9 @@ class Node(GraphObject):
     def get_type(self):
         return self.get_attribute("type")
 
+    def get_pos(self):
+        return self.json_data["position"]["x"], self.json_data["position"]["y"]
+
 
 class Edge(GraphObject):
     """
@@ -107,17 +110,11 @@ class Graph:
     edges: List[Edge]
     nodes: List[Node]
 
-    def __init__(self, json_data: List[Dict]):
+    def __init__(self, json_data: Dict[List[Dict]]):
 
-        self.nodes = []
-        self.edges = []
-
-        for json_obj in json_data:
-            if json_obj["group"] == "nodes":
-                self.nodes.append(Node(json_obj))
-            else:
-                self.edges.append(Edge(json_obj))
-
+        self.nodes = [Node(json_obj) for json_obj in json_data["nodes"]]
+        self.edges = [Edge(json_obj) for json_obj in json_data["edges"]]
+        self._set_edge_weights()  # Since the edge objects dont natively have weights
         self._node_id_map = {}
         self._edge_id_map = {}
         self.update_internal_maps()
@@ -134,6 +131,21 @@ class Graph:
         if type(other) != type(self):
             return False
         return str(other) == str(self)
+
+    def _set_edge_weights(self):
+        """
+        Assigns a weight to each edge in self.edges equal to the distance
+        between their endpoints.
+        """
+        # Mapping node id's to their positions, so we don't have to search later
+        id_to_pos_map = {}
+        for node in self.nodes:
+            id_to_pos_map[node.get_id()] = node.get_pos()
+        for i, edge in enumerate(self.edges):
+            xs, ys = id_to_pos_map[edge.get_source()]
+            xt, yt = id_to_pos_map[edge.get_target()]
+            dist = (((xs - xt) ** 2) + ((ys - yt) ** 2)) ** 0.5
+            self.edges[i].set_attribute("weight", dist)
 
     def get_node(self, id: str) -> Node:
         return self.nodes[self._node_id_map[id]]
@@ -158,11 +170,8 @@ class Graph:
         """
         Return a json dump of this object.
         """
-        objs = []
-        for node in self.nodes:
-            objs.append(node.json_data)
-        for edge in self.edges:
-            objs.append(edge.json_data)
+        objs = {"nodes": [node.json_data for node in self.nodes],
+                "edges": [edge.json_data for edge in self.edges]}
         return json.dumps(objs)
 
     def compute_adjacency_map(self) -> AdjacencyMap:
