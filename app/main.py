@@ -153,7 +153,6 @@ def all_distances(graph_name):
     except ValueError:
         return jsonify({'status': 400, 'info': "non-connected graph!"})
 
-
 @app.route('/graph/distance/rooms/<string:graph_name>/<string:room_name0>/<string:room_name1>')
 def distance_two_rooms(graph_name, room_name0, room_name1):
     """
