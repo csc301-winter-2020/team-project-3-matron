@@ -5,4 +5,4 @@ env/
 
 # misc
 .DS_store
-app/__pycache__
+*/__pycache__/
