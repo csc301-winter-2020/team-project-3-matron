@@ -410,11 +410,15 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
+	console.log(current_graph);
 	if (current_graph == "") {
 		return;
 	}
 
 	let graph = cy.json();
+
+	console.log(graph.elements.nodes);
+	console.log(graph.elements.edges);
 
 	if (!graph.elements.nodes) {
 		graph.elements.nodes = [];
@@ -423,6 +427,7 @@ function saveGraph() {
 	if (!graph.elements.edges) {
 		graph.elements.edges = [];
 	}
+
 	console.log(graph);
 	let url = `graph/${current_graph}`;
 	fetch(url, {
@@ -578,7 +583,7 @@ const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
-	// current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
+	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
 	// let url = `graph/${current_graph}`;
 	// //let current_draft = {cyGraph: cy.json(), types: types};
 	// fetch(url, {
