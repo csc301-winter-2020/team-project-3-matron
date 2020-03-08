@@ -527,8 +527,46 @@ $("#type_select").dropdown({
 		console.log(value, name);
 		if (popperNode != -1) {
 			popperNode.data("type", value);
+
+			let input_label = document.querySelector('#node_label_input').value;
+			let input_type = $("#type_select").dropdown("get value");
+			if (input_label == "") {
+				set_type_btn.classList.remove("positive");
+				set_type_btn.classList.add("negative");
+				set_type_btn.innerHTML = "Enter label";
+				return
+			}
+			if (input_type == "") {
+				set_type_btn.classList.remove("positive");
+				set_type_btn.classList.add("negative");
+				set_type_btn.innerHTML = "Enter type";
+				return
+			}
+			set_type_btn.classList.remove("negative");
+			set_type_btn.classList.add("positive");
+			set_type_btn.innerHTML = "Add node";
 		}
 	}
+});
+
+document.querySelector('#node_label_input').addEventListener("input", function(e) {
+	let input_label = document.querySelector('#node_label_input').value;
+	let input_type = $("#type_select").dropdown("get value");
+	if (input_label == "") {
+		set_type_btn.classList.remove("positive");
+		set_type_btn.classList.add("negative");
+		set_type_btn.innerHTML = "Enter label";
+		return
+	}
+	if (input_type == "") {
+		set_type_btn.classList.remove("positive");
+		set_type_btn.classList.add("negative");
+		set_type_btn.innerHTML = "Enter type";
+		return
+	}
+	set_type_btn.classList.remove("negative");
+	set_type_btn.classList.add("positive");
+	set_type_btn.innerHTML = "Add node";
 });
 
 const set_type_btn = document.querySelector('#set_type');
@@ -538,13 +576,14 @@ set_type_btn.addEventListener("click", (e) => {
 	let input_type = $("#type_select").dropdown("get value");
 
 	console.log(input_label, input_type);
+	if (set_type_btn.classList.contains("negative")) {
+		return;
+	}
 
 	if (!types.some(type => type.name == input_type)) {
 		add_new_node_type(input_type);
 	}
-
-	popperNode.data("label", input_label);
-	popperNode.data("type", input_type);
+	
 	hidePopper();
 });
 
@@ -569,6 +608,9 @@ function add_new_node_type(type_name){
 function clear_label_inputs(){
 	$("#type_select").dropdown("restore defaults");
 	document.querySelector('#node_label_input').value = "";
+	set_type_btn.classList.remove("positive");
+	set_type_btn.classList.add("negative");
+	set_type_btn.innerHTML = "Enter label";
 }
 
 const matron_btn = document.querySelector('#matron');
