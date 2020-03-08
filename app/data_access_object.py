@@ -78,7 +78,7 @@ class MongoDAO:
         existing = self.meta_collect.find_one({"filename": graphname})
         if existing is not None:
             self.blueprint_fs.delete(existing['_id'])
-        image = bytes(blueprint, encoding="ascii")
+        image = bytes(blueprint)
         self.blueprint_fs.put(image, filename=graphname)
 
     def delete_version(self, graphname, date):
@@ -122,4 +122,7 @@ class MongoDAO:
 
     def get_blueprint(self, graphname):
         """returns the blueprint for the given graph"""
-        return self.blueprint_fs.find_one({"filename": graphname}).read().decode("ascii")
+        existing = self.blueprint_fs.find_one({"filename": graphname})
+        if existing is not None:
+            return existing.read().decode("ascii")
+        return -1

@@ -36,19 +36,21 @@ def blueprint(name):
     fetches a saved blueprint, or saves a new blueprint into the
     database depending on the request type
     """
+    print(request.data)
+
     if request.method == 'POST':
-        img = request.files['image']
-        dao.save_blueprint(name, img)
+        dao.save_blueprint(name, request.data)
         return jsonify(success)
     elif request.method == 'GET':
         byte_array = dao.get_blueprint(name)
-        with open(name + ".png", "wb") as write_file:
-            write_file.write(byte_array)
+        return jsonify(byte_array)
+        # with open(name + ".png", "wb") as write_file:
+        #     write_file.write(byte_array)
 
-        try:
-            return send_file(name + ".png", attachment_filename=name + ".png")
-        except Exception as e:
-            return str(e)
+        # try:
+        #     return send_file(name + ".png", attachment_filename=name + ".png")
+        # except Exception as e:
+        #     return str(e)
     else:
         print("Invalid request type!")
         return jsonify(failure)
@@ -62,6 +64,7 @@ def graph(name):
 
     name: the name of the graph
     """
+    print("wefwfwrwrfwreferf")
     if request.method == 'POST':
         g = request.get_json(force=True)
         t = int(time())
@@ -145,9 +148,10 @@ def all_distances(graph_name):
     retrieves every single distance from every room
     from all rooms for a given hospital wing
 
-    graph_name: name of the graph to be inspected
+    graph_name: name of the to be inspected
     """
     graph = request.get_json(force=True)
+
     try:
         res = {'distances': find_all_dist_and_dump(graph), 'status': 200}
         return jsonify(res)
@@ -164,4 +168,4 @@ def clean_graph():
 
 if __name__ == '__main__':
     dao = MongoDAO(url, password)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 5000))

@@ -57,6 +57,7 @@ let cyStyle = [
 		}
 	}
 ]
+
 let current_graph = '';
 let defaulttHoverThresh = [5,1];
 let ghostHOverThresh = [25, 5];
@@ -360,20 +361,23 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
-
 function saveGraph() {
-	console.log('saving graph....');
 	let current_draft = {cyGraph: cy.json(), types: types};
-	console.log(current_draft, current_graph);
 	let url = `graph/${current_graph}`;
 	fetch(url, {
-	  method: 'post',
-	  body: JSON.stringify(current_draft)
+		method: 'post',
+		body: JSON.stringify(current_draft)
 	});
-}
+	if (fileData != -1) {
+		
+		let url = `blueprint/${current_graph}`;
 
-function getMapFromServer(name) {
-	return [];
+		console.log(file);
+		fetch(url, {
+			method: 'post',
+			body: fileData
+		});
+	}
 }
 
 function getMapNamesFromServer() {
@@ -394,20 +398,32 @@ function getMapNamesFromServer() {
 					document.querySelector('#create_floor_inputs').style.display = "none";
 					document.querySelector('#edit_floor').style.display = 'block';
 					document.querySelector('#select_floor_header').innerText = 'Select unit';
-
-					getMapFromServer(value);
 				} else {
 					document.querySelector('#create_floor_inputs').style.display = "block";
 					document.querySelector('#edit_floor').style.display = 'none';
 					document.querySelector('#select_floor_header').innerText = 'Create unit';
-
-					// load blueprint if one has been uploaded
 				}
 			}
 		});
 	});
 }
+
 getMapNamesFromServer();
+
+let file = -1;
+let fileData = -1;
+let fileImage = -1;
+const reader = new FileReader();
+reader.addEventListener("load", function (e) {
+	console.log(e.target.result);
+	fileData = e.target.result;
+
+	fileImage = new Image();
+	fileImage.src = e.target.result;
+}, false);
+function getImageData() {
+	file = document.querySelector('input[type=file]').files[0];
+}
 
 let types = [];
 
@@ -422,7 +438,23 @@ edit_floor_btn.addEventListener('click', (e) => {
 		});
 		fillTypes();
 		console.log(data.graph);
-		cy.add(data.graph.cyGraph.elements);
+		if (data.graph.cyGraph.elements.nodes) {
+			cy.add(data.graph.cyGraph.elements);
+		}
+	});
+
+	fetch(`blueprint/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+		console.log(data);
+
+		if (data != -1) {
+			fileImage = new Image();
+			fileData = data;
+			fileImage.src = fileData;
+
+			// Force rerender
+			document.querySelector('#cy').style.visibility = 'hidden';
+			document.querySelector('#cy').style.visibility = 'visible';
+		}
 	});
 
 	console.log(types);
@@ -442,19 +474,34 @@ create_floor_btn.addEventListener('click', (e) => {
 		body: JSON.stringify({current_draft})
 	});
 
+	if (file != -1) {
+		reader.readAsDataURL(file);
+	}
+
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
 });
 
-// extract the data from the uploaded image file.
-function getImageData() {
-	const file = document.querySelector('input[type=file]').files[0];
-	const reader = new FileReader();
-	reader.addEventListener("load", function () {
-	  // convert image file to base64 string
-	  //data = reader.result;
-	  //console.log(reader.result);
-	}, false);
+
+let canvasLayer = cy.cyCanvas({
+	zIndex: -1
+})
+let canvas = canvasLayer.getCanvas();
+let ctx = canvas.getContext("2d");
+
+cy.on("render cyCanvas.resize", e => {
+	drawBG();
+});
+
+function drawBG() {
+	if (fileData != -1) {
+		canvasLayer.resetTransform(ctx);
+		canvasLayer.clear(ctx);
+		canvasLayer.setTransform(ctx);
+		ctx.save();
+		ctx.globalAlpha = 0.5;
+		ctx.drawImage(fileImage, 0, 0, fileImage.width, fileImage.height);
+	}
 }
 
 // Popper stuff
@@ -521,4 +568,44 @@ function add_new_node_type(type_name){
 
 function clear_label_inputs(){
 	$("#type_select").dropdown("restore defaults");
+	document.querySelector('#node_label_input').value = "";
 }
+
+const matron_btn = document.querySelector('#matron');
+matron_btn.addEventListener("click", (e) => {
+	location.reload();
+});
+
+// might as well cache since could be potentially large
+const all_distances_cache = undefined;
+const distance_btn = document.querySelector('#distance_btn');
+const distance_result_div = document.querySelector('#distance_result_div');
+const distance_icon = document.querySelector('#distance_icon');
+
+distance_icon.addEventListener('click', (e) =>{
+	distance_result_div.style.display = 'none';
+	$('.ui.modal')
+		.modal('show')
+	;
+});
+
+distance_btn.addEventListener('click', (e) =>{
+	distance_result_div.style.display = 'block';
+	let node1 = document.querySelector('#node1').value;
+	let node2 = document.querySelector('#node2').value;
+	// make API call to retrieve distance
+	let distance = -1;
+	if (all_distances_cache != undefined){
+		// get the distance here
+		console.log('return the data');
+	} else {
+		// get the distance here
+		console.log(current_graph);
+		fetch(`graph/${current_graph}/distances`).then((resp) => resp.json()).then(function(data) {
+			console.log(data);
+		});
+
+	}
+	document.querySelector('#dist_result').innerText = "distance : " + distance;
+
+});
