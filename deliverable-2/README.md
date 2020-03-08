@@ -3,6 +3,13 @@
 > _Note:_ This document is intended to be relatively short. Be concise and precise. Assume the reader has no prior knowledge of your application and is non-technical.
 
 ## Description 
+Our web-based app is to be used as a component in a Matron's larger overall system for managing the schedules of nurses and related healthcare professionals. The schedules of such workers are currently served by systems which don't take the physical layout of the work environment into account. As such, nurses regularly walk around their hospital wing much more than they need to (ie., by walking past patient rooms they're scheduled to visit later in the day) and become more exhausted and inefficient as a result. With Matron's spatially-optimized scheduling, nurses will recieve schedules that require them to walk the minimal amount.
+
+Our application allows a hospital blueprint to be translated into a graph that allows room-to-room distances to be queried by the Matron scheduler. Users build this graph through a visual interface that allows them to add nodes representing rooms with a given label (eg., "exam room 3", "room 301", "supply room 6", etc.) and type (eg., "patient room", "supply room", "exam room", "workstation", etc.), and add edges between them representing hallways that connect the rooms.
+
+Once the graph is built, it can be saved and then subsequently reloaded, edited, resaved, etc.
+
+<!--
 The application is primarily a web application, to be used as a component in Matron's larger overall system for managing medical care. The problem is that nurse tasks are currently scheduled by a system that does not take into account the spatial locations of rooms in the hospital. This leads to lots of extra workload and inefficiency which can increase nurse stress and negatively affect patient outcomes.
 Our application will specifically handle the input and pathfinding of hospital unit maps, in order to compute the shortest paths between rooms. It's designed to integrate with the existing patient scheduler so that our API can be used to optimize pathfinding for nurses throughout the entire hospital. This will reduce stress in the hospital and help the Matron system to better schedule nurses to complete their tasks.
 In order to optimize the pathfinding, the application maps all possible paths from one location to another to a certain magnitude. This magnitude could be a total number of steps took from the designated start and end locations, or a normalized sum of length of lines connecting the each nodes between the start and the end of a destination. 
