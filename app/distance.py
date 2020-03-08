@@ -29,6 +29,9 @@ def dijkstra(graph: Graph, s_id: str, e_id: str, adjacency_map: AdjacencyMap = N
         path_nodes = path[1]
         adj_nodes = adjacency_map[path_nodes[-1]]
         for weight, node in adj_nodes:
+            # Path checking
+            if node in path_nodes:
+                continue
             succ = (cur_weight + weight, path_nodes + [node])
             succs.append(succ)
         return succs
