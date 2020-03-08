@@ -3,6 +3,13 @@ import utility as u
 from tests.test_objs import basic_single, two_rooms_one_hallway_node_json
 from copy import deepcopy
 
+#John's import lines 
+# import utility as u
+# import sys
+# sys.path.insert(0, './app/')
+# import utility as u
+# from clean_graph import *
+# from test_objs import *
 
 class GraphObjectTest(unittest.TestCase):
 
