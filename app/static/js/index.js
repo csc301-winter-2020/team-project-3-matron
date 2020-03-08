@@ -59,7 +59,7 @@ let cyStyle = [
 ]
 
 let current_graph = '';
-let defaulttHoverThresh = [5,1];
+let defaulttHoverThresh = [8,1];
 let ghostHOverThresh = [25, 5];
 setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
 
@@ -198,12 +198,13 @@ cy.on("tap", function(e) {
 			let newNode = addNode(e.position.x, e.position.y);
 			popperNode = newNode;
 
-			let popper = newNode.popper({
+			let popper = popperNode.popper({
 				content: () => {
 					let node_input_card = document.querySelector('#node_info');
 					node_input_card.style.display = "block";
 					document.body.appendChild(node_input_card);
 					clear_label_inputs();
+					document.querySelector('#node_label_input').focus();
 					return node_input_card;
 				}
 			});
@@ -212,13 +213,13 @@ cy.on("tap", function(e) {
 				popper.scheduleUpdate();
 			};
 
-			newNode.on("position", update);
+			popperNode.on("position", update);
 			cy.on("pan zoom resize", update);
 
 			unselectAll();
-			newNode.selectify();
-			newNode.select();
-			newNode.unselectify();
+			popperNode.selectify();
+			popperNode.select();
+			popperNode.unselectify();
 		} else {
 			unselectAll();
 		}
@@ -232,6 +233,41 @@ cy.on("tap", function(e) {
 		unselectAll();
 	}
 
+	if (target.group() == "nodes") {
+		popperNode = target;
+
+		let popper = popperNode.popper({
+			content: () => {
+				let node_input_card = document.querySelector('#node_info');
+				node_input_card.style.display = "block";
+				document.body.appendChild(node_input_card);
+				clear_label_inputs();
+
+				$("#type_select").dropdown("restore defaults");
+				
+				document.querySelector('#node_label_input').value = popperNode.data("label");
+				$("#type_select").dropdown("set selected", popperNode.data("type"));
+
+				return node_input_card;
+			}
+		});
+
+		let update = () => {
+			popper.scheduleUpdate();
+		};
+
+		popperNode.on("position", update);
+		cy.on("pan zoom resize", update);
+
+		unselectAll();
+		popperNode.selectify();
+		popperNode.select();
+		popperNode.unselectify();
+
+		ghost.disable();
+		return;
+	}
+
 	ghost.disable();
 	toggleSelected(target);	
 });
@@ -239,6 +275,8 @@ cy.on("tap", function(e) {
 cy.on("cxttapend", function(e) {
 	let target = e.target;
 	let hovered = cy.$(".hover")[0];
+
+	unselectAll();
 
 	if (popperNode != -1) {
 		return;
@@ -257,7 +295,7 @@ cy.on("cxttapend", function(e) {
 		if (target == cy) {
 			let newNode = addNode(e.position.x, e.position.y);
 			newNode.data("type", "hallway");
-
+			add_new_node_type("hallway");
 			ghost.enable();
 			ghost.setSource(newNode);
 			ghost.updateCursor(e.position.x, e.position.y);
@@ -268,6 +306,7 @@ cy.on("cxttapend", function(e) {
 		if (!hovered) {
 			let newNode = addNode(e.position.x, e.position.y);
 			newNode.data("type", "hallway");
+			add_new_node_type("hallway");
 			addEdge(ghost.source, newNode);
 			ghost.setSource(newNode)
 			ghost.redraw();
@@ -276,8 +315,9 @@ cy.on("cxttapend", function(e) {
 
 		if (hovered.group() == "nodes") {
 			addEdge(ghost.source, hovered);
-			ghost.setSource(hovered);
-			ghost.redraw();
+			// ghost.setSource(hovered);
+			// ghost.redraw();
+			ghost.disable();
 			return;
 		}
 
@@ -306,11 +346,13 @@ cy.on("cxttapend", function(e) {
 			cy.remove(hovered);
 			let newNode = addNode(intersectPos[0], intersectPos[1]);
 			newNode.data("type", "hallway");
+			add_new_node_type("hallway");
 			addEdge(newNode, source);
 			addEdge(newNode, target);
 			addEdge(newNode, ghost.source);
-			ghost.setSource(newNode);
-			ghost.redraw();
+			// ghost.setSource(newNode);
+			// ghost.redraw();
+			ghost.disable();
 		}
 	}
 });
@@ -346,12 +388,18 @@ window.addEventListener("keydown", function(e) {
 	}
 
 	if (e.code == "KeyX") {
+		console.log(document.activeElement);
+		if (document.activeElement != document.body) {
+			return;
+		}
+
 		let selected = cy.$(":selected");
 		
-		console.log("lel");
+		console.log(selected);
 		if (selected.some(e => e == popperNode)) {
 			hidePopper();
-		}
+		}		
+
 		cy.remove(selected);
 	}
 });
@@ -362,6 +410,10 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
+	if (current_graph == "") {
+		return;
+	}
+
 	let current_draft = {cyGraph: cy.json(), types: types};
 	let url = `graph/${current_graph}`;
 	fetch(url, {
@@ -380,11 +432,28 @@ function saveGraph() {
 	}
 }
 
+document.getElementById("floor_search").addEventListener("focusout", function(e) {
+	let selected = document.querySelector(".text").firstChild;
+
+	if (selected != null) {
+		if (selected.lastChild != null) {
+			selected.lastChild.style.display = "none";
+		}
+	}
+});
+
 function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
 		values = [];
-		
-		data.graph.forEach((name) => values.push({name: name, value: name}));
+
+		data.graph.forEach((name) => {
+			console.log(name);
+			if (name.trim() == "demo") {
+				values.push({name: "<div>" + name + "<a class='item' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
+			} else {
+				values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name});
+			}
+		});
 
 		$("#floor_search").dropdown({
 			allowAdditions: true, 
@@ -393,18 +462,51 @@ function getMapNamesFromServer() {
 			onChange: function(value, name) {
 				console.log(value, name);
 
-				// if exists in list
-				if (values.some(value => value.name == name)) {
+				if (value == "" || values.some(val => val.value == value)) {
 					document.querySelector('#create_floor_inputs').style.display = "none";
 					document.querySelector('#edit_floor').style.display = 'block';
+					document.querySelector('#edit_floor').classList.remove("negative");
+					document.querySelector('#edit_floor').classList.add("positive");
+					document.querySelector('#edit_floor').innerHTML = "Edit map"
 					document.querySelector('#select_floor_header').innerText = 'Select unit';
+					console.log("oldd");
 				} else {
 					document.querySelector('#create_floor_inputs').style.display = "block";
 					document.querySelector('#edit_floor').style.display = 'none';
 					document.querySelector('#select_floor_header').innerText = 'Create unit';
+					console.log("new");
+				}
+
+				let delete_button = document.querySelector(".text").firstChild.lastChild
+				if (delete_button != null) {
+					delete_button.style.display = "none";
 				}
 			}
 		});
+
+		document.querySelectorAll("#delete_map").forEach((e1) => {
+			e1.addEventListener("click", function(e2) {
+				let name = e1.parentNode.parentNode.textContent.trim();
+				e1.parentNode.parentNode.remove();
+
+				// reset value of dropdown if current selection gets deleted
+				let curValue = $("#floor_search").dropdown("get value").trim();
+
+				if (name == curValue) {
+					console.log("match");
+					$("#floor_search").dropdown("restore defaults");
+				}				
+
+				deleteMap(name);
+			})
+		});
+
+	});
+}
+
+function deleteMap(name) {
+	fetch(`graph/${name}`, {
+		method: 'delete'
 	});
 }
 
@@ -432,13 +534,14 @@ const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-		
-		data.graph.types.forEach((e) => {
-			types.push(e);
-		});
+		if (data.graph.types) {
+			data.graph.types.forEach((e) => {
+				types.push(e);
+			});
+		}
 		fillTypes();
-		console.log(data.graph);
 		if (data.graph.cyGraph.elements.nodes) {
+			console.log(data.graph.cyGraph.elements.nodes);
 			cy.add(data.graph.cyGraph.elements);
 		}
 	});
@@ -468,10 +571,10 @@ create_floor_btn.addEventListener('click', (e) => {
 	// load empty graph with this img (we'll send it to server on save)
 	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
 	let url = `graph/${current_graph}`;
-	let current_draft = {cyGraph: cy.json(), types: types};
+	//let current_draft = {cyGraph: cy.json(), types: types};
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({current_draft})
+		body: JSON.stringify({cyGraph: cy.json(), types: types})
 	});
 
 	if (file != -1) {
@@ -500,13 +603,13 @@ function drawBG() {
 		canvasLayer.setTransform(ctx);
 		ctx.save();
 		ctx.globalAlpha = 0.5;
-		ctx.drawImage(fileImage, 0, 0, fileImage.width, fileImage.height);
+		ctx.drawImage(fileImage, 0, 0, fileImage.width*2, fileImage.height*2);
 	}
 }
 
 // Popper stuff
 const type_list = document.querySelector('#type_list');
-const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', , 'violet', 'purple', 'pink', 'brown', 'black'];
+const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', 'violet', 'purple', 'pink', 'brown', 'black'];
 
 // let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
 // // should really get from server returned map, we need to store manually alongside cy.json();
@@ -527,8 +630,46 @@ $("#type_select").dropdown({
 		console.log(value, name);
 		if (popperNode != -1) {
 			popperNode.data("type", value);
+
+			let input_label = document.querySelector('#node_label_input').value;
+			let input_type = $("#type_select").dropdown("get value");
+			if (input_label == "") {
+				set_type_btn.classList.remove("positive");
+				set_type_btn.classList.add("negative");
+				set_type_btn.innerHTML = "Enter label";
+				return
+			}
+			if (input_type == "") {
+				set_type_btn.classList.remove("positive");
+				set_type_btn.classList.add("negative");
+				set_type_btn.innerHTML = "Enter type";
+				return
+			}
+			set_type_btn.classList.remove("negative");
+			set_type_btn.classList.add("positive");
+			set_type_btn.innerHTML = "Save node";
 		}
 	}
+});
+
+document.querySelector('#node_label_input').addEventListener("input", function(e) {
+	let input_label = document.querySelector('#node_label_input').value;
+	let input_type = $("#type_select").dropdown("get value");
+	if (input_label == "") {
+		set_type_btn.classList.remove("positive");
+		set_type_btn.classList.add("negative");
+		set_type_btn.innerHTML = "Enter label";
+		return
+	}
+	if (input_type == "") {
+		set_type_btn.classList.remove("positive");
+		set_type_btn.classList.add("negative");
+		set_type_btn.innerHTML = "Enter type";
+		return
+	}
+	set_type_btn.classList.remove("negative");
+	set_type_btn.classList.add("positive");
+	set_type_btn.innerHTML = "Save node";
 });
 
 const set_type_btn = document.querySelector('#set_type');
@@ -538,14 +679,17 @@ set_type_btn.addEventListener("click", (e) => {
 	let input_type = $("#type_select").dropdown("get value");
 
 	console.log(input_label, input_type);
+	if (set_type_btn.classList.contains("negative")) {
+		return;
+	}
 
 	if (!types.some(type => type.name == input_type)) {
 		add_new_node_type(input_type);
 	}
-
+	
 	popperNode.data("label", input_label);
-	popperNode.data("type", input_type);
 	hidePopper();
+	clear_label_inputs();
 });
 
 function hidePopper() {
@@ -558,6 +702,10 @@ function hidePopper() {
 }
 
 function add_new_node_type(type_name){
+	if (types.some(e => e.name == type_name)) {
+		return;
+	}
+
 	let color = colors[types.length%colors.length];
 	let div = document.createElement('div');
 	div.innerHTML = `<div class="item" data-value="${type_name}"> <a class="ui ${color} empty circular label"></a> ${type_name} </div>`;
@@ -569,6 +717,10 @@ function add_new_node_type(type_name){
 function clear_label_inputs(){
 	$("#type_select").dropdown("restore defaults");
 	document.querySelector('#node_label_input').value = "";
+	set_type_btn.classList.remove("positive");
+	set_type_btn.classList.add("negative");
+	set_type_btn.innerHTML = "Enter label";
+	//document.querySelector('#node_label_input').focus();
 }
 
 const matron_btn = document.querySelector('#matron');
@@ -576,13 +728,16 @@ matron_btn.addEventListener("click", (e) => {
 	location.reload();
 });
 
-// might as well cache since could be potentially large
-const all_distances_cache = undefined;
 const distance_btn = document.querySelector('#distance_btn');
 const distance_result_div = document.querySelector('#distance_result_div');
 const distance_icon = document.querySelector('#distance_icon');
 
 distance_icon.addEventListener('click', (e) =>{
+
+	if (current_graph == "") {
+		return
+	}
+
 	distance_result_div.style.display = 'none';
 	$('.ui.modal')
 		.modal('show')
@@ -591,19 +746,32 @@ distance_icon.addEventListener('click', (e) =>{
 
 distance_btn.addEventListener('click', (e) =>{
 	distance_result_div.style.display = 'block';
-	let node1 = document.querySelector('#node1').value;
-	let node2 = document.querySelector('#node2').value;
-	// make API call to retrieve distance
-	let distance = -1;
-	if (all_distances_cache != undefined){
-		// get the distance here
-		console.log('return the data');
-	} else {
-		// get the distance here
-		console.log(current_graph);
-		fetch(`graph/distance_two_rooms/${current_graph}/${node1}/${node2}`).then((resp) => resp.json()).then(function(data) {
-			console.log(data);
-		});
+	let node1_label = document.querySelector('#node1').value;
+	let node2_label = document.querySelector('#node2').value;
+
+	if (node1_label == "" || node2_label == "") {
+		document.querySelector('#dist_result').innerText = "Cannot search for empty room.";
+		return;
 	}
-	document.querySelector('#dist_result').innerText = "distance : " + distance;
+
+	let node1 = cy.$("node[label='" + node1_label + "']");
+	let node2 = cy.$("node[label='" + node2_label + "']");
+
+	if (node1.length == 0 && node2.length == 0) {
+		document.querySelector('#dist_result').innerText = "Neither room was not found.";
+		return;
+	} else if (node1.length == 0) {
+		document.querySelector('#dist_result').innerText = "First room was not found.";
+		return;
+	} else if (node2.length == 0) {
+		document.querySelector('#dist_result').innerText = "Second room was not found.";
+		return;
+	}
+
+	node1 = node1[0].id();
+	node2 = node2[0].id();
+
+	fetch(`graph/distance_two_rooms/${current_graph}/${node1}/${node2}`).then((resp) => resp.json()).then(function(data) {
+		document.querySelector('#dist_result').innerText = "distance : " + data;
+	});	
 });

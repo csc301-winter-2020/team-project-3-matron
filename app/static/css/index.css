@@ -78,20 +78,36 @@ body {
 	margin-left: 10px;
 }
 
-#distance_result_div{
+#distance_result_div {
 	display: none;
 }
 
-#ts{
+#ts {
 	margin: auto;
 	width: 100%;
 	padding: 10px;
 }
 
-#dist_result{
+#dist_result {
 	text-align:center;
 }
 
-.node_input_text{
+.node_input_text {
 	width: 100%;
+}
+
+#delete_map {
+	float: right;	
+}
+
+.delete_map_icon {
+	color: red;
+}
+
+.ban {
+	color: red;
+}
+
+#no_delete {
+	float: right;
 }
