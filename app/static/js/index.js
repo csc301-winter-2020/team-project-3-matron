@@ -576,8 +576,6 @@ matron_btn.addEventListener("click", (e) => {
 	location.reload();
 });
 
-// might as well cache since could be potentially large
-const all_distances_cache = undefined;
 const distance_btn = document.querySelector('#distance_btn');
 const distance_result_div = document.querySelector('#distance_result_div');
 const distance_icon = document.querySelector('#distance_icon');
@@ -593,16 +591,7 @@ distance_btn.addEventListener('click', (e) =>{
 	distance_result_div.style.display = 'block';
 	let node1 = document.querySelector('#node1').value;
 	let node2 = document.querySelector('#node2').value;
-	// make API call to retrieve distance
-	let distance = -1;
-	if (all_distances_cache != undefined){
-		// get the distance here
-		console.log('return the data');
-	} else {
-		// get the distance here
-		console.log(current_graph);
-		fetch(`graph/distance_two_rooms/${current_graph}/${node1}/${node2}`).then((resp) => resp.json()).then(function(data) {
-			document.querySelector('#dist_result').innerText = "distance : " + data;
-		});
-	}	
+	fetch(`graph/distance_two_rooms/${current_graph}/${node1}/${node2}`).then((resp) => resp.json()).then(function(data) {
+		document.querySelector('#dist_result').innerText = "distance : " + data;
+	});	
 });
