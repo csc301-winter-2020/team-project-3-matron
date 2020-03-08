@@ -189,9 +189,9 @@ let popperNode = -1;
 cy.on("tap", function(e) {
 	let target = e.target;
 
-	if (popperNode != -1) {
-		return;
-	}
+	// if (popperNode != -1) {
+	// 	return;
+	// }
 
 	if (target == cy) {
 		if (!ghost.enabled) {
@@ -249,9 +249,9 @@ cy.on("tap", function(e) {
 				let node_input_card = document.querySelector('#node_info');
 				node_input_card.style.display = "block";
 				document.body.appendChild(node_input_card);
-				clear_label_inputs();
+				// clear_label_inputs();
 
-				$("#type_select").dropdown("restore defaults");
+				// $("#type_select").dropdown("restore defaults");
 				
 				document.querySelector('#node_label_input').value = popperNode.data("label");
 				$("#type_select").dropdown("set selected", popperNode.data("type"));
@@ -286,9 +286,9 @@ cy.on("cxttapend", function(e) {
 
 	unselectAll();
 
-	if (popperNode != -1) {
-		return;
-	}
+	// if (popperNode != -1) {
+	// 	return;
+	// }
 
 	if (!ghost.enabled) {
 		if (hovered && hovered.group() == "nodes") {
