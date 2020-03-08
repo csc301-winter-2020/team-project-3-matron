@@ -445,8 +445,15 @@ document.getElementById("floor_search").addEventListener("focusout", function(e)
 function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
 		values = [];
-		
-		data.graph.forEach((name) => values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name}));
+
+		data.graph.forEach((name) => {
+			console.log(name);
+			if (name.trim() == "demo") {
+				values.push({name: "<div>" + name + "<a class='item' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
+			} else {
+				values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name});
+			}
+		});
 
 		$("#floor_search").dropdown({
 			allowAdditions: true, 
@@ -490,12 +497,16 @@ function getMapNamesFromServer() {
 					$("#floor_search").dropdown("restore defaults");
 				}				
 
-				fetch(`graph/${name}`, {
-					method: 'delete'
-				});
+				deleteMap(name);
 			})
 		});
 
+	});
+}
+
+function deleteMap(name) {
+	fetch(`graph/${name}`, {
+		method: 'delete'
 	});
 }
 

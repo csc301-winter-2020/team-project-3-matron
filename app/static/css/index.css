@@ -103,3 +103,11 @@ body {
 .delete_map_icon {
 	color: red;
 }
+
+.ban {
+	color: red;
+}
+
+#no_delete {
+	float: right;
+}
