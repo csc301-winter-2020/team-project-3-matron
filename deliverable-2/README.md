@@ -3,10 +3,8 @@
 > _Note:_ This document is intended to be relatively short. Be concise and precise. Assume the reader has no prior knowledge of your application and is non-technical.
 
 ## Description 
-The application is primarily a web application, to be used as a component in Matron's larger overall system for managing medical care.
- Our application will specifically handle the input and processing of hospital unit maps, in order to compute the shortest paths between rooms.
- The goal of this application is to reduce the time spent walking by hospital staff, which has been shown to increase stress and burnout, which can also negatively affect patients.
-An additional component of our application will be a webapp for smartphones that can be used by hospital staff to actually measure time between rooms, in order to tune the graph that represents the unit.
+The application is primarily a web application, to be used as a component in Matron's larger overall system for managing medical care. The problem is that nurse tasks are currently scheduled by a system that does not take into account the spatial locations of rooms in the hospital. This leads to lots of extra workload and inefficiency which can increase nurse stress and negatively affect patient outcomes.
+Our application will specifically handle the input and pathfinding of hospital unit maps, in order to compute the shortest paths between rooms. It's designed to integrate with the existing patient scheduler so that our API can be used to optimize pathfinding for nurses throughout the entire hospital. This will reduce stress in the hospital and help the Matron system to better schedule nurses to complete their tasks.
 
  * Provide a high-level description of your application and it's value from an end-user's perspective
  * What is the problem you're trying to solve?
@@ -15,16 +13,14 @@ An additional component of our application will be a webapp for smartphones that
 ## Key Features
  * Users can upload an existing map of the unit to use as a guide when building the graph of the rooms.
  * Users can draw and modify the graph of the unit using nodes which are overlaid on the uploaded guide.
- * Users can tweak the time it takes to get from one room to another by measuring with the smartphone webapp.
- * Users, via Matron's tools, will be able to view paths generated for them.
+ * Users can measure the time it takes to get from any given room to anyther.
+ * All created hospital maps are saved for users to retrieve and further edit.
 
  * Described the key features in the application that the user can access
  * Provide a breakdown or detail for each feature that is most appropriate for your application
  * This section will be used to assess the value of the features built
 
 ## Instructions
- 
-
 
  * Clear instructions for how to use the application from the end-user's perspective
  * How do you access it? Are accounts pre-created or does a user register? Where do you start? etc. 
@@ -33,12 +29,12 @@ An additional component of our application will be a webapp for smartphones that
  
  ## Development requirements
  The webapp is configured for heroku. The codebase can be directly deployed to heroku, or requirements can be manually installed. In either case, there is the additional requirement of a MongoDB server, which can be provisioned from heroku or elsewhere.
- * Install python 3.8+
+ * Install Python 3.6+
  * Install or Provision a MongoDB instance.
  * Clone the repo
- * Get your MongoDB uri and paste it into `app/main.py` on line 13.
- * If using heroku, just `heroku local`, or associate the repo with your heroku app.
- * If not using heroku, install python dependencies globally (kinda bad, `pip install -r requirements.txt`) or locally, with your choice of virtual environment such as Pipenv.
+ * Put your MongoDB access settings into `app/main.py` on line 13.
+ * If using Heroku, push the current copy of the repo to the heroku-remote
+ * If not using heroku, install python dependencies using `pip install -r requirements.txt`
  * To run the server: `python app/main.py`
 
  * If a developer were to set this up on their machine or a remote server, what are the technical requirements (e.g. OS, libraries, etc.)?
