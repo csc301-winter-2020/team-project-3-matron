@@ -384,7 +384,7 @@ function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
 		values = [];
 		
-		data.graph.forEach((name) => values.push({name: name, value: name}));
+		data.graph.forEach((name) => values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='save icon'></i> </a></div>", value: name}));
 
 		$("#floor_search").dropdown({
 			allowAdditions: true, 
@@ -394,7 +394,7 @@ function getMapNamesFromServer() {
 				console.log(value, name);
 
 				// if exists in list
-				if (values.some(value => value.name == name)) {
+				if (values.some(val => val.value == value)) {
 					document.querySelector('#create_floor_inputs').style.display = "none";
 					document.querySelector('#edit_floor').style.display = 'block';
 					document.querySelector('#edit_floor').classList.remove("negative");
@@ -408,8 +408,17 @@ function getMapNamesFromServer() {
 					document.querySelector('#select_floor_header').innerText = 'Create unit';
 					console.log("new");
 				}
+
+				console.log(document.querySelector(".text").firstChild.lastChild.style.display = "none");
 			}
 		});
+
+		document.querySelectorAll("#delete_map").forEach((e1) => {
+			e1.addEventListener("click", function(e2) {
+				console.log(e1.parentNode.parentNode.textContent);
+			})
+		});
+
 	});
 }
 
