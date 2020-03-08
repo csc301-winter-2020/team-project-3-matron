@@ -8,7 +8,7 @@ basic_single = {
             "data":{
                 "label":"r1",
                 "type":"room",
-                "id":"bcb73bd1-da17-4294-a5b7-0303298bedab"
+                "id":"r1",
             },
             "position":{
                 "x":469,
@@ -32,7 +32,7 @@ two_rooms_disconnected_json = {
             "data":{
                 "label":"",
                 "type":"hallway",
-                "id":"a9ec5c38-d4ac-4b54-9826-c01119f7e13c"
+                "id":"r1"
             },
             "position":{
                 "x":339,
@@ -51,7 +51,7 @@ two_rooms_disconnected_json = {
             "data":{
                 "label":"",
                 "type":"hallway",
-                "id":"c15fc0b0-95fa-48e4-9e60-b1ba2b0002c1"
+                "id":"r2"
             },
             "position":{
                 "x":535,
@@ -75,7 +75,7 @@ two_rooms_one_hallway_node_json = {
             "data":{
                 "label":"r1",
                 "type":"room",
-                "id":"bdd4ba50-63cf-49c7-be4f-f6e7da694cb8"
+                "id":"r1"
             },
             "position":{
                 "x":370,
@@ -94,7 +94,7 @@ two_rooms_one_hallway_node_json = {
             "data":{
                 "label":"r1",
                 "type":"room",
-                "id":"c23eb44e-d70f-4b38-b24a-59934f0e00b2"
+                "id":"r2"
             },
             "position":{
                 "x":593,
@@ -113,7 +113,7 @@ two_rooms_one_hallway_node_json = {
             "data":{
                 "label":"",
                 "type":"hallway",
-                "id":"48f4d09d-532f-447a-95f9-ceda50e4823e"
+                "id":"h1"
             },
             "position":{
                 "x":468,
@@ -132,10 +132,10 @@ two_rooms_one_hallway_node_json = {
     "edges":[
         {
             "data":{
-                "id":"bdd4ba50-63cf-49c7-be4f-f6e7da694cb8-48f4d09d-532f-447a-95f9-ceda50e4823e",
+                "id":"e-r1-h1",
                 "label":"",
-                "source":"bdd4ba50-63cf-49c7-be4f-f6e7da694cb8",
-                "target":"48f4d09d-532f-447a-95f9-ceda50e4823e"
+                "source":"r1",
+                "target":"h1"
             },
             "position":{
                 "x":0,
@@ -152,10 +152,10 @@ two_rooms_one_hallway_node_json = {
         },
         {
             "data":{
-                "id":"48f4d09d-532f-447a-95f9-ceda50e4823e-c23eb44e-d70f-4b38-b24a-59934f0e00b2",
+                "id":"r-h2-r2",
                 "label":"",
-                "source":"48f4d09d-532f-447a-95f9-ceda50e4823e",
-                "target":"c23eb44e-d70f-4b38-b24a-59934f0e00b2"
+                "source":"h1",
+                "target":"r2"
             },
             "position":{
                 "x":0,
@@ -179,7 +179,7 @@ two_rooms_many_hallway_nodes_json = {
             "data":{
                 "label":"r1",
                 "type":"room",
-                "id":"730e433f-f2d1-4a71-9911-881c7440603e"
+                "id":"r1"
             },
             "position":{
                 "x":345,
@@ -198,7 +198,7 @@ two_rooms_many_hallway_nodes_json = {
             "data":{
                 "label":"",
                 "type":"hallway",
-                "id":"abe33564-e350-4af4-a0cf-b26086ccaef1"
+                "id":"h1"
             },
             "position":{
                 "x":496,
@@ -217,7 +217,7 @@ two_rooms_many_hallway_nodes_json = {
             "data":{
                 "label":"r2",
                 "type":"room",
-                "id":"09fbb466-71de-468b-92de-1182310bb13d"
+                "id":"r2"
             },
             "position":{
                 "x":786,
@@ -236,7 +236,7 @@ two_rooms_many_hallway_nodes_json = {
             "data":{
                 "label":"",
                 "type":"hallway",
-                "id":"c03ae0c1-0dcb-4b24-a491-3fa4affeba73"
+                "id":"h2"
             },
             "position":{
                 "x":573,
@@ -255,7 +255,7 @@ two_rooms_many_hallway_nodes_json = {
             "data":{
                 "label":"",
                 "type":"hallway",
-                "id":"b549ce93-8d32-4058-a5b8-b6defbabba1d"
+                "id":"h3"
             },
             "position":{
                 "x":648,
@@ -274,7 +274,7 @@ two_rooms_many_hallway_nodes_json = {
             "data":{
                 "label":"",
                 "type":"hallway",
-                "id":"313a848d-4f80-4bf9-8a34-26116b71b699"
+                "id":"h4"
             },
             "position":{
                 "x":732,
@@ -293,10 +293,10 @@ two_rooms_many_hallway_nodes_json = {
     "edges":[
         {
             "data":{
-                "id":"abe33564-e350-4af4-a0cf-b26086ccaef1-730e433f-f2d1-4a71-9911-881c7440603e",
+                "id":"e-h1-r1",
                 "label":"",
-                "source":"abe33564-e350-4af4-a0cf-b26086ccaef1",
-                "target":"730e433f-f2d1-4a71-9911-881c7440603e"
+                "source":"h1",
+                "target":"r1"
             },
             "position":{
                 "x":0,
@@ -313,10 +313,10 @@ two_rooms_many_hallway_nodes_json = {
         },
         {
             "data":{
-                "id":"abe33564-e350-4af4-a0cf-b26086ccaef1-c03ae0c1-0dcb-4b24-a491-3fa4affeba73",
+                "id":"e-h1-h2",
                 "label":"",
-                "source":"abe33564-e350-4af4-a0cf-b26086ccaef1",
-                "target":"c03ae0c1-0dcb-4b24-a491-3fa4affeba73"
+                "source":"h1",
+                "target":"h2"
             },
             "position":{
                 "x":0,
@@ -333,10 +333,10 @@ two_rooms_many_hallway_nodes_json = {
         },
         {
             "data":{
-                "id":"c03ae0c1-0dcb-4b24-a491-3fa4affeba73-b549ce93-8d32-4058-a5b8-b6defbabba1d",
+                "id":"e-h2-h3", 
                 "label":"",
-                "source":"c03ae0c1-0dcb-4b24-a491-3fa4affeba73",
-                "target":"b549ce93-8d32-4058-a5b8-b6defbabba1d"
+                "source":"h2",
+                "target":"h3"
             },
             "position":{
                 "x":0,
@@ -353,10 +353,10 @@ two_rooms_many_hallway_nodes_json = {
         },
         {
             "data":{
-                "id":"b549ce93-8d32-4058-a5b8-b6defbabba1d-313a848d-4f80-4bf9-8a34-26116b71b699",
+                "id":"e-h3-h4",
                 "label":"",
-                "source":"b549ce93-8d32-4058-a5b8-b6defbabba1d",
-                "target":"313a848d-4f80-4bf9-8a34-26116b71b699"
+                "source":"h3",
+                "target":"h4"
             },
             "position":{
                 "x":0,
@@ -373,10 +373,10 @@ two_rooms_many_hallway_nodes_json = {
         },
         {
             "data":{
-                "id":"313a848d-4f80-4bf9-8a34-26116b71b699-09fbb466-71de-468b-92de-1182310bb13d",
+                "id":"e-h4-r2",
                 "label":"",
-                "source":"313a848d-4f80-4bf9-8a34-26116b71b699",
-                "target":"09fbb466-71de-468b-92de-1182310bb13d"
+                "source":"h4",
+                "target":"r2"
             },
             "position":{
                 "x":0,
