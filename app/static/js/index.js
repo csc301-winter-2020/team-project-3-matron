@@ -385,9 +385,12 @@ function saveGraph() {
 }
 
 document.getElementById("floor_search").addEventListener("focusout", function(e) {
-	let selected = document.querySelector(".text").firstChild.lastChild
+	let selected = document.querySelector(".text").firstChild;
+
 	if (selected != null) {
-		selected.style.display = "none";
+		if (selected.lastChild != null) {
+			selected.lastChild.style.display = "none";
+		}
 	}
 });
 
@@ -404,8 +407,7 @@ function getMapNamesFromServer() {
 			onChange: function(value, name) {
 				console.log(value, name);
 
-				// if exists in list
-				if (values.some(val => val.value == value)) {
+				if (value == "" || values.some(val => val.value == value)) {
 					document.querySelector('#create_floor_inputs').style.display = "none";
 					document.querySelector('#edit_floor').style.display = 'block';
 					document.querySelector('#edit_floor').classList.remove("negative");
@@ -420,9 +422,9 @@ function getMapNamesFromServer() {
 					console.log("new");
 				}
 
-				let selected = document.querySelector(".text").firstChild.lastChild
-				if (selected != null) {
-					selected.style.display = "none";
+				let delete_button = document.querySelector(".text").firstChild.lastChild
+				if (delete_button != null) {
+					delete_button.style.display = "none";
 				}
 			}
 		});
@@ -430,7 +432,12 @@ function getMapNamesFromServer() {
 		document.querySelectorAll("#delete_map").forEach((e1) => {
 			e1.addEventListener("click", function(e2) {
 				let name = e1.parentNode.parentNode.textContent;
-				console.log(e1.parentNode.parentNode.remove());
+				e1.parentNode.parentNode.remove();
+				// console.log(document.querySelector(".text").firstChild.style.display = "none");
+
+				// reset value of dropdown if current selection gets deleted
+				//$("#floor_search").dropdown("set selected");
+				$("#floor_search").dropdown("restore defaults");
 
 				fetch(`graph/${name}`, {
 					method: 'delete'
