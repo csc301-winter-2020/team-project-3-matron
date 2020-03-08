@@ -23,7 +23,8 @@ basic_single = {
             "pannable":False,
             "classes":""
         }
-    ]
+    ],
+    "edges": []
 }
 
 two_rooms_disconnected_json = {
@@ -66,7 +67,8 @@ two_rooms_disconnected_json = {
             "pannable":False,
             "classes":""
         }
-    ]
+    ],
+    "edges": []
 }
 
 two_rooms_one_hallway_node_json = {
