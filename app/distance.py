@@ -4,7 +4,7 @@ For routing, use distance, find_dist_and_dump, and find_all_dist_and_dump. See d
 Find the distance between any two nodes in a given graph, with a list of node id pairs.
 """
 
-from .utility import *
+from utility import *
 import json
 
 
@@ -79,7 +79,7 @@ def find_all_room_distances(graph: Graph) -> Dict[str, RoomDistanceMap]:
     return maps
 
 
-def distance(json_graph: Dict[List[Dict]], room_id_a: str, room_id_b: str) -> float:
+def distance(json_graph: JSONGraph, room_id_a: str, room_id_b: str) -> float:
     """
     Return the distance (edge weight sum along shortest path) between rooms
     specified by their id's, and given the graph in which they exist.
@@ -89,7 +89,7 @@ def distance(json_graph: Dict[List[Dict]], room_id_a: str, room_id_b: str) -> fl
     return dijkstra(g, room_id_a, room_id_b)[0]
 
 
-def find_dist_and_dump(json_graph: Dict[List[Dict]], start_id: str) -> RoomDistanceMap:
+def find_dist_and_dump(json_graph: JSONGraph, start_id: str) -> RoomDistanceMap:
     """
     Return a json dump of all room distances from a given start room. Raises a
     ValueError if graph is not connected, where the arguments are the ids of the
@@ -98,7 +98,7 @@ def find_dist_and_dump(json_graph: Dict[List[Dict]], start_id: str) -> RoomDista
     return json.dumps(find_dist_from_start(Graph(json_graph), start_id))
 
 
-def find_all_dist_and_dump(json_graph: Dict[List[Dict]]) -> Dict[str, RoomDistanceMap]:
+def find_all_dist_and_dump(json_graph: JSONGraph) -> Dict[str, RoomDistanceMap]:
     """
     Return a json dump of a dict which maps all rooms to their corresponding
     RoomDistanceMaps.

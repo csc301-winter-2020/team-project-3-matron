@@ -19,6 +19,10 @@ Path = Tuple[float, List[str]]
 # Value: ascending-order tuples (d, id) similar to Adjacency map
 RoomDistanceMap = Dict[str, List[Tuple[float, str]]]
 
+# Key: JSON object type
+# Value: List of objects of that type
+JSONGraph = Dict[str, List[Dict]]
+
 
 def get_sys_args() -> List[str]:
     """
@@ -110,7 +114,7 @@ class Graph:
     edges: List[Edge]
     nodes: List[Node]
 
-    def __init__(self, json_data: Dict[List[Dict]]):
+    def __init__(self, json_data: JSONGraph):
 
         self.nodes = [Node(json_obj) for json_obj in json_data["nodes"]]
         self.edges = [Edge(json_obj) for json_obj in json_data["edges"]]

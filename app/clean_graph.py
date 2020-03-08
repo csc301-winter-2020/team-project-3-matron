@@ -61,7 +61,7 @@ def clean_graph(graph: Graph) -> None:
         cur_edge = find_removable_edge(graph)
 
 
-def clean_and_dump(json_graph: List[Dict]) -> List[Dict]:
+def clean_and_dump(json_graph: JSONGraph) -> JSONGraph:
     """
     Calls clean_graph on graph and returns a json dump of the
     newly-cleaned graph.
