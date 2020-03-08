@@ -198,7 +198,7 @@ cy.on("tap", function(e) {
 			let newNode = addNode(e.position.x, e.position.y);
 			popperNode = newNode;
 
-			let popper = newNode.popper({
+			let popper = popperNode.popper({
 				content: () => {
 					let node_input_card = document.querySelector('#node_info');
 					node_input_card.style.display = "block";
@@ -212,13 +212,13 @@ cy.on("tap", function(e) {
 				popper.scheduleUpdate();
 			};
 
-			newNode.on("position", update);
+			popperNode.on("position", update);
 			cy.on("pan zoom resize", update);
 
 			unselectAll();
-			newNode.selectify();
-			newNode.select();
-			newNode.unselectify();
+			popperNode.selectify();
+			popperNode.select();
+			popperNode.unselectify();
 		} else {
 			unselectAll();
 		}
@@ -230,6 +230,38 @@ cy.on("tap", function(e) {
 
 	if (!target.selected() && !e.originalEvent.ctrlKey) {
 		unselectAll();
+	}
+
+	if (target.group() == "nodes") {
+		popperNode = target;
+
+		let popper = popperNode.popper({
+			content: () => {
+				let node_input_card = document.querySelector('#node_info');
+				node_input_card.style.display = "block";
+				document.body.appendChild(node_input_card);
+				clear_label_inputs();
+
+				$("#type_select").dropdown("restore defaults");
+				
+				document.querySelector('#node_label_input').value = popperNode.data("label");
+				$("#type_select").dropdown("set selected", popperNode.data("type"));
+
+				return node_input_card;
+			}
+		});
+
+		let update = () => {
+			popper.scheduleUpdate();
+		};
+
+		popperNode.on("position", update);
+		cy.on("pan zoom resize", update);
+
+		unselectAll();
+		popperNode.selectify();
+		popperNode.select();
+		popperNode.unselectify();
 	}
 
 	ghost.disable();
@@ -588,7 +620,7 @@ $("#type_select").dropdown({
 			}
 			set_type_btn.classList.remove("negative");
 			set_type_btn.classList.add("positive");
-			set_type_btn.innerHTML = "Add node";
+			set_type_btn.innerHTML = "Save node";
 		}
 	}
 });
@@ -610,7 +642,7 @@ document.querySelector('#node_label_input').addEventListener("input", function(e
 	}
 	set_type_btn.classList.remove("negative");
 	set_type_btn.classList.add("positive");
-	set_type_btn.innerHTML = "Add node";
+	set_type_btn.innerHTML = "Save node";
 });
 
 const set_type_btn = document.querySelector('#set_type');
@@ -628,7 +660,9 @@ set_type_btn.addEventListener("click", (e) => {
 		add_new_node_type(input_type);
 	}
 	
+	popperNode.data("label", input_label);
 	hidePopper();
+	clear_label_inputs();
 });
 
 function hidePopper() {
