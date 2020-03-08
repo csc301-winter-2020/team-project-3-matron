@@ -414,11 +414,20 @@ function saveGraph() {
 		return;
 	}
 
-	let current_draft = {cyGraph: cy.json(), types: types};
+	let graph = cy.json();
+
+	if (!graph.elements.nodes) {
+		graph.elements.nodes = [];
+	}
+
+	if (!graph.elements.edges) {
+		graph.elements.edges = [];
+	}
+	console.log(graph);
 	let url = `graph/${current_graph}`;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify(current_draft)
+		body: JSON.stringify({cyGraph: graph, types: types})
 	});
 	if (fileData != -1) {
 		
@@ -569,13 +578,13 @@ const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
-	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
-	let url = `graph/${current_graph}`;
-	//let current_draft = {cyGraph: cy.json(), types: types};
-	fetch(url, {
-		method: 'post',
-		body: JSON.stringify({cyGraph: cy.json(), types: types})
-	});
+	// current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
+	// let url = `graph/${current_graph}`;
+	// //let current_draft = {cyGraph: cy.json(), types: types};
+	// fetch(url, {
+	// 	method: 'post',
+	// 	body: JSON.stringify({cyGraph: cy.json(), types: types})
+	// });
 
 	if (file != -1) {
 		reader.readAsDataURL(file);
