@@ -600,8 +600,7 @@ distance_btn.addEventListener('click', (e) =>{
 		console.log('return the data');
 	} else {
 		// get the distance here
-		console.log(current_graph);
-		fetch(`graph/${current_graph}/distances`).then((resp) => resp.json()).then(function(data) {
+		fetch(`graph/distance/rooms/${current_graph}/${node1}/${node2}`).then((resp) => resp.json()).then(function(data) {
 			console.log(data);
 		});
 

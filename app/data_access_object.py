@@ -5,9 +5,7 @@ import gridfs
 class MongoDAO:
     """
     The MongoDAO object, used to interface with a given MongoDB database
-
     Attributes:
-
     client : MongoClient
         used to connect to the database server
     graphdb : Database
@@ -18,9 +16,7 @@ class MongoDAO:
         used to save and retrieve blueprints
     meta_collect : Collection
         used to view metadata for stored blueprints
-
     Methods:
-
     save_graph : bool
         saves latest version of a graph in the database
         returns true if successful, false otherwise
@@ -37,11 +33,11 @@ class MongoDAO:
     get_all_versions : [int]
         returns a list of past versions for the requested graph
     get_all_names : [String]
-        returns a list of graph names
+        returns a list of all graph names
     save_blueprint : None
-        saves the blueprint image of a graph
+        saves the blueprint image of a graph using GridFS
     get_blueprint : String
-        returns the blueprint of a graph
+        returns the blueprint of a graph in base64
     """
 
     def __init__(self, connection, password):
@@ -97,18 +93,24 @@ class MongoDAO:
         return collection.drop()
 
     def get_latest(self, graphname):
-        """returns a dictionary for the latest version of the specified graph"""
+        """returns a dictionary for the latest version of the specified graph
+           returns None if there are no versions saved for that graph
+        """
         collection = self.graphdb[graphname]
         dates = collection.find({}, {'_id': 0, 'date': 1})
         stripped = [date['date'] for date in dates]
-        document = collection.find_one({'date': stripped[-1]}, {'_id': 0})
-        return document
+        if (len(stripped) > 0):
+            return collection.find_one({'date': stripped[-1]}, {'_id': 0})
+        else:
+            return None
+        
 
     def get_version(self, graphname, date):
-        """returns a dictionary for the given version of the specified graph"""
+        """returns a dictionary for the given version of the specified graph
+           returns None if the specified version does not exist
+        """
         collection = self.graphdb[graphname]
-        document = collection.find_one({'date': date}, {'_id': 0})
-        return document
+        return collection.find_one({'date': date}, {'_id': 0})
 
     def get_all_versions(self, graphname):
         """returns all stored versions of the specified graph, in a list dates for those objects"""
