@@ -2,161 +2,394 @@
 JSON objects for use in test files
 """
 
-basic_single = [
-    {
-        "data": {
-            "id": "0",
-            "type": "room"
-        },
-        "group": "nodes"
-    }
-]
+basic_single = {
+    "nodes":[
+        {
+            "data":{
+                "label":"r1",
+                "type":"room",
+                "id":"bcb73bd1-da17-4294-a5b7-0303298bedab"
+            },
+            "position":{
+                "x":469,
+                "y":306
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":True,
+            "selectable":False,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
+        }
+    ]
+}
 
-two_rooms_disconnected_json = [
-    {
-        "data": {
-            "id": "0",
-            "type": "room"
+two_rooms_disconnected_json = {
+    "nodes":[
+        {
+            "data":{
+                "label":"",
+                "type":"hallway",
+                "id":"a9ec5c38-d4ac-4b54-9826-c01119f7e13c"
+            },
+            "position":{
+                "x":339,
+                "y":365
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "1",
-            "type": "room"
-        },
-        "group": "nodes"
-    },
-]
+        {
+            "data":{
+                "label":"",
+                "type":"hallway",
+                "id":"c15fc0b0-95fa-48e4-9e60-b1ba2b0002c1"
+            },
+            "position":{
+                "x":535,
+                "y":365
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
+        }
+    ]
+}
 
-two_rooms_one_hallway_node_json = [
-    {
-        "data": {
-            "id": "0",
-            "type": "room"
+two_rooms_one_hallway_node_json = {
+    "nodes":[
+        {
+            "data":{
+                "label":"r1",
+                "type":"room",
+                "id":"bdd4ba50-63cf-49c7-be4f-f6e7da694cb8"
+            },
+            "position":{
+                "x":370,
+                "y":425
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":False,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "1",
-            "type": "room"
+        {
+            "data":{
+                "label":"r1",
+                "type":"room",
+                "id":"c23eb44e-d70f-4b38-b24a-59934f0e00b2"
+            },
+            "position":{
+                "x":593,
+                "y":437
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":True,
+            "selectable":False,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "2",
-            "type": "hallway"
+        {
+            "data":{
+                "label":"",
+                "type":"hallway",
+                "id":"48f4d09d-532f-447a-95f9-ceda50e4823e"
+            },
+            "position":{
+                "x":468,
+                "y":418
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
+        }
+    ],
+    "edges":[
+        {
+            "data":{
+                "id":"bdd4ba50-63cf-49c7-be4f-f6e7da694cb8-48f4d09d-532f-447a-95f9-ceda50e4823e",
+                "label":"",
+                "source":"bdd4ba50-63cf-49c7-be4f-f6e7da694cb8",
+                "target":"48f4d09d-532f-447a-95f9-ceda50e4823e"
+            },
+            "position":{
+                "x":0,
+                "y":0
+            },
+            "group":"edges",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":True,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "3",
-            "source": "0",
-            "target": "2",
-            "weight": 1.0
-        },
-        "group": "edges"
-    },
-    {
-        "data": {
-            "id": "4",
-            "source": "2",
-            "target": "1",
-            "weight": 1.0
-        },
-        "group": "edges"
-    },
-]
+        {
+            "data":{
+                "id":"48f4d09d-532f-447a-95f9-ceda50e4823e-c23eb44e-d70f-4b38-b24a-59934f0e00b2",
+                "label":"",
+                "source":"48f4d09d-532f-447a-95f9-ceda50e4823e",
+                "target":"c23eb44e-d70f-4b38-b24a-59934f0e00b2"
+            },
+            "position":{
+                "x":0,
+                "y":0
+            },
+            "group":"edges",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":True,
+            "classes":""
+        }
+    ]
+}
 
-two_rooms_many_hallway_nodes_json = [
-    {
-        "data": {
-            "id": "0",
-            "type": "room"
+two_rooms_many_hallway_nodes_json = {
+    "nodes":[
+        {
+            "data":{
+                "label":"r1",
+                "type":"room",
+                "id":"730e433f-f2d1-4a71-9911-881c7440603e"
+            },
+            "position":{
+                "x":345,
+                "y":424
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":False,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "1",
-            "type": "hallway"
+        {
+            "data":{
+                "label":"",
+                "type":"hallway",
+                "id":"abe33564-e350-4af4-a0cf-b26086ccaef1"
+            },
+            "position":{
+                "x":496,
+                "y":373
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "2",
-            "type": "hallway"
+        {
+            "data":{
+                "label":"r2",
+                "type":"room",
+                "id":"09fbb466-71de-468b-92de-1182310bb13d"
+            },
+            "position":{
+                "x":786,
+                "y":410
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":True,
+            "selectable":False,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "3",
-            "type": "hallway"
+        {
+            "data":{
+                "label":"",
+                "type":"hallway",
+                "id":"c03ae0c1-0dcb-4b24-a491-3fa4affeba73"
+            },
+            "position":{
+                "x":573,
+                "y":364
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "4",
-            "type": "hallway"
+        {
+            "data":{
+                "label":"",
+                "type":"hallway",
+                "id":"b549ce93-8d32-4058-a5b8-b6defbabba1d"
+            },
+            "position":{
+                "x":648,
+                "y":361
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "5",
-            "type": "room"
+        {
+            "data":{
+                "label":"",
+                "type":"hallway",
+                "id":"313a848d-4f80-4bf9-8a34-26116b71b699"
+            },
+            "position":{
+                "x":732,
+                "y":367
+            },
+            "group":"nodes",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":False,
+            "classes":""
+        }
+    ],
+    "edges":[
+        {
+            "data":{
+                "id":"abe33564-e350-4af4-a0cf-b26086ccaef1-730e433f-f2d1-4a71-9911-881c7440603e",
+                "label":"",
+                "source":"abe33564-e350-4af4-a0cf-b26086ccaef1",
+                "target":"730e433f-f2d1-4a71-9911-881c7440603e"
+            },
+            "position":{
+                "x":0,
+                "y":0
+            },
+            "group":"edges",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":True,
+            "classes":""
         },
-        "group": "nodes"
-    },
-    {
-        "data": {
-            "id": "6",
-            "source": "0",
-            "target": "1",
-            "weight": 1.0
+        {
+            "data":{
+                "id":"abe33564-e350-4af4-a0cf-b26086ccaef1-c03ae0c1-0dcb-4b24-a491-3fa4affeba73",
+                "label":"",
+                "source":"abe33564-e350-4af4-a0cf-b26086ccaef1",
+                "target":"c03ae0c1-0dcb-4b24-a491-3fa4affeba73"
+            },
+            "position":{
+                "x":0,
+                "y":0
+            },
+            "group":"edges",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":True,
+            "classes":""
         },
-        "group": "edges"
-    },
-    {
-        "data": {
-            "id": "7",
-            "source": "1",
-            "target": "2",
-            "weight": 1.0
+        {
+            "data":{
+                "id":"c03ae0c1-0dcb-4b24-a491-3fa4affeba73-b549ce93-8d32-4058-a5b8-b6defbabba1d",
+                "label":"",
+                "source":"c03ae0c1-0dcb-4b24-a491-3fa4affeba73",
+                "target":"b549ce93-8d32-4058-a5b8-b6defbabba1d"
+            },
+            "position":{
+                "x":0,
+                "y":0
+            },
+            "group":"edges",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":True,
+            "classes":""
         },
-        "group": "edges"
-    },
-    {
-        "data": {
-            "id": "8",
-            "source": "2",
-            "target": "3",
-            "weight": 1.0
+        {
+            "data":{
+                "id":"b549ce93-8d32-4058-a5b8-b6defbabba1d-313a848d-4f80-4bf9-8a34-26116b71b699",
+                "label":"",
+                "source":"b549ce93-8d32-4058-a5b8-b6defbabba1d",
+                "target":"313a848d-4f80-4bf9-8a34-26116b71b699"
+            },
+            "position":{
+                "x":0,
+                "y":0
+            },
+            "group":"edges",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":True,
+            "classes":""
         },
-        "group": "edges"
-    },
-    {
-        "data": {
-            "id": "9",
-            "source": "3",
-            "target": "4",
-            "weight": 1.0
-        },
-        "group": "edges"
-    },
-    {
-        "data": {
-            "id": "10",
-            "source": "4",
-            "target": "5",
-            "weight": 1.0
-        },
-        "group": "edges"
-    },
-]
+        {
+            "data":{
+                "id":"313a848d-4f80-4bf9-8a34-26116b71b699-09fbb466-71de-468b-92de-1182310bb13d",
+                "label":"",
+                "source":"313a848d-4f80-4bf9-8a34-26116b71b699",
+                "target":"09fbb466-71de-468b-92de-1182310bb13d"
+            },
+            "position":{
+                "x":0,
+                "y":0
+            },
+            "group":"edges",
+            "removed":False,
+            "selected":False,
+            "selectable":True,
+            "locked":False,
+            "grabbable":True,
+            "pannable":True,
+            "classes":""
+        }
+    ]
+}
