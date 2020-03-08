@@ -4,7 +4,7 @@ from time import gmtime, strftime, time
 
 from data_access_object import MongoDAO
 from clean_graph import clean_and_dump
-from distance import find_dist_and_dump, find_all_dist_and_dump
+from distance import find_dist_and_dump, find_all_dist_and_dump, dijkstra
 from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
@@ -44,13 +44,6 @@ def blueprint(name):
     elif request.method == 'GET':
         byte_array = dao.get_blueprint(name)
         return jsonify(byte_array)
-        # with open(name + ".png", "wb") as write_file:
-        #     write_file.write(byte_array)
-
-        # try:
-        #     return send_file(name + ".png", attachment_filename=name + ".png")
-        # except Exception as e:
-        #     return str(e)
     else:
         print("Invalid request type!")
         return jsonify(failure)
@@ -64,7 +57,6 @@ def graph(name):
 
     name: the name of the graph
     """
-    print("wefwfwrwrfwreferf")
     if request.method == 'POST':
         g = request.get_json(force=True)
         t = int(time())
@@ -86,7 +78,7 @@ def graph(name):
         print("Invalid request type!")
 
 
-@app.route('/graph/<string:name>/requestAll')
+@app.route('/graph/requestAll/<string:name>')
 def get_all_versions(name):
     """
     acquires the 10 most recent dates of saves for a particular graph
@@ -101,7 +93,7 @@ def get_all_versions(name):
     return jsonify({'times': times, 'status': 200})
 
 
-@app.route('/graph/<string:name>/<date>', methods=['GET', 'DELETE'])
+@app.route('/graph/version/<string:name>/<date>', methods=['GET', 'DELETE'])
 def graph_version(name, date):
     """
     retrieves/deletes the specified version dates of a given graph
@@ -125,7 +117,7 @@ def graph_version(name, date):
         return jsonify(failure)
 
 
-@app.route('/graph/<string:graph_name>/<string:room>')
+@app.route('/graph/distance/<string:graph_name>/<string:room>')
 def distances_from_room(graph_name, room):
     """
     retrieves all distances of a specific room to the rest
@@ -134,7 +126,8 @@ def distances_from_room(graph_name, room):
     graph_name: the name of the graph
     room:       the name of the room
     """
-    graph = request.get_json(force=True)
+    data = dao.get_latest(graph_name)
+    graph = data['graph']
     try: 
         res = {'distances': find_dist_and_dump(graph, room), 'status': 200}
         return jsonify(res)
@@ -142,7 +135,7 @@ def distances_from_room(graph_name, room):
         return jsonify({'status': 400, 'info': "non-connected graph!"})
 
 
-@app.route('/graph/<string:graph_name>/distances')
+@app.route('/graph/distances/<string:graph_name>')
 def all_distances(graph_name):
     """
     retrieves every single distance from every room
@@ -150,13 +143,33 @@ def all_distances(graph_name):
 
     graph_name: name of the to be inspected
     """
-    graph = request.get_json(force=True)
+
+    data = dao.get_latest(graph_name)
+    graph = data['graph']
 
     try:
         res = {'distances': find_all_dist_and_dump(graph), 'status': 200}
         return jsonify(res)
     except ValueError:
         return jsonify({'status': 400, 'info': "non-connected graph!"})
+
+
+@app.route('/graph/distance/rooms/<string:graph_name>/<string:room_name0>/<string:room_name1>')
+def distance_two_rooms(graph_name, room_name0, room_name1):
+    """
+    find the distance between 2 specific rooms on a floor
+
+    graph_name: name of the graph to examine
+    room_name0: name of the starting room
+    room_name1: name of destination room
+    """
+    data = dao.get_latest(graph_name)
+    graph = data['graph']
+    path = dijkstra(graph, room_name0, room_name1, None)
+    if info[0] == -1:
+        return jsonify({'status': 400, 'info': "path not found"})
+    else:
+        return jsonify({'status': 200, 'path': info})
 
 
 @app.route('/graph/clean')
@@ -168,4 +181,4 @@ def clean_graph():
 
 if __name__ == '__main__':
     dao = MongoDAO(url, password)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
