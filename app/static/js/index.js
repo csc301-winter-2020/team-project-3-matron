@@ -204,6 +204,7 @@ cy.on("tap", function(e) {
 					node_input_card.style.display = "block";
 					document.body.appendChild(node_input_card);
 					clear_label_inputs();
+					document.querySelector('#node_label_input').focus();
 					return node_input_card;
 				}
 			});
@@ -262,6 +263,9 @@ cy.on("tap", function(e) {
 		popperNode.selectify();
 		popperNode.select();
 		popperNode.unselectify();
+
+		ghost.disable();
+		return;
 	}
 
 	ghost.disable();
@@ -382,7 +386,7 @@ window.addEventListener("keydown", function(e) {
 	if (e.code == "KeyX") {
 		let selected = cy.$(":selected");
 		
-		console.log("lel");
+		console.log(selected);
 		if (selected.some(e => e == popperNode)) {
 			hidePopper();
 		}
@@ -578,7 +582,7 @@ function drawBG() {
 		canvasLayer.setTransform(ctx);
 		ctx.save();
 		ctx.globalAlpha = 0.5;
-		ctx.drawImage(fileImage, 0, 0, fileImage.width, fileImage.height);
+		ctx.drawImage(fileImage, 0, 0, fileImage.width*2, fileImage.height*2);
 	}
 }
 
@@ -695,7 +699,7 @@ function clear_label_inputs(){
 	set_type_btn.classList.remove("positive");
 	set_type_btn.classList.add("negative");
 	set_type_btn.innerHTML = "Enter label";
-	document.querySelector('#node_label_input').focus();
+	//document.querySelector('#node_label_input').focus();
 }
 
 const matron_btn = document.querySelector('#matron');
