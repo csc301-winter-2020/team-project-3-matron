@@ -82,7 +82,7 @@ In order to optimize the pathfinding, the application maps all possible paths fr
     
     I scroll to zoom the camera in and out.
     
-    I press X to delete nodes/edges selected via box select.
+    I press X on my keyboard to delete nodes/edges selected via box select.
     
     I press Esc to disable the ghost edge if it's enabled.
     
