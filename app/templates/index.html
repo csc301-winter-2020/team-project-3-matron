@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Matron Maps</title>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="../static/css/index.css">
+		<script src="../static/js/lib/cytoscape.umd.js"></script>
+		<script src="https://unpkg.com/popper.js@1.16.0/dist/umd/popper.js"></script>
+		<script src="../static/js/lib/cytoscape-popper.js"></script>
+		<script src="../static/js/lib/cytoscape-canvas.js"></script>
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.0.0/fetch.js"></script>
+		
+	</head>
+	<body>
+
+		<div class="ui top fixed menu">
+			<div id="matron" class="item">
+			  <h3> Matron </h3>
+			</div>
+			
+			<a class="item" id="save_icon" > <i id="ico" class="save icon"></i> </a>
+			<!-- <a class="item"> <i id="ico" class="cog icon"></i></a> -->
+			<a class="item" id="distance_icon"> <i id="ico" class="location arrow icon"></i></a>
+			
+<!-- 			<div id="search_bar"class="ui action input">
+				<input type="text" placeholder="Search...">
+				<div class="ui button">Search</div>
+			  </div> -->
+		  </div>
+
+
+		<div id="cy"></div>
+		<div class="small ui modal">
+			<i class="close icon"></i>
+			<div class="header">
+			  Distance calculator
+			</div>
+			<div class="popup_content">
+				<div class="ui form" id="ts">
+					<div class="inline fields">
+						<label>Distance from </label>
+						<input class="node_input_text" id="node1"type="text" placeholder="">
+					  <label style="margin: 10px;">  to </label>
+						<input class="node_input_text" id="node2" type="text" placeholder="">
+					  <button class="positive ui button" id="distance_btn" style="margin-left: 10px;"> calculate </button>
+
+					</div>
+				</div>
+				<div id="distance_result_div">
+					<hr>
+					<h4 id="dist_result" ></h4>
+					<br>
+				</div>
+
+				
+
+			</div>
+		</div>
+
+		<div id="select_floor" class="ui card centered">
+			<div class="content">
+			  <div id="select_floor_header" class="header"> Select unit</div>
+			</div>
+			<div id="floor_select" class="content">
+				<div id="floor_search" class="ui fluid search selection dropdown">
+					<input type="hidden" name="country">
+					<i class="dropdown icon"></i>
+					<div class="default text"> maps </div>
+					<div class="menu">
+<!-- 					<div class="item" data-value="0">floor1 B-wing</div>
+					<div class="item" data-value="1">floor3 C-wing</div>			 -->
+				  </div>
+				</div>
+
+			</div>
+			<div class="extra content">
+				<div id="create_floor_inputs"class="hide">
+					<label > Upload blueprint: </label>
+					<input id="file_button" type="file" accept="image/*" onchange="getImageData()">
+					<button id="create_floor" class="positive fluid ui button">Create floor</button>
+				</div>
+				<button id="edit_floor" class="negative fluid ui button"> Enter map name </button>
+			</div>
+		</div>
+
+		<div id="node_info" class="ui cards" >
+			<div class="card">
+			  <div class="content">
+				<div class="ui form">
+					<div class="inline fields">
+					  <div class="five wide field">
+						<label id="create_node_label_1"> Label: </label>
+						<input id="node_label_input" type="text" placeholder="Enter a label">
+					  </div>
+
+					</div>
+
+					<div class="inline fields">
+						<label>Type: </label>
+						<div id="type_select", class="ui fluid search selection dropdown">
+
+							<input type="hidden" id="node_type" name="node_type">
+							<i class="dropdown icon"></i>
+							<div class="default text"> type </div>
+							<div id="type_list" class="menu">
+							<!-- 	<div class="item" data-value="1"> <a class="ui green empty circular label"></a>Supply </div>
+								<div class="item" data-value="0"> <a class="ui orange empty circular label"></a> Treatment </div> -->
+							</div>
+						</div>
+
+					</div>
+					<div>
+					<button id="set_type" class="negative fluid ui button"> Enter label </button>
+					</div>
+				  </div>
+			  </div>
+			</div>
+		</div>
+		<script src="../static/js/index.js"></script>
+	</body>
+</html>

@@ -1,0 +1,113 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	overflow: hidden;
+}
+
+#cy {
+	width: 100vw;
+	height: 100vh;
+	visibility: hidden;
+}
+
+.debug {
+	position: fixed;
+	padding: 10px;
+}
+
+#node_label_input{
+	width: 120px;
+}
+
+#node_info{
+	display: none;
+}
+
+#add_new_type{
+	margin-left: 10px;
+}
+
+.centered {
+	position: fixed;
+	left: 0%;
+	bottom: 50%;
+  }
+
+#search_bar{
+	position: fixed;
+	right: 0%;
+	padding-top: 5px;
+	padding-right: 10px;
+}
+
+.hide{
+	display: none;
+}
+
+#file_button {
+	margin-top: 12px;
+	margin-bottom: 15px;
+}
+
+#ico {
+	margin: 0;
+}
+
+.message {
+	display: none;
+}
+
+#select_floor {
+	transform: translateY(-50%);
+}
+
+#node_info {
+	display: none;
+}
+
+#matron {
+	cursor: pointer;
+}
+
+.popup_content {
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-left: 10px;
+}
+
+#distance_result_div {
+	display: none;
+}
+
+#ts {
+	margin: auto;
+	width: 100%;
+	padding: 10px;
+}
+
+#dist_result {
+	text-align:center;
+}
+
+.node_input_text {
+	width: 100%;
+}
+
+#delete_map {
+	float: right;	
+}
+
+.delete_map_icon {
+	color: red;
+}
+
+.ban {
+	color: red;
+}
+
+#no_delete {
+	float: right;
+}

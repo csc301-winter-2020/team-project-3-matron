@@ -1,0 +1,10 @@
+# environment
+/env
+./env
+env/
+
+# misc
+.DS_store
+*/__pycache__/
+*.swp
+*.pyc
