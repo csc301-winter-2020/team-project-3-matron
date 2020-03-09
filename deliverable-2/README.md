@@ -1,7 +1,5 @@
 # Team 3 - Matron
 
-> _Note:_ This document is intended to be relatively short. Be concise and precise. Assume the reader has no prior knowledge of your application and is non-technical.
-
 ## Description 
 Our web-based app is to be used as a component in a Matron's larger overall system for managing the schedules of nurses and related healthcare professionals. The schedules of such workers are currently served by systems which don't take the physical layout of the work environment into account. As such, nurses regularly walk around their hospital wing much more than they need to (ie., by walking past patient rooms they're scheduled to visit later in the day) and become more exhausted and inefficient as a result. With Matron's spatially-optimized scheduling, nurses will recieve schedules that require them to walk the minimal amount.
 
@@ -41,18 +39,16 @@ In order to optimize the pathfinding, the application maps all possible paths fr
  * Provide a breakdown or detail for each feature that is most appropriate for your application
  * This section will be used to assess the value of the features built -->
 
-## Instructions
+## Instructions 
+ The master branch auto deploys to https://salty-shelf-59230.herokuapp.com/.
 
- * Clear instructions for how to use the application from the end-user's perspective
- * How do you access it? Are accounts pre-created or does a user register? Where do you start? etc. 
- * Provide clear steps for using each feature described above
- * This section is critical to testing your application and must be done carefully and thoughtfully
- 
  The develop branch auto deploys to https://floating-shore-56001.herokuapp.com/.
  
  Designed for the <strong>latest version of Chrome on Windows</strong>. No guarantees on other platforms.  
  
  Optimized for use with a <strong>3-button mouse</strong>. Results may vary with other input devices.
+ 
+ We have no user accounts.
  
  1. I want to load an existing map:
  
@@ -114,20 +110,8 @@ In order to optimize the pathfinding, the application maps all possible paths fr
  * If not using heroku, install python dependencies using `pip install -r requirements.txt`
  * To run the server: `python app/main.py`
 
-
- 
-
- * If a developer were to set this up on their machine or a remote server, what are the technical requirements (e.g. OS, libraries, etc.)?
- * Briefly describe instructions for setting up and running the application (think a true README).
  
  ## Deployment and Github Workflow
-
-Describe your Git / GitHub workflow. Essentially, we want to understand how your team members shares a codebase, avoid conflicts and deploys the application.
- * Be concise, yet precise. For example, "we use pull-requests" is not a precise statement since it leaves too many open questions - Pull-requests from where to where? Who reviews the pull-requests? Who is responsible for merging them? etc.
- * If applicable, specify any naming conventions or standards you decide to adopt.
- * Describe your overall deployment process from writing code to viewing a live applicatioon
- * What deployment tool(s) are you using and how
- * Don't forget to **briefly explain why** you chose this workflow or particular aspects of it!
  
 Our main process from writing code to a live application is:
 
@@ -145,12 +129,6 @@ Our main process from writing code to a live application is:
  * We are working on integrating a continuous integration service to automatically run tests, like Travis CI or GitHub actions. Once this is complete, we'll require tests to pass before being able to merge to develop or master.
 
  ## Licenses 
-
- Keep this section as brief as possible. You may read this [Github article](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/licensing-a-repository) for a start.
-
- * What type of license will you apply to your codebase?
- * What affect does it have on the development and use of your codebase?
- * Why did you or your partner make this choice?
  
  We decided to use the MIT license because we felt it is the one of the best open source licenses available. Firstly, It does not require any derivative works to also use that license unlike GPL. Since we are building an addon for an existing service that may one day need to extend our code, this aspect is appealing to both us and the project partner. It also means other projects that want to build on our code can use it freely without having any licensing restrictions or paying any fees
  
