@@ -95,7 +95,7 @@ In order to optimize the pathfinding, the application maps all possible paths fr
     In the graph editor interface, I leftclick the paper plane button (to the right of the save button). This opens a popup that prompts me to enter the labels of two rooms in my graph. When I leftclick the calculate button it displays the distance or gives me an error message prompting me to retry with the correct arguments.
     
     Distance query notes:
-       * If I've modified the map, I need to save before the distances will update.
+       * <strong>If I've modified the map, I need to save before the distances will update.</strong>
        * The number is unitless, as these distances are only ever compared relative to each other.
        * If the returned value is -1, this indicates that no path exists between the two given rooms.
        * This element queries our backend API to obtain the distance. Normally, such API methods will only be called by the backend Matron scheduling API. This element exists solely for debugging and demonstration purposes.
