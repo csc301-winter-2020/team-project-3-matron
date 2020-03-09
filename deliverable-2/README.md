@@ -25,7 +25,7 @@ In order to optimize the pathfinding, the application maps all possible paths fr
  6. Users can obtain the relative distance from one room to another within the current graph.
  
  7. Responsive button colors/messages let the user know when they're missing required inputs.
- 8. Node/edge snapping.
+ 8. Node/edge snapping and edge junction creation.
  
  <!--* Users can load/view an existing map and blueprint image from its name.
 
@@ -58,7 +58,7 @@ In order to optimize the pathfinding, the application maps all possible paths fr
  
  2. I want to create a new graph:
  
-    On the homepage I'm prompted to select a unit to load via a searchable dropdown. I leftclick the search box and begin typing a new name. Eventually I'll be shown the option to "add <new name>". I leftclick this option and am prompted with the option to upload a blueprint image to serve as the backdrop for my map. Note that uploading a blueprint is NOT required (you can tell since the "Create floor button" is green, indicating that we may proceed). I then click the "Create floor button" and am taken to a new blank canvas potentially filled with a backdrop image if one was uploaded.
+    On the homepage I'm prompted to select a unit to load via a searchable dropdown. I leftclick the search box and begin typing a new name. Eventually I'll be shown the option to "add <new name>". I leftclick this option and am prompted with the option to upload a blueprint image to serve as the backdrop for my map. Note that uploading a blueprint is NOT required (you can tell since the "Create floor button" is green, indicating that we may proceed (key feature 7)). I then click the "Create floor button" and am taken to a new blank canvas potentially filled with a backdrop image if one was uploaded.
  
  3. I want to delete an existing map:
  
@@ -70,7 +70,7 @@ In order to optimize the pathfinding, the application maps all possible paths fr
     
     I leftclick an existing room (large) node to edit its label or type.
     
-    I rightclick the canvas to add a hallway (small) node. This enables a "ghost edge" that follows my cursor. In this state, if I click the canvas, I create a new hallway node and move the "ghost edge" source to the new node. This enables me to easily create long stretches of curvy hallways. If I rightclick on an existing node, I create an edge between the ghost source and the rightclicked node. If I press Esc, I remove the ghost edge. If I rightclick on an existing edge, a new hallway node will be formed at the junction between that edge and the ghost edge. (Note that while the ghost edge is enabled, the snapping distance is increase substantially to make it easier to connect things. A cyan border is added to the nearby element my rightclick will snap to. If the snapping distance is too great and I require more precision, I can simply zoom in via the scroll-wheel.)
+    I rightclick the canvas to add a hallway (small) node. This enables a "ghost edge" that follows my cursor. In this state, if I click the canvas, I create a new hallway node and move the "ghost edge" source to the new node. This enables me to easily create long stretches of curvy hallways. If I rightclick on an existing node, I create an edge between the ghost source and the rightclicked node. If I press Esc, I remove the ghost edge. If I rightclick on an existing edge, a new hallway node will be formed at the junction between that edge and the ghost edge (key feature 8). (Note that while the ghost edge is enabled, the snapping distance is increase substantially to make it easier to connect things. A cyan border is added to the nearby element my rightclick will snap to. If the snapping distance is too great and I require more precision, I can simply zoom in via the scroll-wheel.)
     
     I rightclick an existing node to enable a "ghost edge" with its source set to the rightclicked node.
     
