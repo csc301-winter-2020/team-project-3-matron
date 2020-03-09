@@ -1,7 +1,7 @@
 # Team 3 - Matron
 
 ## Description 
-Our web-based app is to be used as a component in a Matron's larger overall system for managing the schedules of nurses and related healthcare professionals. The schedules of such workers are currently served by systems which don't take the physical layout of the work environment into account. As such, nurses regularly walk around their hospital wing much more than they need to (ie., by walking past patient rooms they're scheduled to visit later in the day) and become more exhausted and inefficient as a result. With Matron's spatially-optimized scheduling, nurses will recieve schedules that require them to walk the minimal amount.
+Our web-based app is to be used as a component in a Matron's larger overall system for managing the schedules of nurses and related healthcare professionals. The schedules of such workers are currently served by systems which don't take the physical layout of the work environment into account. As such, nurses regularly walk around their hospital wing much more than they need to (ie., by walking past patient rooms they're scheduled to visit later in the day) and become more exhausted and inefficient as a result. With Matron's spatially-optimized scheduling, nurses will receive schedules that require them to walk the minimal amount.
 
 Our application allows a hospital blueprint to be translated into a graph that allows room-to-room distances to be queried by the Matron scheduler. Users build this graph through a visual interface that allows them to add nodes representing rooms with a given label (eg., "exam room 3", "room 301", "supply room 6", etc.) and type (eg., "patient room", "supply room", "exam room", "workstation", etc.), and add edges between them representing hallways that connect the rooms.
 
@@ -124,7 +124,7 @@ Our main process from writing code to a live application is:
  
  Some additional information:
  
- * We chose to assign tasks by features of the app because we each have expertise in different areas. Using branching in the git repository was the optimal way to accomodate people working on different parts of the app. 
+ * We chose to assign tasks by features of the app because we each have expertise in different areas. Using branching in the git repository was the optimal way to accommodate people working on different parts of the app. 
  * The testing before pull request is done to ensure the new feature will work well with the other parts of the app and is bug free. If the test fails, the person assigned to that feature can go back to the branch and fix the issue and then it can be tested again
  * We are working on integrating a continuous integration service to automatically run tests, like Travis CI or GitHub actions. Once this is complete, we'll require tests to pass before being able to merge to develop or master.
 
