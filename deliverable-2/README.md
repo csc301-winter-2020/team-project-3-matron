@@ -55,17 +55,21 @@ In order to optimize the pathfinding, the application maps all possible paths fr
  Optimized for use with a <strong>3-button mouse</strong>. Results may vary with other input devices.
  
  1. I want to load an existing map:
+ 
     On the homepage I'm prompted to select a unit to load via a searchable dropdown. I can leftclick the search box and select it from the dropdown, or begin typing its name to narrow the search results before leftclicking on it. I then click the green "edit map" button to load it.
     
     (Note, the map entitled "demo" will always exist for loading/editing as it is intentionally undeletable for demo purposes.)
  
  2. I want to create a new graph:
+ 
     On the homepage I'm prompted to select a unit to load via a searchable dropdown. I leftclick the search box and begin typing a new name. Eventually I'll be shown the option to "add <new name>". I leftclick this option and am prompted with the option to upload a blueprint image to serve as the backdrop for my map. Note that uploading a blueprint is NOT required (you can tell since the "Create floor button" is green, indicating that we may proceed). I then click the "Create floor button" and am taken to a new blank canvas potentially filled with a backdrop image if one was uploaded.
  
  3. I want to delete an existing map:
+ 
     On the homepage I'm prompted to select a unit to load via a searchable dropdown. I leftclick the search box and see a list of existing maps. If I click the red "x" to the right of each map name, I will delete that map from the database. (Note that the map entitled "demo" is undeletable for demo purposes.)
  
  4. I want to edit the current loaded map in the graph editor:
+ 
     I leftclick the canvas to add a new room (large) node. I am then prompted to enter the node's label (eg. "room 301") and type (eg. "classroom"). The type dropdown works the same as the map selection dropdown on the homepage, ie., I can select an existing node type or enter a new one via the keyboard. Note that no types existing on a newly created map. Once a type is created, it will show up as option in the type dropdown for subsequent nodes. Once the inputs are valid, the red "Enter label" button will transition to a green "Save node" button which I click to save the node.
     
     I leftclick an existing room (large) node to edit its label or type.
@@ -87,9 +91,11 @@ In order to optimize the pathfinding, the application maps all possible paths fr
     I press Esc to disable the ghost edge if it's enabled.
     
  5. I want to save my current map:
+ 
     In the graph editor interface, I leftclick the save button in the top left corner to save my graph to the database. (Note that empty graphs will not be saved.) It will be saved under the name chosen back at the homepage. Later I can load this version of the graph from the homepage via that name.
     
  6. I want to obtain the distance between two rooms in the current map:
+ 
     In the graph editor interface, I leftclick the paper plane button (to the right of the save button). This opens a popup that prompts me to enter the labels of two rooms in my graph. When I leftclick the calculate button it displays the distance or gives me an error message prompting me to retry with the correct arguments.
     
     Distance query notes:
