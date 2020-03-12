@@ -7,15 +7,6 @@ Our application allows a hospital blueprint to be translated into a graph that a
 
 Once the graph is built, it can be saved and then subsequently reloaded, edited, resaved, etc.
 
-<!--
-The application is primarily a web application, to be used as a component in Matron's larger overall system for managing medical care. The problem is that nurse tasks are currently scheduled by a system that does not take into account the spatial locations of rooms in the hospital. This leads to lots of extra workload and inefficiency which can increase nurse stress and negatively affect patient outcomes.
-Our application will specifically handle the input and pathfinding of hospital unit maps, in order to compute the shortest paths between rooms. It's designed to integrate with the existing patient scheduler so that our API can be used to optimize pathfinding for nurses throughout the entire hospital. This will reduce stress in the hospital and help the Matron system to better schedule nurses to complete their tasks.
-In order to optimize the pathfinding, the application maps all possible paths from one location to another to a certain magnitude. This magnitude could be a total number of steps took from the designated start and end locations, or a normalized sum of length of lines connecting the each nodes between the start and the end of a destination.-->
-
- * Provide a high-level description of your application and it's value from an end-user's perspective
- * What is the problem you're trying to solve?
- * Is there any context required to understand **why** the application solves this problem?
-
 ## Key Features (Implemented)
  1. Users can load saved maps/blueprint images via the map name.
  2. Users can create a new named map with an optional blueprint backdrop image.
