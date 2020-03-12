@@ -189,9 +189,9 @@ let popperNode = -1;
 cy.on("tap", function(e) {
 	let target = e.target;
 
-	if (popperNode != -1) {
-		return;
-	}
+	// if (popperNode != -1) {
+	// 	return;
+	// }
 
 	if (target == cy) {
 		if (!ghost.enabled) {
@@ -234,6 +234,14 @@ cy.on("tap", function(e) {
 	}
 
 	if (target.group() == "nodes") {
+
+		console.log(target.data("type"));
+
+		if (target.data("type") == "hallway") {
+			toggleSelected(target);	
+			return;
+		}
+
 		popperNode = target;
 
 		let popper = popperNode.popper({
@@ -241,9 +249,9 @@ cy.on("tap", function(e) {
 				let node_input_card = document.querySelector('#node_info');
 				node_input_card.style.display = "block";
 				document.body.appendChild(node_input_card);
-				clear_label_inputs();
+				// clear_label_inputs();
 
-				$("#type_select").dropdown("restore defaults");
+				// $("#type_select").dropdown("restore defaults");
 				
 				document.querySelector('#node_label_input').value = popperNode.data("label");
 				$("#type_select").dropdown("set selected", popperNode.data("type"));
@@ -278,9 +286,9 @@ cy.on("cxttapend", function(e) {
 
 	unselectAll();
 
-	if (popperNode != -1) {
-		return;
-	}
+	// if (popperNode != -1) {
+	// 	return;
+	// }
 
 	if (!ghost.enabled) {
 		if (hovered && hovered.group() == "nodes") {
@@ -410,15 +418,29 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
+	console.log(current_graph);
 	if (current_graph == "") {
 		return;
 	}
 
-	let current_draft = {cyGraph: cy.json(), types: types};
+	let graph = cy.json();
+
+	console.log(graph.elements.nodes);
+	console.log(graph.elements.edges);
+
+	if (!graph.elements.nodes) {
+		graph.elements.nodes = [];
+	}
+
+	if (!graph.elements.edges) {
+		graph.elements.edges = [];
+	}
+
+	console.log(graph);
 	let url = `graph/${current_graph}`;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify(current_draft)
+		body: JSON.stringify({cyGraph: graph, types: types})
 	});
 	if (fileData != -1) {
 		
@@ -445,8 +467,15 @@ document.getElementById("floor_search").addEventListener("focusout", function(e)
 function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
 		values = [];
-		
-		data.graph.forEach((name) => values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name}));
+
+		data.graph.forEach((name) => {
+			console.log(name);
+			if (name.trim() == "demo") {
+				values.push({name: "<div>" + name + "<a class='item' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
+			} else {
+				values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name});
+			}
+		});
 
 		$("#floor_search").dropdown({
 			allowAdditions: true, 
@@ -490,12 +519,16 @@ function getMapNamesFromServer() {
 					$("#floor_search").dropdown("restore defaults");
 				}				
 
-				fetch(`graph/${name}`, {
-					method: 'delete'
-				});
+				deleteMap(name);
 			})
 		});
 
+	});
+}
+
+function deleteMap(name) {
+	fetch(`graph/${name}`, {
+		method: 'delete'
 	});
 }
 
@@ -559,12 +592,12 @@ create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
 	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
-	let url = `graph/${current_graph}`;
-	//let current_draft = {cyGraph: cy.json(), types: types};
-	fetch(url, {
-		method: 'post',
-		body: JSON.stringify({cyGraph: cy.json(), types: types})
-	});
+	// let url = `graph/${current_graph}`;
+	// //let current_draft = {cyGraph: cy.json(), types: types};
+	// fetch(url, {
+	// 	method: 'post',
+	// 	body: JSON.stringify({cyGraph: cy.json(), types: types})
+	// });
 
 	if (file != -1) {
 		reader.readAsDataURL(file);
@@ -622,7 +655,7 @@ $("#type_select").dropdown({
 
 			let input_label = document.querySelector('#node_label_input').value;
 			let input_type = $("#type_select").dropdown("get value");
-			if (input_label == "") {
+			if (input_label == "" && input_type != "hallway") {
 				set_type_btn.classList.remove("positive");
 				set_type_btn.classList.add("negative");
 				set_type_btn.innerHTML = "Enter label";
@@ -644,7 +677,7 @@ $("#type_select").dropdown({
 document.querySelector('#node_label_input').addEventListener("input", function(e) {
 	let input_label = document.querySelector('#node_label_input').value;
 	let input_type = $("#type_select").dropdown("get value");
-	if (input_label == "") {
+	if (input_label == "" && input_type != "hallway") {
 		set_type_btn.classList.remove("positive");
 		set_type_btn.classList.add("negative");
 		set_type_btn.innerHTML = "Enter label";
@@ -676,7 +709,12 @@ set_type_btn.addEventListener("click", (e) => {
 		add_new_node_type(input_type);
 	}
 	
-	popperNode.data("label", input_label);
+	if (input_type == "hallway") {
+		popperNode.data("label", "");
+	} else {
+		popperNode.data("label", input_label);
+	}
+	
 	hidePopper();
 	clear_label_inputs();
 });

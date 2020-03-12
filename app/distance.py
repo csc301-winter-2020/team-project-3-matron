@@ -15,6 +15,8 @@ def dijkstra(graph: Graph, s_id: str, e_id: str, adjacency_map: AdjacencyMap = N
     respectively. The second element is the list of id's of the
     nodes along this shortest path. Return (-1, []) if no path
     exists between start and end.
+
+    Can raise a KeyError if edges refer to node id's that don't exist in graph.
     """
     if adjacency_map is None:
         adjacency_map = graph.compute_adjacency_map()
