@@ -6,8 +6,14 @@ name: Python Unittesting
 on:
   push:
     branches: [ master, develop ]
+    paths:
+      - 'app/'
+      - 'selenium_test/'
   pull_request:
     branches: [ master, develop ]
+    paths:
+      - 'app/'
+      - 'selenium_test/'
 
 jobs:
   build:
