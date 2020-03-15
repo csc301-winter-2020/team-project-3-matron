@@ -576,8 +576,6 @@ function editFloor(current_graph) {
 	});
 
 	fetch(`blueprint/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-		console.log(data);
-
 		if (data != -1) {
 			fileImage = new Image();
 			fileData = data;
@@ -818,13 +816,40 @@ if (urlMapName != "") {
 	editFloor(urlMapName);
 }
 
+function addVec(a, b) {
+	return {x: a.x+b.x, y: a.y+b.y};
+}
+function subVec(a, b) {
+	return {x: a.x-b.x, y: a.y-b.y};
+}
+function scaleVec(a, s) {
+	return {x: a.x*s, y:a.y*s};
+}
+function normalize(a) {
+	return scaleVec(a, 1/len(a));
+}
+function len(a) {
+	return Math.sqrt(a.x*a.x + a.y*a.y);
+}
+
 let scaleFactor = 1;
 function setScale(a, b, t) {
 	let node1 = cy.$("node[label='" + a + "']")[0];
 	let node2 = cy.$("node[label='" + b + "']")[0];
 
-	// let dist = node1.position
+	let cyDist = len(subVec(node1.position(), node2.position()));
+	scaleFactor = cyDist/t;
+	console.log(scaleFactor);
+}
 
-	console.log(node1.position());
+function reScale(a, b, t) {
+	let node1 = cy.$("node[label='" + a + "']")[0];
+	let node2 = cy.$("node[label='" + b + "']")[0];
 
+	let diff = subVec(node2.position(), node1.position());
+	let newdiff = scaleVec(normalize(diff), t*scaleFactor);
+	let newpos = addVec(subVec(node2.position(),diff),newdiff);
+	console.log(newpos);
+
+	node2.position(newpos);
 }
