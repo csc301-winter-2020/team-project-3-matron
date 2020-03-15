@@ -555,6 +555,12 @@ let types = [];
 const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
+	if (current_graph) {
+		editFloor(current_graph);
+	}
+});
+
+function editFloor(current_graph) {
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		if (data.graph.types) {
 			data.graph.types.forEach((e) => {
@@ -585,7 +591,7 @@ edit_floor_btn.addEventListener('click', (e) => {
 	console.log(types);
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
-});
+}
 
 const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
@@ -802,3 +808,14 @@ distance_btn.addEventListener('click', (e) =>{
 		document.querySelector('#dist_result').innerText = "distance : " + data;
 	});	
 });
+
+let scaleFactor = 1;
+function setScale(a, b, t) {
+	let node1 = cy.$("node[label='" + a + "']")[0];
+	let node2 = cy.$("node[label='" + b + "']")[0];
+
+	// let dist = node1.position
+
+	console.log(node1.position());
+
+}
