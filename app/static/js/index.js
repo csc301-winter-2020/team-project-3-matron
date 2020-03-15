@@ -561,6 +561,7 @@ edit_floor_btn.addEventListener('click', (e) => {
 });
 
 function editFloor(current_graph) {
+	console.log(current_graph);
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		if (data.graph.types) {
 			data.graph.types.forEach((e) => {
@@ -591,6 +592,7 @@ function editFloor(current_graph) {
 	console.log(types);
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
+	window.history.replaceState({}, "Matron", "/" + current_graph);
 }
 
 const create_floor_btn = document.querySelector('#create_floor');
@@ -808,6 +810,13 @@ distance_btn.addEventListener('click', (e) =>{
 		document.querySelector('#dist_result').innerText = "distance : " + data;
 	});	
 });
+
+let urlPath = decodeURI(window.location.href);
+let lastSlashIndex = urlPath.lastIndexOf("/")
+let urlMapName = urlPath.substring(lastSlashIndex + 1);
+if (urlMapName != "") {
+	editFloor(urlMapName);
+}
 
 let scaleFactor = 1;
 function setScale(a, b, t) {
