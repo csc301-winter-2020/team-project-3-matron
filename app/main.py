@@ -9,8 +9,8 @@ from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
 
-url = "mongodb+srv://matron:<password>@matron-db-pxltz.azure.mongodb.net/test?retryWrites=true&w=majority"
-password = "zO0J376wJeEmR4xc"
+url = os.environ['DB_URL']
+password = os.environ['DB_PASS']
 dao = None
 
 success = {'status': 200}
