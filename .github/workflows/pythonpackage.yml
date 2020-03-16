@@ -47,3 +47,4 @@ jobs:
         python -m pytest tests/
       env: 
         DB_URL: ${{ secrets.DB_URL }}
+        DB_PASS: ${{ secrets.DB_PASS }}
