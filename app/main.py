@@ -173,11 +173,13 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
 
     return jsonify(dist)
 
-@app.route('/graph/clean')
-def clean_graph():
+@app.route('/graph/clean/<string:graph_name>')
+def clean_graph(graph_name):
     """cleans the graph"""
-    graph = request.get_json(force=True)
-    return jsonify({'graph': clean_and_dump(graph), 'status': 200})
+    # graph = request.get_json(force=True)
+    data = dao.get_latest(graph_name)
+    print(data['graph']['cyGraph']['elements'])
+    return jsonify({'graph': clean_and_dump(data['graph']['cyGraph']['elements']), 'status': 200})
 
 if __name__ == '__main__':
     dao = MongoDAO(url, password)

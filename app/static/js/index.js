@@ -611,6 +611,7 @@ create_floor_btn.addEventListener('click', (e) => {
 
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
+	window.history.replaceState({}, "Matron", "/" + current_graph);
 });
 
 
@@ -854,4 +855,14 @@ function reScale(a, b, t) {
 	console.log(newpos);
 
 	node2.position(newpos);
+}
+
+function getClean() {
+	fetch(`graph/clean/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+		console.log(data);
+		data = JSON.parse(data.graph);
+		cy.elements().remove();
+		data.nodes.forEach(e => cy.add(e));
+		data.edges.forEach(e => cy.add(e));
+	});	
 }
