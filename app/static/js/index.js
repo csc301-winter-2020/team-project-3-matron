@@ -758,7 +758,8 @@ function clear_label_inputs(){
 
 const matron_btn = document.querySelector('#matron');
 matron_btn.addEventListener("click", (e) => {
-	location.reload();
+	window.location.pathname = ""
+	//location.reload();
 });
 
 const distance_btn = document.querySelector('#distance_btn');
@@ -813,6 +814,7 @@ let urlPath = decodeURI(window.location.href);
 let lastSlashIndex = urlPath.lastIndexOf("/")
 let urlMapName = urlPath.substring(lastSlashIndex + 1);
 if (urlMapName != "") {
+	current_graph = urlMapName;
 	editFloor(urlMapName);
 }
 
