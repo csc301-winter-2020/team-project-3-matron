@@ -45,3 +45,5 @@ jobs:
         pip install pytest
         cd app
         python -m pytest tests/
+      env: 
+        DB_URL: ${{ secrets.DB_URL }}
