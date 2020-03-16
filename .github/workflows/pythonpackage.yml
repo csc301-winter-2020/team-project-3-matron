@@ -37,6 +37,7 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
+        cd app
         pytest
       env:
         DB_URL: ${{ secrets.DB_URL }}
