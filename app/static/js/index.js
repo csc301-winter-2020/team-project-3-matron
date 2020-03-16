@@ -230,14 +230,16 @@ cy.on("tap", function(e) {
 	}
 
 	if (!target.selected() && !e.originalEvent.ctrlKey) {
+		console.log("ttettetetet");
 		unselectAll();
+		//return;
 	}
 
 	if (target.group() == "nodes") {
 
 		console.log(target.data("type"));
 
-		if (target.data("type") == "hallway") {
+		if (target.data("type") == "hallway" || e.originalEvent.ctrlKey) {
 			toggleSelected(target);	
 			return;
 		}
@@ -864,5 +866,5 @@ function getClean() {
 		cy.elements().remove();
 		data.nodes.forEach(e => cy.add(e));
 		data.edges.forEach(e => cy.add(e));
-	});	
+	});
 }
