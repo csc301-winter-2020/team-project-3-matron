@@ -229,7 +229,9 @@ cy.on("tap", function(e) {
 		return;
 	}
 
-	if (!target.selected() && !e.originalEvent.ctrlKey) {
+	ghost.disable();
+
+	if (!e.originalEvent.ctrlKey) {
 		console.log("ttettetetet");
 		unselectAll();
 		//return;
