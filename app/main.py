@@ -102,7 +102,7 @@ def graph_version(name, date):
     date: the version date wanted
     """
     utc_time = datetime.strptime(date, "%d %m %Y %H: %M: %S")
-    epoch = timegm(utc_time)
+    epoch = gmtime(utc_time)
     if request.method == 'GET':
         data = dao.get_version(name, epoch)
         graph = data['graph']
