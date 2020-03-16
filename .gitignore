@@ -7,5 +7,6 @@ env/
 .DS_store
 */__pycache__/
 *.swp
+*.swo
 *.pyc
 drivers/
