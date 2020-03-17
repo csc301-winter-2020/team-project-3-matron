@@ -23,10 +23,10 @@ class EasyDriver(unittest.TestCase):
                 raise KeyError(f"{br} is not a recognised browser to target on windows")
         elif tar == "UBUNTU":
             if br == "FIREFOX":
-                fpath = os.environ["GECKOWEBDRIVER"]
+                fpath = os.path.join(os.environ["GECKOWEBDRIVER"], "geckodriver")
                 self.driver = webdriver.Firefox(executable_path=fpath)
             elif br == "CHROME":
-                cpath = os.environ["CHROMEWEBDRIVER"]
+                cpath = os.path.join(os.environ["CHROMEWEBDRIVER"], "chromedriver")
                 self.driver = webdriver.Chrome(executable_path=cpath)
             else:
                 raise KeyError(f"{br} is not a recognised browser to target on ubuntu")
