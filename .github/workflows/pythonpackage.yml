@@ -51,7 +51,7 @@ jobs:
         cd app
         python main.py &
         cd ../selenium_test
-        python -m pytest .
+        sudo python -m pytest .
       env:
         SELENIUM_TEST_BROWSER: "CHROME"
 
