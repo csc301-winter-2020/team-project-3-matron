@@ -42,3 +42,11 @@ jobs:
       env:
         DB_URL: ${{ secrets.DB_URL }}
         DB_PASS: ${{ secrets.DB_PASS }}
+    - name: Test with selenium
+      run: |
+        pip install selenium
+        cd selenium_test/
+        pytest
+      env:
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_PASS: ${{ secrets.DB_PASS }}
