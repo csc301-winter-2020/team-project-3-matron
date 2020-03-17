@@ -1,13 +1,13 @@
-# import unittest
-# from clean_graph import *
-# from tests.test_objs import *
+import unittest
+from clean_graph import *
+from tests.test_objs import *
 
 #John's import lines 
-import unittest
-import sys
-sys.path.insert(0, './app/')
-from clean_graph import *
-from test_objs import *
+#import unittest
+#import sys
+#sys.path.insert(0, './app/')
+#from clean_graph import *
+#from test_objs import *
 
 # Will add more tests later
 
