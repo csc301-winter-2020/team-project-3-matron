@@ -5,9 +5,9 @@ name: Autotesting
 
 on:
   push:
-    branches: [ master, develop, add-tests ]
+    branches: [ master, develop]
   pull_request:
-    branches: [ master, develop, add-tests ]
+    branches: [ master, develop]
 
 env:
     DB_URL: ${{ secrets.DB_URL }}
