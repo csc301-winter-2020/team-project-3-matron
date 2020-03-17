@@ -1,6 +1,6 @@
 import unittest
 from selenium import webdriver
-import time
+import time, os
 from selenium.webdriver.common.action_chains import ActionChains
 
 
@@ -11,8 +11,8 @@ class seleniumtest(unittest.TestCase):
     # driver = webdriver.Chrome(executable_path="./drivers/chromedriver")
     # driver.get("https://floating-shore-56001.herokuapp.com/")
     def setUp(self):
-        assert os.path.isfile(os.environ["IEWebDriver"])
-        self.driver = webdriver.Ie(executable_path=os.environ["IEWebDriver"])
+        iepath = os.path.join(os.environ["IEWebDriver"], "IEDriverServer.exe"
+        self.driver = webdriver.Ie(executable_path=iepath)
 
     def test_create_node(self):
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
