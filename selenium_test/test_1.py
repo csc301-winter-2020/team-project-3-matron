@@ -6,8 +6,10 @@ import os
 
 class seleniumtest(unittest.TestCase):
     
+    def setUp(self):
+        self.driver = webdriver.Ie(executable_path=os.environ["IEWebDriver"])
+
     def test_Heroku(self):
-        self.driver = webdriver.Chrome(executable_path=os.environ["CHROMEWEBDRIVER"])
         self.driver.maximize_window()
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
         time.sleep(1)
@@ -15,14 +17,14 @@ class seleniumtest(unittest.TestCase):
         self.driver.close()
         
     def test_Bing(self):
-        self.driver = webdriver.Chrome(executable_path=os.environ["CHROMEWEBDRIVER"])
+        self.driver = webdriver.Chrome(executable_path=os.environ["IEWebDriver"])
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
         
         titleOfWebPage = self.driver.title
         self.driver.close()
         
     def test_get_element(self):
-        self.driver = webdriver.Chrome(executable_path=os.environ["CHROMEWEBDRIVER"])
+        self.driver = webdriver.Chrome(executable_path=os.environ["IEWebDriver"])
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
         button = self.driver.find_element_by_id('edit_floor')
         button.click()
