@@ -69,4 +69,12 @@ jobs:
           cd ../selenium_test/
           python -m pytest 
         env:
+          SELENIUM_TEST_BROWSER: "CHROME"
+      - name: Run IE Test
+        run: |
+          cd app
+          Start-Process -NoNewWindow python main.py
+          cd ../selenium_test/
+          python -m pytest 
+        env:
           SELENIUM_TEST_BROWSER: "IE"

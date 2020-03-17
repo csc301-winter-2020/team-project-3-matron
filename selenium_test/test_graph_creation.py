@@ -8,7 +8,7 @@ class seleniumtest(EasyDriver):
     def test_create_node(self):
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
         self.driver.maximize_window()
-        inputElement = self.driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/input")
+        inputElement = self.driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/input[2]")
         inputElement.send_keys("test")
         time.sleep(1)
         button_1 = self.driver.find_element_by_id('edit_floor')
@@ -28,7 +28,7 @@ class seleniumtest(EasyDriver):
     def test_create_triangle(self):
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
         self.driver.maximize_window()
-        inputElement = self.driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/input")
+        inputElement = self.driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/input[2]")
         inputElement.send_keys("test")
         time.sleep(1)
         button_1 = self.driver.find_element_by_id('edit_floor')
