@@ -46,14 +46,6 @@ jobs:
         pip install pytest
         cd app
         python -m pytest .
-    - name: Test on firefox in ubuntu
-      run: |
-        cd app
-        python main.py &
-        cd ../selenium_test
-        python -m pytest .
-      env:
-        SELENIUM_TEST_BROWSER: "FIREFOX"
     - name: Test on chrome in ubuntu
       run: |
         cd app
