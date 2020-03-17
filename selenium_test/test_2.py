@@ -1,18 +1,9 @@
-import unittest
+import unittest, time, os
 from selenium import webdriver
-import time, os
+from testutils import EasyDriver
 from selenium.webdriver.common.action_chains import ActionChains
 
-
-
-
-class seleniumtest(unittest.TestCase):
-    # global driver
-    # driver = webdriver.Chrome(executable_path="./drivers/chromedriver")
-    # driver.get("https://floating-shore-56001.herokuapp.com/")
-    def setUp(self):
-        iepath = os.path.join(os.environ["IEWebDriver"], "IEDriverServer.exe")
-        self.driver = webdriver.Ie(executable_path=iepath)
+class seleniumtest(EasyDriver):
 
     def test_create_node(self):
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
