@@ -31,5 +31,5 @@ class EasyDriver(unittest.TestCase):
             else:
                 raise KeyError(f"{br} is not a recognised browser to target on ubuntu")
         else: 
-            self.driver = webdriver.Chrome("../driver/chromedriver")
+            self.driver = webdriver.Chrome("../drivers/chromedriver")
 
