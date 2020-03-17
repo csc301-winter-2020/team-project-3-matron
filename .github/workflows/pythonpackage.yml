@@ -46,14 +46,6 @@ jobs:
         pip install pytest
         cd app
         python -m pytest .
-    - name: Test on chrome in ubuntu
-      run: |
-        cd app
-        python main.py &
-        cd ../selenium_test
-        sudo python -m pytest .
-      env:
-        SELENIUM_TEST_BROWSER: "CHROME"
 
   Windows-Testing:
       runs-on: windows-latest
