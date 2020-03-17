@@ -59,7 +59,7 @@ jobs:
       - name: Run Tests
         run: |
           cd selenium_test/
-          elevate python -m pytest 
+          python -m pytest 
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_PASS: ${{ secrets.DB_PASS }}
