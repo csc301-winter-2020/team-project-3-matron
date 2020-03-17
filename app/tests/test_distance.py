@@ -18,7 +18,7 @@ class DistanceFunctionTest(unittest.TestCase):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
 
-        output_1 = {'room': [(0, ['r1']), (465.20720723947005, ['r1', 'h1', 'h2', 'h3', 'h4', 'r2'])], 'hallway': [(159.38004893963358, ['r1', 'h1']), (236.9042387128908, ['r1', 'h1', 'h2']), (311.9642147320716, ['r1', 'h1', 'h2', 'h3']), (396.1782278177808, ['r1', 'h1', 'h2', 'h3', 'h4'])]}
+        output_1 = {'room': [(0, ['r1']), (465.20720723947005, ['r1', 'h1', 'h2', 'h3', 'h4', 'r2'])], 'hallway': [(159.38004893963358, ['r1', 'h1']), (236.9042387128908, ['r1', 'h1', 'h2']), (311.9642147320716, ['r1', 'h1', 'h2', 'h3']), (396.1782278177808, ['r1', 'h1', 'h2', 'h3', 'h4'])]} 
         output_2 = {'room': [(0, ['A']), (239.0083680543424, ['A', 'B']), (362.02462714231825, ['A', 'B', 'C'])], 'hallway': [(137.71347065556077, ['A', 'hn1']), (153.07514494521962, ['A', 'hn2'])]}
 
         self.assertEqual(find_dist_from_start(test_go1, 'r1'), output_1, "Invalid output")
@@ -49,16 +49,16 @@ class DistanceFunctionTest(unittest.TestCase):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
 
-        self.assertEqual(find_dist_and_dump(two_rooms_many_hallway_nodes_json, 'r1'),str(find_dist_from_start(test_go1, 'r1')), "Invalid output") 
-        self.assertEqual(find_dist_and_dump(three_rooms_many_hall_ways_nodes_json, 'A'),str(find_dist_from_start(test_go2, 'A')), "Invalid output") 
+        self.assertEqual(find_dist_and_dump(two_rooms_many_hallway_nodes_json, 'r1'), dumps(find_dist_from_start(test_go1, 'r1')), "Invalid output") 
+        self.assertEqual(find_dist_and_dump(three_rooms_many_hall_ways_nodes_json, 'A'), dumps(find_dist_from_start(test_go2, 'A')), "Invalid output") 
 
 
     def find_all_dist_and_dump(self):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
 
-        self.assertEqual(find_all_dist_and_dump(two_rooms_many_hallway_nodes_json), str(find_all_room_distances(test_go1)))
-        self.assertEqual(find_all_dist_and_dump(three_rooms_many_hall_ways_nodes_json), str(find_all_room_distances(test_go2)))
+        self.assertEqual(find_all_dist_and_dump(two_rooms_many_hallway_nodes_json), dumps(find_all_room_distances(test_go1)))
+        self.assertEqual(find_all_dist_and_dump(three_rooms_many_hall_ways_nodes_json), dumps(find_all_room_distances(test_go2)))
 
 
 if __name__ == "__main__":
