@@ -59,8 +59,8 @@ jobs:
       - name: Run Tests
         run: |
           pip install selenium
-          cd slenium_test/
-          python -m pytest .
+          cd selenium_test/
+          python -m pytest
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_PASS: ${{ secrets.DB_PASS }}
