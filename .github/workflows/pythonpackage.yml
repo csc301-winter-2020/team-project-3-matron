@@ -14,7 +14,7 @@ env:
     DB_PASSS: ${{ secrets.DB_PASS}}
 
 jobs:
-  Ubuntu/Unittesting:
+  Ubuntu-Unittesting:
 
     runs-on: ubuntu-latest
     strategy:
