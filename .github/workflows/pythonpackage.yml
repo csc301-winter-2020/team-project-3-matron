@@ -62,7 +62,7 @@ jobs:
       env:
         SELENIUM_TEST_BROWSER: "CHROME"
 
-  Windows Testing:
+  Windows-Testing:
       runs-on: windows-latest
       env:
           HOST_SYS: "WIN"
