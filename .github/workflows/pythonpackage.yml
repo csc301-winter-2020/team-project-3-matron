@@ -12,6 +12,7 @@ on:
 env:
     DB_URL: ${{ secrets.DB_URL }}
     DB_PASS: ${{ secrets.DB_PASS}}
+    PORT: 3000
 
 jobs:
   Ubuntu-Unittesting:
@@ -49,7 +50,7 @@ jobs:
       run: |
         cd app
         python main.py &
-        cd selenium_test
+        cd ../selenium_test
         python -m pytest .
       env:
         SELENIUM_TEST_BROWSER: "FIREFOX"
