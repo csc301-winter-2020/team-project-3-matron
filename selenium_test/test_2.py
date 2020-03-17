@@ -14,7 +14,7 @@ class seleniumtest(unittest.TestCase):
 
 
     def test_create_node(self):
-        self.driver = webdriver.Chrome(executable_path="./drivers/chromedriver")
+        self.driver = webdriver.Chrome(executable_path=os.environ["CHROMEWEBDRIVER"])
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
         self.driver.maximize_window()
         inputElement = self.driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/input[2]")
@@ -35,7 +35,7 @@ class seleniumtest(unittest.TestCase):
         self.driver.close()
         
     def test_create_triangle(self):
-        self.driver = webdriver.Chrome(executable_path="./drivers/chromedriver")
+        self.driver = webdriver.Chrome(executable_path=os.environ["CHROMEWEBDRIVER"])
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
         self.driver.maximize_window()
         inputElement = self.driver.find_element_by_xpath("/html/body/div[4]/div[2]/div/input[2]")
