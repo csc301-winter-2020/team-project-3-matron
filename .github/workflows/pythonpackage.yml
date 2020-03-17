@@ -11,7 +11,7 @@ on:
 
 env:
     DB_URL: ${{ secrets.DB_URL }}
-    DB_PASSS: ${{ secrets.DB_PASS}}
+    DB_PASS: ${{ secrets.DB_PASS}}
 
 jobs:
   Ubuntu-Unittesting:
