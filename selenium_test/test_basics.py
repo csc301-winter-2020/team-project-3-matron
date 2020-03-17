@@ -15,12 +15,6 @@ class seleniumtest(EasyDriver):
         print("\nTitle of the page is: " + self.driver.title)
         self.driver.close()
         
-    def test_Bing(self):
-        self.driver.get("https://floating-shore-56001.herokuapp.com/")
-        
-        titleOfWebPage = self.driver.title
-        self.driver.close()
-        
     def test_get_element(self):
         self.driver.get("https://floating-shore-56001.herokuapp.com/")
         button = self.driver.find_element_by_id('edit_floor')
