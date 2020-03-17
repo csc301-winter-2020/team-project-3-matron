@@ -7,7 +7,7 @@ import os
 class seleniumtest(unittest.TestCase):
     
     def setUp(self):
-        assert os.path.isfile(os.environ["IEWebDriver"] + "IEDriverServer.exe")
+        assert os.path.isfile(os.path.join(os.environ["IEWebDriver"], "IEDriverServer.exe"))
         self.driver = webdriver.Ie(executable_path=os.environ["IEWebDriver"])
 
     def test_Heroku(self):
