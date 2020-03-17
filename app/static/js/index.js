@@ -836,7 +836,11 @@ function normalize(a) {
 	return scaleVec(a, 1/len(a));
 }
 function len(a) {
-	return Math.sqrt(a.x*a.x + a.y*a.y);
+	return Math.sqrt((a.x*a.x) + (a.y*a.y));
+}
+
+function nodeDist(node1, node2) {
+	return len(subVec(node1.position(), node2.position()));
 }
 
 let scaleFactor = 1;
@@ -870,3 +874,65 @@ function getClean() {
 		data.edges.forEach(e => cy.add(e));
 	});
 }
+
+function fillPath(node, label, len) {
+	console.log(len);
+	let neighbors = node;
+	//let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
+	// console.log(node);
+	// node = node.successors("node[type = 'hallway'][[degree <= 2]][id != '"+ node.id() + "']");
+	let oldNode = node;
+	while (true) {
+		// probably also needs a selector for node has not already been rescaled
+		let newNeighbors = neighbors.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
+		let newNode = newNeighbors.difference(neighbors)[0];
+		console.log(neighbors.difference(neighbors));
+		console.log(newNode);
+		if (!newNode) {
+			break;
+		}
+
+		console.log(newNode);
+		len += nodeDist(newNode, oldNode);
+		console.log(len);
+		oldNode = newNode;
+		neighbors = newNeighbors;
+	}
+
+	let end = neighbors.openNeighborhood("node[label !='" + label + "'][type != 'hallway'], node[label !='" + label + "'][[degree > 2]]")[0];
+	len += nodeDist(oldNode, end);
+	toggleSelected(end);
+	console.log(len);
+	console.log(end);
+	return {path: neighbors, end: end, len: len};
+}
+
+function fillNode(label) {
+	let node = cy.$("node[label='" + label + "']")[0];
+	let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
+	let paths = [];
+
+	neighbors.forEach(n => {
+		let branch = fillPath(n, label, nodeDist(n, node));
+		
+		paths.push(branch);
+	});
+
+	console.log(paths);
+	return paths;
+}
+
+// function fillNode(label) {
+// 	let node = cy.$("node[label='" + label + "']")[0];
+// 	let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
+
+// 	let path = fillPath(neighbors[0]);
+// 	let end = path.openNeighborhood("node[label !='" + label + "'][type != 'hallway'], node[[degree > 2]]");
+
+// 	toggleSelected(path);
+
+// 	console.log(path);
+// 	console.log(end);
+
+// 	//toggleSelected(path.openNeighborhood("node"));
+// }
