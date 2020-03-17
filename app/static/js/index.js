@@ -843,27 +843,27 @@ function nodeDist(node1, node2) {
 	return len(subVec(node1.position(), node2.position()));
 }
 
-let scaleFactor = 1;
-function setScale(a, b, t) {
-	let node1 = cy.$("node[label='" + a + "']")[0];
-	let node2 = cy.$("node[label='" + b + "']")[0];
 
-	let cyDist = len(subVec(node1.position(), node2.position()));
-	scaleFactor = cyDist/t;
-	console.log(scaleFactor);
-}
+// function setScale(a, b, t) {
+// 	let node1 = cy.$("node[label='" + a + "']")[0];
+// 	let node2 = cy.$("node[label='" + b + "']")[0];
 
-function reScale(a, b, t) {
-	let node1 = cy.$("node[label='" + a + "']")[0];
-	let node2 = cy.$("node[label='" + b + "']")[0];
+// 	let cyDist = len(subVec(node1.position(), node2.position()));
+// 	scaleFactor = cyDist/t;
+// 	console.log(scaleFactor);
+// }
 
-	let diff = subVec(node2.position(), node1.position());
-	let newdiff = scaleVec(normalize(diff), t*scaleFactor);
-	let newpos = addVec(subVec(node2.position(),diff),newdiff);
-	console.log(newpos);
+// function reScale(a, b, t) {
+// 	let node1 = cy.$("node[label='" + a + "']")[0];
+// 	let node2 = cy.$("node[label='" + b + "']")[0];
 
-	node2.position(newpos);
-}
+// 	let diff = subVec(node2.position(), node1.position());
+// 	let newdiff = scaleVec(normalize(diff), t*scaleFactor);
+// 	let newpos = addVec(subVec(node2.position(),diff),newdiff);
+// 	console.log(newpos);
+
+// 	node2.position(newpos);
+// }
 
 function getClean() {
 	fetch(`graph/clean/${current_graph}`).then((resp) => resp.json()).then(function(data) {
@@ -875,8 +875,8 @@ function getClean() {
 	});
 }
 
-function fillPath(node, label, len) {
-	console.log(len);
+function fillPath(node, id, len) {
+	// console.log(len);
 	let neighbors = node;
 	//let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
 	// console.log(node);
@@ -886,41 +886,59 @@ function fillPath(node, label, len) {
 		// probably also needs a selector for node has not already been rescaled
 		let newNeighbors = neighbors.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
 		let newNode = newNeighbors.difference(neighbors)[0];
-		console.log(neighbors.difference(neighbors));
-		console.log(newNode);
+		// console.log(neighbors.difference(neighbors));
+		// console.log(newNode);
 		if (!newNode) {
 			break;
 		}
 
-		console.log(newNode);
+		// console.log(newNode);
 		len += nodeDist(newNode, oldNode);
-		console.log(len);
+		// console.log(len);
 		oldNode = newNode;
 		neighbors = newNeighbors;
 	}
 
-	let end = neighbors.openNeighborhood("node[label !='" + label + "'][type != 'hallway'], node[label !='" + label + "'][[degree > 2]]")[0];
+	let end = neighbors.openNeighborhood("node[id !='" + id + "'][type != 'hallway'], node[id !='" + id + "'][[degree > 2]]")[0];
 	len += nodeDist(oldNode, end);
-	toggleSelected(end);
-	console.log(len);
-	console.log(end);
-	return {path: neighbors, end: end, len: len};
+	// toggleSelected(end);
+	// console.log(len);
+	// console.log(end);
+	return {interim: neighbors, end: end, len: len};
 }
 
-function fillNode(label) {
-	let node = cy.$("node[label='" + label + "']")[0];
+function fillNode(node) {
+	//let node = cy.$("node[id='" + id + "']")[0];
 	let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
 	let paths = [];
 
 	neighbors.forEach(n => {
-		let branch = fillPath(n, label, nodeDist(n, node));
+		let branch = fillPath(n, node.id(), nodeDist(n, node));
 		
 		paths.push(branch);
+		// toggleSelected(branch.path);
 	});
 
-	console.log(paths);
+	// console.log(paths);
 	return paths;
 }
+
+// let scaleFactor = 1;
+// function setScale(a, b, t) {
+
+// }
+
+function kek() {
+	cy.$("node[type != 'hallway']").forEach(node => {
+		let paths = fillNode(node);
+		//console.log(fillNode(node));
+		paths.forEach(path => {
+			cy.remove(path.interim);
+			addEdge(node, path.end);
+		})
+	});
+}
+
 
 // function fillNode(label) {
 // 	let node = cy.$("node[label='" + label + "']")[0];
