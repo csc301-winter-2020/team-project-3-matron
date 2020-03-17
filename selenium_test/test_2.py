@@ -11,6 +11,7 @@ class seleniumtest(unittest.TestCase):
     # driver = webdriver.Chrome(executable_path="./drivers/chromedriver")
     # driver.get("https://floating-shore-56001.herokuapp.com/")
     def setUp(self):
+        assert os.path.isfile(os.environ["IEWebDriver"])
         self.driver = webdriver.Ie(executable_path=os.environ["IEWebDriver"])
 
     def test_create_node(self):
