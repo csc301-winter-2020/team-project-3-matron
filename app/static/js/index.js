@@ -904,7 +904,7 @@ function fillPath(node, id, len) {
 		oldNode = newNode;
 		neighbors = newNeighbors;
 	}
-	toggleSelected(neighbors);
+	// toggleSelected(neighbors);
 	// end is either a non-origin room, a nonorigin junction, or a nonorigin leaf
 	let end = neighbors.openNeighborhood("node[id !='" + id + "'][type != 'hallway'], node[id !='" + id + "'][[degree > 2]], node[id !='" + id + "'][[degree = 1]]")[0];
 	
@@ -912,7 +912,7 @@ function fillPath(node, id, len) {
 	if (!end) {
 		return {interim: neighbors, end: end, len: len};
 	}
-	toggleSelected(end);
+	// toggleSelected(end);
 	len += nodeDist(oldNode, end);
 	// toggleSelected(end);
 	// console.log(len);
@@ -964,7 +964,8 @@ function cleanNodeID(id) {
 }
 
 function cleanGraph() {
-	cy.$("node[type != 'hallway'], node[type = 'hallway'][[degree > 2]]").forEach(node => {
+	let selector = "node[type != 'hallway'], node[type = 'hallway'][[degree > 2]], node[type = 'hallway'][[degree = 1]]";
+	cy.$(selector).forEach(node => {
 		let paths = fillNode(node);
 		//console.log(fillNode(node));
 		// if this node no longer exist, skip it
@@ -973,7 +974,7 @@ function cleanGraph() {
 		// console.log(cy.elements().length);
 		// if (cy.$id(node.id())[0]) {
 
-		let updatedCollection = cy.$("node[type != 'hallway'], node[type = 'hallway'][[degree > 2]]");
+		let updatedCollection = cy.$(selector);
 		if (updatedCollection.is("node[id='" + node.id() + "']")) {
 			paths.forEach(path => {
 				// console.log(node.id());
