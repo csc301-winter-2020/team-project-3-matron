@@ -100,6 +100,10 @@ function toggleSelected(e) {
 }
 
 function addEdge(cyNode1, cyNode2) {
+	// if (!cy.$id(cyNode1.id())[0] || !cy.$id(cyNode2.id())[0]) {
+	// 	return;
+	// }
+
 	if (cyNode1 == cyNode2) {
 		return;
 	}
@@ -238,8 +242,8 @@ cy.on("tap", function(e) {
 	}
 
 	if (target.group() == "nodes") {
-
-		console.log(target.data("type"));
+		console.log(target.id());
+		// console.log(target.data("type"));
 
 		if (target.data("type") == "hallway" || e.originalEvent.ctrlKey) {
 			toggleSelected(target);	
@@ -422,6 +426,7 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
+	unselectAll();
 	console.log(current_graph);
 	if (current_graph == "") {
 		return;
@@ -840,8 +845,8 @@ function len(a) {
 }
 
 function nodeDist(node1, node2) {
-	console.log(node1);
-	console.log(node2);
+	// console.log(node1);
+	// console.log(node2);
 	return len(subVec(node1.position(), node2.position()));
 }
 
@@ -899,8 +904,15 @@ function fillPath(node, id, len) {
 		oldNode = newNode;
 		neighbors = newNeighbors;
 	}
-
+	toggleSelected(neighbors);
+	// end is either a non-origin room, a nonorigin junction, or a nonorigin leaf
 	let end = neighbors.openNeighborhood("node[id !='" + id + "'][type != 'hallway'], node[id !='" + id + "'][[degree > 2]], node[id !='" + id + "'][[degree = 1]]")[0];
+	
+	// cycle
+	if (!end) {
+		return {interim: neighbors, end: end, len: len};
+	}
+	toggleSelected(end);
 	len += nodeDist(oldNode, end);
 	// toggleSelected(end);
 	// console.log(len);
@@ -910,13 +922,15 @@ function fillPath(node, id, len) {
 
 function fillNode(node) {
 	//let node = cy.$("node[id='" + id + "']")[0];
-	let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
+	let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree = 2]]");
+	//toggleSelected(neighbors);
 	let paths = [];
 
 	neighbors.forEach(n => {
 		let branch = fillPath(n, node.id(), nodeDist(n, node));
-		
-		paths.push(branch);
+		// if (branch) {
+			paths.push(branch);
+		// }
 		// toggleSelected(branch.path);
 	});
 
@@ -924,20 +938,76 @@ function fillNode(node) {
 	return paths;
 }
 
+function cleanNode(label) {
+	let node = cy.$("node[label='" + label + "']")[0];
+	let paths = fillNode(node);
+	paths.forEach(path => {
+		cy.remove(path.interim);
+		//removeNodes(path.interim);
+		if (path.end) {
+			addEdge(node, path.end);
+		}
+	})
+}
 
-// function setScale(a, b, t) {
-
-// }
+function cleanNodeID(id) {
+	let node = cy.$("node[id='" + id + "']")[0];
+	let paths = fillNode(node);
+	console.log(paths);
+	paths.forEach(path => {
+		cy.remove(path.interim);
+		//removeNodes(path.interim);
+		if (path.end) {
+			addEdge(node, path.end);
+		}
+	})
+}
 
 function cleanGraph() {
 	cy.$("node[type != 'hallway'], node[type = 'hallway'][[degree > 2]]").forEach(node => {
 		let paths = fillNode(node);
 		//console.log(fillNode(node));
-		paths.forEach(path => {
-			cy.remove(path.interim);
-			addEdge(node, path.end);
-		});
+		// if this node no longer exist, skip it
+		// console.log(node.id());
+		// console.log(cy.$id(node.id())[0]);
+		// console.log(cy.elements().length);
+		// if (cy.$id(node.id())[0]) {
+
+		let updatedCollection = cy.$("node[type != 'hallway'], node[type = 'hallway'][[degree > 2]]");
+		if (updatedCollection.is("node[id='" + node.id() + "']")) {
+			paths.forEach(path => {
+				// console.log(node.id());
+				// console.log(cy.$id(node.id())[0]);
+				//if (cy.$id(node.id())[0]) {
+				console.log(node.data("label"));
+				// if intersection of the selector with this node is nonempty, ie., if this node still fits the selector, continue
+				
+				path.interim.forEach(n => {
+					console.log(n.id());
+				})
+				console.log(path.end);
+
+				cy.remove(path.interim);
+				//removeNodes(path.interim);
+				// console.log(node);
+				// console.log(path.end);
+				if (path.end) {
+					addEdge(node, path.end);
+				}
+				//}
+			});
+		}
+		console.log("");
+		// }
 	});
+}
+
+function removeNodes(collection) {
+	collection.forEach(n => {
+		if (n) {
+			cy.remove(n);
+		}
+	})
 }
 
 function rotateVec(point, origin, theta) {
