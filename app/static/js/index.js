@@ -840,6 +840,8 @@ function len(a) {
 }
 
 function nodeDist(node1, node2) {
+	console.log(node1);
+	console.log(node2);
 	return len(subVec(node1.position(), node2.position()));
 }
 
@@ -883,7 +885,7 @@ function fillPath(node, id, len) {
 	let oldNode = node;
 	while (true) {
 		// probably also needs a selector for node has not already been rescaled
-		let newNeighbors = neighbors.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
+		let newNeighbors = neighbors.closedNeighborhood("node[type = 'hallway'][[degree = 2]]");
 		let newNode = newNeighbors.difference(neighbors)[0];
 		// console.log(neighbors.difference(neighbors));
 		// console.log(newNode);
@@ -898,7 +900,7 @@ function fillPath(node, id, len) {
 		neighbors = newNeighbors;
 	}
 
-	let end = neighbors.openNeighborhood("node[id !='" + id + "'][type != 'hallway'], node[id !='" + id + "'][[degree > 2]]")[0];
+	let end = neighbors.openNeighborhood("node[id !='" + id + "'][type != 'hallway'], node[id !='" + id + "'][[degree > 2]], node[id !='" + id + "'][[degree = 1]]")[0];
 	len += nodeDist(oldNode, end);
 	// toggleSelected(end);
 	// console.log(len);
@@ -928,7 +930,7 @@ function fillNode(node) {
 // }
 
 function cleanGraph() {
-	cy.$("node[type != 'hallway']").forEach(node => {
+	cy.$("node[type != 'hallway'], node[type = 'hallway'][[degree > 2]]").forEach(node => {
 		let paths = fillNode(node);
 		//console.log(fillNode(node));
 		paths.forEach(path => {
