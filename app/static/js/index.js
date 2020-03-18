@@ -853,18 +853,6 @@ function nodeDist(node1, node2) {
 // 	console.log(scaleFactor);
 // }
 
-// function reScale(a, b, t) {
-// 	let node1 = cy.$("node[label='" + a + "']")[0];
-// 	let node2 = cy.$("node[label='" + b + "']")[0];
-
-// 	let diff = subVec(node2.position(), node1.position());
-// 	let newdiff = scaleVec(normalize(diff), t*scaleFactor);
-// 	let newpos = addVec(subVec(node2.position(),diff),newdiff);
-// 	console.log(newpos);
-
-// 	node2.position(newpos);
-// }
-
 function getClean() {
 	fetch(`graph/clean/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		console.log(data);
@@ -873,6 +861,17 @@ function getClean() {
 		data.nodes.forEach(e => cy.add(e));
 		data.edges.forEach(e => cy.add(e));
 	});
+}
+
+let scaleFactor = 1;
+function reScale(node1pos, node2pos, scale) {
+	let diff = subVec(node2pos, node1pos);
+	let newdiff = scaleVec(diff, scale);
+	let newpos = addVec(subVec(node2pos,diff),newdiff);
+	return newpos;
+	// console.log(newpos);
+
+	// node2.position(newpos);
 }
 
 function fillPath(node, id, len) {
@@ -923,19 +922,88 @@ function fillNode(node) {
 	return paths;
 }
 
-// let scaleFactor = 1;
+
 // function setScale(a, b, t) {
 
 // }
 
-function kek() {
+function cleanGraph() {
 	cy.$("node[type != 'hallway']").forEach(node => {
 		let paths = fillNode(node);
 		//console.log(fillNode(node));
 		paths.forEach(path => {
 			cy.remove(path.interim);
 			addEdge(node, path.end);
-		})
+		});
+	});
+}
+
+function rotateVec(point, origin, theta) {
+	// let x = vec.x - origin.x;
+	// let y = vec.y - origin.y;
+	let vec = subVec(point, origin);
+	let x = vec.x*Math.cos(theta) - vec.y*Math.sin(theta);
+	let y = vec.x*Math.sin(theta) + vec.y*Math.cos(theta);
+	vec = {x:x, y:y};
+	vec = addVec(vec, origin);
+	//console.log(vec);
+	return vec;
+}
+
+function getAng(vec) {
+	let x = vec.x;
+	let y = vec.y;
+	let ang = Math.atan(y/x);
+	if (x<0) {
+		ang += Math.PI;
+	}
+	if (x>0 && y<0) {
+		ang += 2*Math.PI;
+	}
+	return ang;
+}
+
+function setScale(label1, label2, scale) {
+	let node1 = cy.$("node[label='" + label1 + "']")[0];
+	let node2 = cy.$("node[label='" + label2 + "']")[0];
+	let node2pos = JSON.parse(JSON.stringify(node2.position()));
+
+	// assume node1 is in MST, ie., is fixed
+	let path = fillNode(node1).find(p => p.end == node2);
+	path.interim.forEach(n => {
+		n.position(reScale(node1.position(), n.position(), scale));
+	});
+	path.end.position(reScale(node1.position(), path.end.position(), scale));
+
+	let endpaths = fillNode(node2);
+	// for(let i=0; i<endpaths.length; i++) {
+	// 	let p = endpaths[i];
+	// 	if (p.end != node1) {
+	// 		let scale = nodeDist(node2, p.end) / 
+	// 	}
+	// }
+	endpaths.forEach(p => {
+		if (p.end != node1) {
+			toggleSelected(p.interim);
+
+			let scale = nodeDist(node2, p.end) / len(subVec(node2pos, p.end.position()));
+			let endToNode2 = subVec(node2pos, p.end.position());
+			let endToNewNode2 = subVec(node2.position(), p.end.position());
+			console.log(endToNode2);
+			console.log(getAng(endToNode2));
+
+			p.interim.forEach(n => {
+				n.position(reScale(p.end.position(), n.position(), scale));
+				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
+
+				n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
+
+				// now rotate it
+
+				// console.log(n.position());
+			});
+			// console.log(scale);
+		}
 	});
 }
 
