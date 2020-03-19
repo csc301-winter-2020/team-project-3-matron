@@ -145,6 +145,7 @@ class MongoDAO:
         collection = self.graphdb[graphname]
         dates = collection.find({}, {'_id': 0, 'date': 1})
         stripped = [date['date'] for date in dates]
+        stripped.sort()
 
         if (len(stripped) > 0):
             return self.get_version(graphname, stripped[-1])
@@ -175,7 +176,7 @@ class MongoDAO:
         """returns the blueprint for the given graph version"""
         blueprint = self.blueprint_fs.find_one({"filename": graphname, "name": date})
         if blueprint is not None:
-            return self.blueprint_fs.find_one({"filename": graphname, "name": date}).read().decode("ascii")
+            return blueprint.read().decode("ascii")
         else:
             return None
 
