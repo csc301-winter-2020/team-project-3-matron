@@ -44,6 +44,8 @@ class MongoDAO:
         returns a list of all graph names
     get_blueprint : String
         returns the blueprint of a graph for the specified date in base64
+    delete_blueprint : None
+        deletes the blueprint for a specific version of a graph
     """
 
     def __init__(self, connection, password):
@@ -62,6 +64,7 @@ class MongoDAO:
         """
         Saves the newest version of a graph under its corresponding collection
         If there are 10 versions already stored the oldest version is discarded
+        Use if graph is saved with no blueprint
         """
         collection = self.graphdb[graphname]
         delete = True
@@ -76,11 +79,10 @@ class MongoDAO:
             del_result = collection.delete_one({'date': old_date})
             delete = del_result.deleted_count == 1
             # delete oldest version's blueprint (if exists)
-            old_blue = self.meta_collect.find_one({"filename": graphname, "name": old_date})
-            if old_blue is not None:
-                self.blueprint_fs.delete(old_blue['_id'])
+            self.delete_blueprint(graphname, old_date)
 
         ins_result = collection.insert_one(graph)
+
         return ins_result.acknowledged and delete
     
     def save_graph_and_print(self, graphname, graph, blueprint):
@@ -102,58 +104,61 @@ class MongoDAO:
             del_result = collection.delete_one({'date': old_date})
             delete = del_result.deleted_count == 1
             # delete oldest version's blueprint (if exists)
-            old_blue = self.meta_collect.find_one({"filename": graphname, "name": old_date})
-            if old_blue is not None:
-                self.blueprint_fs.delete(old_blue['_id'])
+            self.delete_blueprint(graphname, old_date)
 
         # save new graph
         ins_result = collection.insert_one(graph)
+
         # save new blueprint
         image = bytes(blueprint, encoding="ascii")
         self.blueprint_fs.put(image, filename=graphname, name=new_date)
+
         return ins_result.acknowledged and delete
 
     def delete_version(self, graphname, date):
         """deletes version of specified graph corresponding to the given date"""
+        # delete version of graph
         collection = self.graphdb[graphname]
         result = collection.delete_one({'date': date})
-        blueprint = self.meta_collect.find_one({"filename": graphname, "name": date})
-        if blueprint is not None:
-            self.blueprint_fs.delete(blueprint['_id'])
+
+        # delete associated blueprint if it exists
+        self.delete_blueprint(graphname, date)
+
         return result.deleted_count == 1
 
     def delete_graph(self, graphname):
         """deletes the collection corresponding to the graph labelled by graphname from the database"""
+        # delete all associated blueprints
         blueprints = self.meta_collect.find({"filename": graphname})
         for blueprint in blueprints:
             self.blueprint_fs.delete(blueprint['_id'])
 
         collection = self.graphdb[graphname]
+
         return collection.drop()
 
     def get_latest(self, graphname):
-        """returns a dictionary for the latest version of the specified graph
+        """returns a dictionary and blueprint for the latest version of the specified graph
            returns None if there are no versions saved for that graph
         """
+        # get all versions by date
         collection = self.graphdb[graphname]
         dates = collection.find({}, {'_id': 0, 'date': 1})
         stripped = [date['date'] for date in dates]
+
         if (len(stripped) > 0):
-            date = stripped[-1]
-            graph = collection.find_one({'date': date}, {'_id': 0})
-            blueprint = self.blueprint_fs.find_one({"filename": graphname, "name": date}).read().decode("ascii")
-            return graph, blueprint
+            return self.get_version(graphname, stripped[-1])
         else:
             return None
         
 
     def get_version(self, graphname, date):
-        """returns a dictionary for the given version of the specified graph
+        """returns a dictionary and blueprint for the given version of the specified graph
            returns None if the specified version does not exist
         """
         collection = self.graphdb[graphname]
         graph = collection.find_one({'date': date}, {'_id': 0})
-        blueprint = self.blueprint_fs.find_one({"filename": graphname, "name": date}).read().decode("ascii")
+        blueprint = self.get_blueprint(graphname, date)
         return graph, blueprint
 
     def get_all_versions(self, graphname):
@@ -167,5 +172,15 @@ class MongoDAO:
         return self.graphdb.list_collection_names()
 
     def get_blueprint(self, graphname, date):
-        """returns the blueprint for the given graph"""
-        return self.blueprint_fs.find_one({"filename": graphname, "name": date}).read().decode("ascii")
+        """returns the blueprint for the given graph version"""
+        blueprint = self.blueprint_fs.find_one({"filename": graphname, "name": date})
+        if blueprint is not None:
+            return self.blueprint_fs.find_one({"filename": graphname, "name": date}).read().decode("ascii")
+        else:
+            return None
+
+    def delete_blueprint(self, graphname, date):
+        """deletes the blueprint for the given graph version, if it exists"""
+        blueprint = self.meta_collect.find_one({"filename": graphname, "name": date})
+        if blueprint is not None:
+            self.blueprint_fs.delete(blueprint['_id'])
