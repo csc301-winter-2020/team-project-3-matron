@@ -70,16 +70,10 @@ class MongoDAO:
         delete = True
 
         if collection.estimated_document_count() >= 10:
-            # find oldest version saved
-            dates = collection.find({}, {'_id': 0, 'date': 1})
-            stripped = [date['date'] for date in dates]
-            stripped.sort()
-            old_date = stripped[0]
-            # delete oldest version
-            del_result = collection.delete_one({'date': old_date})
-            delete = del_result.deleted_count == 1
-            # delete oldest version's blueprint (if exists)
-            self.delete_blueprint(graphname, old_date)
+            # find oldest version saved and delete it
+            versions = self.get_all_versions(graphname)
+            if len(versions) > 0:
+                delete = self.delete_version(graphname, versions[0])
 
         ins_result = collection.insert_one(graph)
 
@@ -95,16 +89,10 @@ class MongoDAO:
         new_date = graph['date']
 
         if collection.estimated_document_count() >= 10:
-            # find oldest version saved
-            dates = collection.find({}, {'_id': 0, 'date': 1})
-            stripped = [date['date'] for date in dates]
-            stripped.sort()
-            old_date = stripped[0]
-            # delete oldest version
-            del_result = collection.delete_one({'date': old_date})
-            delete = del_result.deleted_count == 1
-            # delete oldest version's blueprint (if exists)
-            self.delete_blueprint(graphname, old_date)
+            # find oldest version saved and delete it
+            versions = self.get_all_versions(graphname)
+            if len(versions) > 0:
+                delete = self.delete_version(graphname, versions[0])
 
         # save new graph
         ins_result = collection.insert_one(graph)
@@ -116,7 +104,10 @@ class MongoDAO:
         return ins_result.acknowledged and delete
 
     def delete_version(self, graphname, date):
-        """deletes version of specified graph corresponding to the given date"""
+        """
+        Deletes version of specified graph corresponding to the given date
+        Returns true if deletion successful, false otherwise
+        """
         # delete version of graph
         collection = self.graphdb[graphname]
         result = collection.delete_one({'date': date})
@@ -142,13 +133,10 @@ class MongoDAO:
            returns None if there are no versions saved for that graph
         """
         # get all versions by date
-        collection = self.graphdb[graphname]
-        dates = collection.find({}, {'_id': 0, 'date': 1})
-        stripped = [date['date'] for date in dates]
-        stripped.sort()
+        versions = self.get_all_versions(graphname)
 
-        if (len(stripped) > 0):
-            return self.get_version(graphname, stripped[-1])
+        if len(versions) > 0:
+            return self.get_version(graphname, versions[-1])
         else:
             return None
         
@@ -166,7 +154,9 @@ class MongoDAO:
         """returns all stored versions of the specified graph, in a list dates for those objects"""
         collection = self.graphdb[graphname]
         dates = collection.find({}, {'_id': 0, 'date': 1})
-        return [date['date'] for date in dates]
+        stripped = [date['date'] for date in dates]
+        stripped.sort()
+        return stripped
 
     def get_all_names(self):
         """returns a list of names of all graphs in the database"""
