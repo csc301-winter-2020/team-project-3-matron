@@ -24,24 +24,26 @@ class MongoDAO:
     save_graph : bool
         saves latest version of a graph in the database
         returns true if successful, false otherwise
+    save_graph_and_print : bool
+        saves latest version of a graph in the database
+        also saves the blueprint image for that version using GridFS
+        returns true if successful, false otherwise
     delete_version : bool
         deletes a version of a graph from the database
         returns true if successful, false otherwise
     delete_graph : bool
         deletes all records of a graph from the database
         returns true if successful, false otherwise
-    get_latest : Dict
-        returns the latest version of the specified graph
-    get_version : Dict
-        returns a specified version of the specified graph
+    get_latest : Dict, String
+        returns the latest version of the specified graph and its blueprint (or None)
+    get_version : Dict, String
+        returns a specified version of the specified graph and its blueprint (or None)
     get_all_versions : [int]
         returns a list of past versions for the requested graph
     get_all_names : [String]
         returns a list of all graph names
-    save_blueprint : None
-        saves the blueprint image of a graph using GridFS
     get_blueprint : String
-        returns the blueprint of a graph in base64
+        returns the blueprint of a graph for the specified date in base64
     """
 
     def __init__(self, connection, password):
@@ -65,33 +67,66 @@ class MongoDAO:
         delete = True
 
         if collection.estimated_document_count() >= 10:
+            # find oldest version saved
             dates = collection.find({}, {'_id': 0, 'date': 1})
             stripped = [date['date'] for date in dates]
             stripped.sort()
-            del_result = collection.delete_one({'date': stripped[0]})
+            old_date = stripped[0]
+            # delete oldest version
+            del_result = collection.delete_one({'date': old_date})
             delete = del_result.deleted_count == 1
+            # delete oldest version's blueprint (if exists)
+            old_blue = self.meta_collect.find_one({"filename": graphname, "name": old_date})
+            if old_blue is not None:
+                self.blueprint_fs.delete(old_blue['_id'])
 
         ins_result = collection.insert_one(graph)
         return ins_result.acknowledged and delete
+    
+    def save_graph_and_print(self, graphname, graph, blueprint):
+        """
+        Saves the newest version of a graph under its corresponding collection
+        If there are 10 versions already stored the oldest version is discarded
+        """
+        collection = self.graphdb[graphname]
+        delete = True
+        new_date = graph['date']
 
-    def save_blueprint(self, graphname, blueprint):
-        existing = self.meta_collect.find_one({"filename": graphname})
-        if existing is not None:
-            self.blueprint_fs.delete(existing['_id'])
+        if collection.estimated_document_count() >= 10:
+            # find oldest version saved
+            dates = collection.find({}, {'_id': 0, 'date': 1})
+            stripped = [date['date'] for date in dates]
+            stripped.sort()
+            old_date = stripped[0]
+            # delete oldest version
+            del_result = collection.delete_one({'date': old_date})
+            delete = del_result.deleted_count == 1
+            # delete oldest version's blueprint (if exists)
+            old_blue = self.meta_collect.find_one({"filename": graphname, "name": old_date})
+            if old_blue is not None:
+                self.blueprint_fs.delete(old_blue['_id'])
+
+        # save new graph
+        ins_result = collection.insert_one(graph)
+        # save new blueprint
         image = bytes(blueprint, encoding="ascii")
-        self.blueprint_fs.put(image, filename=graphname)
+        self.blueprint_fs.put(image, filename=graphname, name=new_date)
+        return ins_result.acknowledged and delete
 
     def delete_version(self, graphname, date):
         """deletes version of specified graph corresponding to the given date"""
         collection = self.graphdb[graphname]
         result = collection.delete_one({'date': date})
+        blueprint = self.meta_collect.find_one({"filename": graphname, "name": date})
+        if blueprint is not None:
+            self.blueprint_fs.delete(blueprint['_id'])
         return result.deleted_count == 1
 
     def delete_graph(self, graphname):
         """deletes the collection corresponding to the graph labelled by graphname from the database"""
-        existing = self.meta_collect.find_one({"filename": graphname})
-        if existing is not None:
-            self.blueprint_fs.delete(existing['_id'])
+        blueprints = self.meta_collect.find({"filename": graphname})
+        for blueprint in blueprints:
+            self.blueprint_fs.delete(blueprint['_id'])
 
         collection = self.graphdb[graphname]
         return collection.drop()
@@ -104,7 +139,10 @@ class MongoDAO:
         dates = collection.find({}, {'_id': 0, 'date': 1})
         stripped = [date['date'] for date in dates]
         if (len(stripped) > 0):
-            return collection.find_one({'date': stripped[-1]}, {'_id': 0})
+            date = stripped[-1]
+            graph = collection.find_one({'date': date}, {'_id': 0})
+            blueprint = self.blueprint_fs.find_one({"filename": graphname, "name": date}).read().decode("ascii")
+            return graph, blueprint
         else:
             return None
         
@@ -114,7 +152,9 @@ class MongoDAO:
            returns None if the specified version does not exist
         """
         collection = self.graphdb[graphname]
-        return collection.find_one({'date': date}, {'_id': 0})
+        graph = collection.find_one({'date': date}, {'_id': 0})
+        blueprint = self.blueprint_fs.find_one({"filename": graphname, "name": date}).read().decode("ascii")
+        return graph, blueprint
 
     def get_all_versions(self, graphname):
         """returns all stored versions of the specified graph, in a list dates for those objects"""
@@ -126,6 +166,6 @@ class MongoDAO:
         """returns a list of names of all graphs in the database"""
         return self.graphdb.list_collection_names()
 
-    def get_blueprint(self, graphname):
+    def get_blueprint(self, graphname, date):
         """returns the blueprint for the given graph"""
-        return self.blueprint_fs.find_one({"filename": graphname}).read().decode("ascii")
+        return self.blueprint_fs.find_one({"filename": graphname, "name": date}).read().decode("ascii")
