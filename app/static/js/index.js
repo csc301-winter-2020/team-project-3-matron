@@ -1043,6 +1043,11 @@ function setScale(label1, label2, scale) {
 
 	// assume node1 is in MST, ie., is fixed
 	let path = fillNode(node1).find(p => p.end == node2);
+
+	if (!path) {
+		return;
+	}
+
 	path.interim.forEach(n => {
 		n.position(reScale(node1.position(), n.position(), scale));
 	});
@@ -1057,7 +1062,7 @@ function setScale(label1, label2, scale) {
 	// }
 	endpaths.forEach(p => {
 		if (p.end != node1) {
-			toggleSelected(p.interim);
+			// toggleSelected(p.interim);
 
 			let scale = nodeDist(node2, p.end) / len(subVec(node2pos, p.end.position()));
 			let endToNode2 = subVec(node2pos, p.end.position());
