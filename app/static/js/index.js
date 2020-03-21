@@ -449,7 +449,7 @@ function saveGraph() {
 	let url = `graph/${current_graph}`;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({cyGraph: graph, types: types})
+		body: JSON.stringify({cyGraph: graph, types: types, pan: cy.pan(), zoom: cy.zoom()})
 	});
 	if (fileData != -1) {
 		
@@ -581,6 +581,14 @@ function editFloor(current_graph) {
 		if (data.graph.cyGraph.elements.nodes) {
 			console.log(data.graph.cyGraph.elements.nodes);
 			cy.add(data.graph.cyGraph.elements);
+		}
+		if (data.graph.zoom) {
+			console.log(data.graph.zoom);
+			cy.zoom(data.graph.zoom);
+		}
+		if (data.graph.pan) {
+			console.log(data.graph.pan);
+			cy.pan(data.graph.pan);
 		}
 	});
 
