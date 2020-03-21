@@ -897,6 +897,7 @@ function reScale(node1pos, node2pos, scale) {
 	// node2.position(newpos);
 }
 
+// neighbor, source, len
 function fillPath(node, id, len) {
 	// console.log(len);
 	let neighbors = node;
@@ -1052,7 +1053,24 @@ function getAng(vec) {
 	return ang;
 }
 
-function setScale(label1, label2, scale) {
+function setScaleFactor(label1, label2, t) {
+	let node1 = cy.$("node[label='" + label1 + "']")[0];
+	let node2 = cy.$("node[label='" + label2 + "']")[0];
+
+	let path = fillNode(node1).find(p => p.end == node2);
+
+	if (!path) {
+		return
+	}
+
+	let cyLen = path.len;
+	scaleFactor = cyLen/t;
+
+	console.log(cyLen);
+	console.log(scaleFactor);
+}
+
+function reScalePath(label1, label2, t) {
 	let node1 = cy.$("node[label='" + label1 + "']")[0];
 	let node2 = cy.$("node[label='" + label2 + "']")[0];
 	let node2pos = JSON.parse(JSON.stringify(node2.position()));
@@ -1063,6 +1081,11 @@ function setScale(label1, label2, scale) {
 	if (!path) {
 		return;
 	}
+
+	let cyLen = path.len;
+	let scale = (t*scaleFactor)/cyLen;
+	console.log(t, cyLen, scaleFactor);
+	console.log(scale);
 
 	path.interim.forEach(n => {
 		n.position(reScale(node1.position(), n.position(), scale));
