@@ -427,6 +427,7 @@ const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
 	unselectAll();
+	unHoverAll();
 	console.log(current_graph);
 	if (current_graph == "") {
 		return;
@@ -461,6 +462,13 @@ function saveGraph() {
 			body: fileData
 		});
 	}
+}
+
+function unHoverAll() {
+	cy.$(".hover").forEach(e => {
+		console.log(e);
+		e.removeClass("hover");
+	});
 }
 
 document.getElementById("floor_search").addEventListener("focusout", function(e) {
