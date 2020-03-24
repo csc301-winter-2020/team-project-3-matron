@@ -186,7 +186,7 @@ class MongoDAO:
         if len(versions) > 0:
             return self.get_version(graphname, versions[-1])
         else:
-            return None
+            return None, None
         
 
     def get_version(self, graphname, date):

@@ -47,6 +47,8 @@ def graph(name):
             return jsonify(failure)
     elif request.method == 'GET':
         graph, blueprint = dao.get_latest(name)
+        if graph is None:
+            return jsonify({"status": 404})
         return jsonify({'graph': graph['graph'], 'blueprint': blueprint['blueprint'], 'status': 200})
     elif request.method == 'DELETE':
         if dao.delete_graph(name):
@@ -111,6 +113,8 @@ def graph_version(name, date):
     epoch = timegm(utc_time.timetuple())
     if request.method == 'GET':
         graph, blueprint = dao.get_version(name, epoch)
+        if graph is None:
+            return jsonify({'status': 404})
         return jsonify({'graph': graph['graph'], 'blueprint': blueprint['blueprint'], 'status': 200})
     elif request.metohd == 'DELETE':
         if dao.delete_version(name, epoch):
@@ -132,6 +136,8 @@ def distances_from_room(graph_name, room):
     room:       the name of the room
     """
     graph_data, print_data = dao.get_latest(graph_name)
+    if graph_data is None:
+        return jsonify({"status": 404})
     graph = graph_data['graph']
     try: 
         res = {'distances': find_dist_and_dump(graph, room), 'status': 200}
@@ -150,6 +156,8 @@ def all_distances(graph_name):
     """
 
     graph_data, print_data = dao.get_latest(graph_name)
+    if graph_data is None:
+        return jsonify({"status": 404})
     graph = graph_data['graph']
 
     try:
@@ -169,6 +177,8 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     room_name1: name of destination room
     """
     data, print_data = dao.get_latest(graph_name)
+    if graph_data is None:
+        return jsonify({"status": 404})
     dist = distance(data['graph']['cyGraph']['elements'], room_name0, room_name1)
 
     return jsonify(dist)
