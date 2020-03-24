@@ -47,7 +47,7 @@ def graph(name):
             return jsonify(failure)
     elif request.method == 'GET':
         graph, blueprint = dao.get_latest(name)
-        return jsonify({'graph': graph, 'blueprint': blueprint, 'status': 200})
+        return jsonify({'graph': graph['graph'], 'blueprint': blueprint['blueprint'], 'status': 200})
     elif request.method == 'DELETE':
         if dao.delete_graph(name):
             return jsonify(success)
@@ -111,7 +111,7 @@ def graph_version(name, date):
     epoch = timegm(utc_time.timetuple())
     if request.method == 'GET':
         graph, blueprint = dao.get_version(name, epoch)
-        return jsonify({'graph': graph, 'blueprint': blueprint, 'status': 200})
+        return jsonify({'graph': graph['graph'], 'blueprint': blueprint['blueprint'], 'status': 200})
     elif request.metohd == 'DELETE':
         if dao.delete_version(name, epoch):
             return jsonify(success)
@@ -131,8 +131,8 @@ def distances_from_room(graph_name, room):
     graph_name: the name of the graph
     room:       the name of the room
     """
-    data = dao.get_latest(graph_name)
-    graph = data['graph']
+    graph_data, print_data = dao.get_latest(graph_name)
+    graph = graph_data['graph']
     try: 
         res = {'distances': find_dist_and_dump(graph, room), 'status': 200}
         return jsonify(res)
@@ -149,8 +149,8 @@ def all_distances(graph_name):
     graph_name: name of the to be inspected
     """
 
-    data = dao.get_latest(graph_name)
-    graph = data['graph']
+    graph_data, print_data = dao.get_latest(graph_name)
+    graph = graph_data['graph']
 
     try:
         res = {'distances': find_all_dist_and_dump(graph), 'status': 200}
@@ -168,7 +168,7 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     room_name0: name of the starting room
     room_name1: name of destination room
     """
-    data = dao.get_latest(graph_name)
+    data, print_data = dao.get_latest(graph_name)
     dist = distance(data['graph']['cyGraph']['elements'], room_name0, room_name1)
 
     return jsonify(dist)
@@ -181,6 +181,6 @@ def clean_graph():
     return jsonify({'graph': clean_and_dump(graph), 'status': 200})
 
 
-if __name__ == '__main__':
-    dao = MongoDAO(url, password)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
+dao = MongoDAO(url, password)
+app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
+    
