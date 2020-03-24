@@ -30,7 +30,7 @@ def get_graph_names():
 
 
 @app.route('/graph/<string:name>', methods=['GET', 'POST', 'DELETE'])
-def graph(name):
+def graph_functions(name):
     """
     fetches a saved graph or save a new graph into the database
     depending on the request type
@@ -49,6 +49,9 @@ def graph(name):
         graph, blueprint = dao.get_latest(name)
         if graph is None:
             return jsonify({"status": 404})
+        if blueprint is None:
+            print("orgasming!")
+            return jsonify({'graph': graph['graph'], 'status': 200})
         return jsonify({'graph': graph['graph'], 'blueprint': blueprint['blueprint'], 'status': 200})
     elif request.method == 'DELETE':
         if dao.delete_graph(name):
@@ -115,6 +118,8 @@ def graph_version(name, date):
         graph, blueprint = dao.get_version(name, epoch)
         if graph is None:
             return jsonify({'status': 404})
+        if blueprint is None:
+            return jsonify({'graph': graph['graph'], 'status': 200})
         return jsonify({'graph': graph['graph'], 'blueprint': blueprint['blueprint'], 'status': 200})
     elif request.metohd == 'DELETE':
         if dao.delete_version(name, epoch):
@@ -177,7 +182,7 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     room_name1: name of destination room
     """
     data, print_data = dao.get_latest(graph_name)
-    if graph_data is None:
+    if data is None:
         return jsonify({"status": 404})
     dist = distance(data['graph']['cyGraph']['elements'], room_name0, room_name1)
 
@@ -191,6 +196,7 @@ def clean_graph():
     return jsonify({'graph': clean_and_dump(graph), 'status': 200})
 
 
-dao = MongoDAO(url, password)
-app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
+if __name__ == "__main__":
+    dao = MongoDAO(url, password)
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
     
