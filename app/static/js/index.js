@@ -99,10 +99,13 @@ function toggleSelected(e) {
 	e.unselectify();
 }
 
-function addEdge(cyNode1, cyNode2) {
+function addEdge(cyNode1, cyNode2, cyInstance) {
 	// if (!cy.$id(cyNode1.id())[0] || !cy.$id(cyNode2.id())[0]) {
 	// 	return;
 	// }
+
+	cyInstance = cyInstance || cy;
+
 
 	if (cyNode1 == cyNode2) {
 		return;
@@ -111,7 +114,7 @@ function addEdge(cyNode1, cyNode2) {
 	let id1 = cyNode1.id() + "-" + cyNode2.id();
 	let id2 = cyNode2.id() + "-" + cyNode1.id();
 
-	if (cy.$id(id1)[0] || cy.$id(id2)[0]) {
+	if (cyInstance.$id(id1)[0] || cyInstance.$id(id2)[0]) {
 		return;
 	}
 
@@ -124,10 +127,11 @@ function addEdge(cyNode1, cyNode2) {
 		},
 		classes: []
 	}
-	return cy.add(edge);
+	return cyInstance.add(edge);
 }
 
-function addNode(posX, posY) {
+function addNode(posX, posY, cyInstance) {
+	cyInstance = cyInstance || cy;
 	let node = {
 		data: {
 			label: "",
@@ -139,7 +143,7 @@ function addNode(posX, posY) {
 		},
 		classes: []
 	}
-	return cy.add(node)[0];
+	return cyInstance.add(node)[0];
 }
 
 let ghost = {
@@ -955,34 +959,46 @@ function fillNode(node) {
 	return paths;
 }
 
-function cleanNode(label) {
-	let node = cy.$("node[label='" + label + "']")[0];
-	let paths = fillNode(node);
-	paths.forEach(path => {
-		cy.remove(path.interim);
-		//removeNodes(path.interim);
-		if (path.end) {
-			addEdge(node, path.end);
-		}
-	})
-}
+// function cleanNode(label) {
+// 	let node = cy.$("node[label='" + label + "']")[0];
+// 	let paths = fillNode(node);
+// 	paths.forEach(path => {
+// 		cy.remove(path.interim);
+// 		//removeNodes(path.interim);
+// 		if (path.end) {
+// 			addEdge(node, path.end);
+// 		}
+// 	})
+// }
 
-function cleanNodeID(id) {
-	let node = cy.$("node[id='" + id + "']")[0];
-	let paths = fillNode(node);
-	console.log(paths);
-	paths.forEach(path => {
-		cy.remove(path.interim);
-		//removeNodes(path.interim);
-		if (path.end) {
-			addEdge(node, path.end);
-		}
-	})
-}
+// function cleanNodeID(id) {
+// 	let node = cy.$("node[id='" + id + "']")[0];
+// 	let paths = fillNode(node);
+// 	console.log(paths);
+// 	paths.forEach(path => {
+// 		cy.remove(path.interim);
+// 		//removeNodes(path.interim);
+// 		if (path.end) {
+// 			addEdge(node, path.end);
+// 		}
+// 	})
+// }
 
-function cleanGraph() {
+let cy2 = cytoscape({
+	layout: {
+		name: "preset"
+	},
+	style: cyStyle,
+	headless: true
+});
+
+function cleanGraph(invis) {
+	let cyInstance = invis ? cy2 : cy;
+
+	cyInstance.add(cy.elements());
+
 	let selector = "node[type != 'hallway'], node[type = 'hallway'][[degree > 2]], node[type = 'hallway'][[degree = 1]]";
-	cy.$(selector).forEach(node => {
+	cyInstance.$(selector).forEach(node => {
 		let paths = fillNode(node);
 		//console.log(fillNode(node));
 		// if this node no longer exist, skip it
@@ -991,7 +1007,7 @@ function cleanGraph() {
 		// console.log(cy.elements().length);
 		// if (cy.$id(node.id())[0]) {
 
-		let updatedCollection = cy.$(selector);
+		let updatedCollection = cyInstance.$(selector);
 		if (updatedCollection.is("node[id='" + node.id() + "']")) {
 			paths.forEach(path => {
 				// console.log(node.id());
@@ -1005,12 +1021,12 @@ function cleanGraph() {
 				})
 				console.log(path.end);
 
-				cy.remove(path.interim);
-				//removeNodes(path.interim);
-				// console.log(node);
-				// console.log(path.end);
+				cyInstance.remove(path.interim);
+
+				// cy2.add(path.interim);
+
 				if (path.end) {
-					addEdge(node, path.end);
+					addEdge(node, path.end, cyInstance);
 				}
 				//}
 			});
@@ -1018,15 +1034,20 @@ function cleanGraph() {
 		console.log("");
 		// }
 	});
+
+	let span = cyInstance.elements().kruskal();
+	cyInstance.remove(cyInstance.elements());
+	cyInstance.add(span);
+	console.log(span);
 }
 
-function removeNodes(collection) {
-	collection.forEach(n => {
-		if (n) {
-			cy.remove(n);
-		}
-	})
-}
+// function removeNodes(collection) {
+// 	collection.forEach(n => {
+// 		if (n) {
+// 			cy.remove(n);
+// 		}
+// 	})
+// }
 
 function rotateVec(point, origin, theta) {
 	// let x = vec.x - origin.x;
@@ -1065,6 +1086,9 @@ function setScaleFactor(label1, label2, t) {
 
 	let cyLen = path.len;
 	scaleFactor = cyLen/t;
+
+	// path.interim.addClass("scaled");
+	// path.end.addClass("scaled");
 
 	console.log(cyLen);
 	console.log(scaleFactor);
