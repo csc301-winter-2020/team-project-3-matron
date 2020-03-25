@@ -59,6 +59,7 @@ let cyStyle = [
 ]
 
 let current_graph = '';
+let types = [];
 let defaulttHoverThresh = [8,1];
 let ghostHOverThresh = [25, 5];
 setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
@@ -441,9 +442,11 @@ function saveGraph() {
 		graph.elements.edges = [];
 	}
 	let url = `both/${current_graph}`;
+	let _graph = cy.json();
+	_graph.types = types;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: cy.json(), types: types, blueprint: fileImage.src})
+		body: JSON.stringify({graph: _graph, types: types, blueprint: fileImage.src})
 	});
 
 }
@@ -536,9 +539,11 @@ reader.addEventListener("load", function (e) {
 	console.log(e.target.result);
 	fileData = e.target.result;
 	let url = `both/${current_graph}`;
+	let _graph = cy.json()
+	_graph.types = types;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: cy.json(), types: types, blueprint: fileData})
+		body: JSON.stringify({graph: _graph, types: types, blueprint: fileData})
 	});
 	fileImage = new Image();
 	fileImage.src = e.target.result;
@@ -548,7 +553,7 @@ function getImageData() {
 	file = document.querySelector('#file_button').files[0];
 }
 
-let types = [];
+
 
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
@@ -558,6 +563,7 @@ edit_floor_btn.addEventListener('click', (e) => {
 
 		console.log(data);
 		if (data.graph.types) {
+			console.log("Adding types")
 			data.graph.types.forEach((e) => {
 				types.push(e);
 			});
