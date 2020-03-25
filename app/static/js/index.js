@@ -202,6 +202,7 @@ cy.on("tap", function(e) {
 				content: () => {
 					let node_input_card = document.querySelector('#node_info');
 					node_input_card.style.display = "block";
+					
 					document.body.appendChild(node_input_card);
 					clear_label_inputs();
 					document.querySelector('#node_label_input').focus();
@@ -234,6 +235,8 @@ cy.on("tap", function(e) {
 	}
 
 	if (target.group() == "nodes") {
+
+		console.log("a node has been selected!!!");
 
 		console.log(target.data("type"));
 
@@ -421,7 +424,9 @@ function saveGraph() {
 	console.log(current_graph);
 	if (current_graph == "") {
 		return;
-	}
+	}	
+
+	console.log('SAVED');
 
 	let graph = cy.json();
 
@@ -435,23 +440,12 @@ function saveGraph() {
 	if (!graph.elements.edges) {
 		graph.elements.edges = [];
 	}
-
-	console.log(graph);
-	let url = `graph/${current_graph}`;
+	let url = `both/${current_graph}`;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({cyGraph: graph, types: types})
+		body: JSON.stringify({graph: cy.json(), types: types, blueprint: fileImage.src})
 	});
-	if (fileData != -1) {
-		
-		let url = `blueprint/${current_graph}`;
 
-		console.log(file);
-		fetch(url, {
-			method: 'post',
-			body: fileData
-		});
-	}
 }
 
 document.getElementById("floor_search").addEventListener("focusout", function(e) {
@@ -496,7 +490,7 @@ function getMapNamesFromServer() {
 					document.querySelector('#create_floor_inputs').style.display = "block";
 					document.querySelector('#edit_floor').style.display = 'none';
 					document.querySelector('#select_floor_header').innerText = 'Create unit';
-					console.log("new");
+					
 				}
 
 				let delete_button = document.querySelector(".text").firstChild.lastChild
@@ -541,12 +535,17 @@ const reader = new FileReader();
 reader.addEventListener("load", function (e) {
 	console.log(e.target.result);
 	fileData = e.target.result;
-
+	let url = `both/${current_graph}`;
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify({graph: cy.json(), types: types, blueprint: fileData})
+	});
 	fileImage = new Image();
 	fileImage.src = e.target.result;
 }, false);
+
 function getImageData() {
-	file = document.querySelector('input[type=file]').files[0];
+	file = document.querySelector('#file_button').files[0];
 }
 
 let types = [];
@@ -556,51 +555,52 @@ const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+
+		console.log(data);
 		if (data.graph.types) {
 			data.graph.types.forEach((e) => {
 				types.push(e);
 			});
 		}
 		fillTypes();
-		if (data.graph.cyGraph.elements.nodes) {
-			console.log(data.graph.cyGraph.elements.nodes);
-			cy.add(data.graph.cyGraph.elements);
+		if (data.graph.elements.nodes) {
+			console.log(data.graph.elements.nodes);
+			cy.add(data.graph.elements);
 		}
-	});
 
-	fetch(`blueprint/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-		console.log(data);
-
+		const blueprint = data.blueprint;
+		// loads all the versions for a given graph.
 		if (data != -1) {
 			fileImage = new Image();
-			fileData = data;
+			fileData = blueprint;
 			fileImage.src = fileData;
-
 			// Force rerender
 			document.querySelector('#cy').style.visibility = 'hidden';
 			document.querySelector('#cy').style.visibility = 'visible';
 		}
-	});
+		load_graph_versions();
+		//console.log(types);
+		document.querySelector('#select_floor').style.display = 'none';
+		document.querySelector('#cy').style.visibility = 'visible';
+		});
 
-	console.log(types);
-	document.querySelector('#select_floor').style.display = 'none';
-	document.querySelector('#cy').style.visibility = 'visible';
 });
 
 const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
-	current_graph = ($('.ui.dropdown').dropdown("get value")[0]);
-	// let url = `graph/${current_graph}`;
-	// //let current_draft = {cyGraph: cy.json(), types: types};
-	// fetch(url, {
-	// 	method: 'post',
-	// 	body: JSON.stringify({cyGraph: cy.json(), types: types})
-	// });
-
+	current_graph = $('.ui.dropdown').dropdown("get value")[1];
+	console.log(current_graph);
+	
 	if (file != -1) {
 		reader.readAsDataURL(file);
+	} else {
+		const url = `graph/${current_graph}`;
+		fetch(url, {
+			method: 'post',
+			body: JSON.stringify({graph: cy.json(), types: types})
+		});
 	}
 
 	document.querySelector('#select_floor').style.display = 'none';
@@ -759,6 +759,26 @@ const distance_btn = document.querySelector('#distance_btn');
 const distance_result_div = document.querySelector('#distance_result_div');
 const distance_icon = document.querySelector('#distance_icon');
 
+const blueprint_icon = document.querySelector('#image_icon');
+const upload_new_blueprint_btn = document.querySelector('#upload_new_blueprint');
+const blueprint_reader = new FileReader();
+
+upload_new_blueprint_btn.addEventListener('click', (e)=>{
+	file = document.querySelector('#new_blue_print').files[0];
+	reader.readAsDataURL(file);
+});
+
+blueprint_icon.addEventListener('click', (e)=>{
+	if (current_graph == "") {
+		return
+	}
+	
+	$('#blueprint_modal')
+		.modal('show')
+	;
+
+});
+
 distance_icon.addEventListener('click', (e) =>{
 
 	if (current_graph == "") {
@@ -766,10 +786,11 @@ distance_icon.addEventListener('click', (e) =>{
 	}
 
 	distance_result_div.style.display = 'none';
-	$('.ui.modal')
+	$('#distance_modal')
 		.modal('show')
 	;
 });
+
 
 distance_btn.addEventListener('click', (e) =>{
 	distance_result_div.style.display = 'block';
@@ -802,3 +823,87 @@ distance_btn.addEventListener('click', (e) =>{
 		document.querySelector('#dist_result').innerText = "distance : " + data;
 	});	
 });
+
+
+$("#version_select").dropdown({
+	
+	onChange: function(value, text, $selectedItem) {
+		// the text corresponds to date
+		const date = text;
+		fetch(`/graph/version/${current_graph}/${date}`).then((resp) => resp.json()).then(function(data) {
+			// here we would do something load our older version graph
+			//console.log(data);
+	
+			const blueprint = data.blueprint;
+			// loads all the versions for a given graph.
+			if (data != -1) {
+				console.log(fileData);
+				fileImage = new Image();
+				fileData = blueprint;
+				fileImage.src = fileData;
+			}
+	
+		});
+
+
+	  }
+});
+
+/**
+ * Function used to load in the graph version on the dropdown
+ */
+function load_graph_versions(){
+
+	const version_list = document.querySelector('#version_list');
+	document.querySelector('#version_select').style.display = 'block';
+	fetch(`/graph/requestAll/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+		let count = 0;
+		console.log(data)
+		data.times.map((time)=>{
+			const div = document.createElement('div');
+			div.innerHTML = `<div class="item" data-value="${count}">  ${time} </div>`;
+			version_list.appendChild(div.firstChild);
+			count += 1;
+		});
+
+	});
+}
+/**
+ * Requests a particular version of a graph along with its blueprint image
+ * this function is being called when a version is selected from the drop
+ * down.
+ */
+function change_graph_version(){
+	const date = $("#version_select").dropdown("get value");
+	fetch(`/graph/version/${current_graph}/${date}`).then((resp) => resp.json()).then(function(data) {
+		// here we would do something with graph object and blueprint
+		console.log(data);
+		// if (data.graph.types) {
+		// 	data.graph.types.forEach((e) => {
+		// 		types.push(e);
+		// 	});
+		// }
+		// fillTypes();
+		// if (data.graph.elements.nodes) {
+		// 	console.log(data.graph.elements.nodes);
+		// 	cy.add(data.graph.elements);
+		// }
+
+		const blueprint = data.blueprint;
+		// loads all the versions for a given graph.
+		if (data != -1) {
+			console.log(fileData);
+			fileImage = new Image();
+			fileData = blueprint;
+			fileImage.src = fileData;
+			// Force rerender
+			//document.querySelector('#cy').style.visibility = 'hidden';
+			//document.querySelector('#cy').style.visibility = 'visible';
+		}
+
+	});
+
+}
+
+
+
