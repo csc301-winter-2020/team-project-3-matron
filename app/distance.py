@@ -1,5 +1,5 @@
 """
-For routing, use distance, find_dist_and_dump, and find_all_dist_and_dump. See documentation for details.
+For routing, use distance, find_dist_from_start, and find_all_room_distances. See documentation for details.
 
 Find the distance between any two nodes in a given graph, with a list of node id pairs.
 """
@@ -94,18 +94,18 @@ def distance(json_graph: JSONGraph, room_id_a: str, room_id_b: str) -> float:
     return dijkstra(g, room_id_a, room_id_b)[0]
 
 
-def find_dist_and_dump(json_graph: JSONGraph, start_id: str) -> RoomDistanceMap:
-    """
-    Return a json dump of all room distances from a given start room. Raises a
-    ValueError if graph is not connected, where the arguments are the ids of the
-    two unconnected rooms which caused the error.
-    """
-    return json.dumps(find_dist_from_start(Graph(json_graph), start_id))
-
-
-def find_all_dist_and_dump(json_graph: JSONGraph) -> Dict[str, RoomDistanceMap]:
-    """
-    Return a json dump of a dict which maps all rooms to their corresponding
-    RoomDistanceMaps.
-    """
-    return json.dumps(find_all_room_distances(Graph(json_graph)))
+# def find_dist_and_dump(json_graph: JSONGraph, start_id: str) -> RoomDistanceMap:
+#     """
+#     Return a json dump of all room distances from a given start room. Raises a
+#     ValueError if graph is not connected, where the arguments are the ids of the
+#     two unconnected rooms which caused the error.
+#     """
+#     return json.dumps(find_dist_from_start(Graph(json_graph), start_id))
+#
+#
+# def find_all_dist_and_dump(json_graph: JSONGraph) -> Dict[str, RoomDistanceMap]:
+#     """
+#     Return a json dump of a dict which maps all rooms to their corresponding
+#     RoomDistanceMaps.
+#     """
+#     return json.dumps(find_all_room_distances(Graph(json_graph)))
