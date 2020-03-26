@@ -1,5 +1,5 @@
 """
-For routing, use distance, find_dist_and_dump, and find_all_dist_and_dump. See documentation for details.
+For routing, use distance, find_dist_from_start, and find_all_room_distances. See documentation for details.
 
 Find the distance between any two nodes in a given graph, with a list of node id pairs.
 """
