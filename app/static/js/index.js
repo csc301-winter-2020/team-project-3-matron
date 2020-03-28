@@ -458,11 +458,15 @@ function saveGraph() {
 	let url = `both/${current_graph}`;
 	let _graph = cy.json();
 	_graph.types = types;
+
+	let blueprint = fileImage == -1 ? "" : fileImage.src;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: _graph, types: types, blueprint: fileImage.src, pan: cy.pan(), zoom: cy.zoom()})
+		body: JSON.stringify({graph: _graph, types: types, blueprint: blueprint, pan: cy.pan(), zoom: cy.zoom()})
+	}).then(res=>{
+		load_graph_versions();
 	});
-
+	
 }
 
 function unHoverAll() {
@@ -472,16 +476,6 @@ function unHoverAll() {
 	});
 }
 
-document.getElementById("floor_search").addEventListener("focusout", function(e) {
-	let selected = document.querySelector(".text").firstChild;
-
-	if (selected != null) {
-		if (selected.lastChild != null) {
-			selected.lastChild.style.display = "none";
-		}
-	}
-});
-
 function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
 		values = [];
@@ -489,9 +483,9 @@ function getMapNamesFromServer() {
 		data.graph.forEach((name) => {
 			console.log(name);
 			if (name.trim() == "demo") {
-				values.push({name: "<div>" + name + "<a class='item' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
+				values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
 			} else {
-				values.push({name: "<div>" + name + "<a class='item' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name});
+				values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name});
 			}
 		});
 
@@ -499,6 +493,7 @@ function getMapNamesFromServer() {
 			allowAdditions: true, 
 			hideAdditions: false,
 			values: values,
+			forceSelection: false,
 			onChange: function(value, name) {
 				console.log(value, name);
 
@@ -521,6 +516,8 @@ function getMapNamesFromServer() {
 				if (delete_button != null) {
 					delete_button.style.display = "none";
 				}
+
+
 			}
 		});
 
@@ -605,8 +602,8 @@ function loadGraphData(data) {
 			});
 		}
 		fillTypes();
-		if (data.graph.elements.nodes) {
-			console.log(data.graph.elements.nodes);
+		if (data.graph.elements) {
+			console.log(data.graph.elements);
 			cy.add(data.graph.elements);
 		}
 		if (data.graph.zoom) {
@@ -620,7 +617,7 @@ function loadGraphData(data) {
 
 		const blueprint = data.blueprint;
 		// loads all the versions for a given graph.
-		if (data != -1) {
+		if (blueprint) {
 			fileImage = new Image();
 			fileData = blueprint;
 			fileImage.src = fileData;
@@ -1229,13 +1226,18 @@ $("#version_select").dropdown({
  * Function used to load in the graph version on the dropdown
  */
 function load_graph_versions(){
-
+	console.log("LOAIDNG GRAPH VERSION");
 	const version_list = document.querySelector('#version_list');
+	while(version_list.hasChildNodes()) {
+		version_list.removeChild(version_list.lastChild);
+	}
+
 	document.querySelector('#version_select').style.display = 'block';
 	fetch(`/graph/requestAll/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		let count = 0;
 		console.log(data)
-		data.times.map((time)=>{
+		data.times.reverse();
+		data.times.forEach((time)=>{
 			const div = document.createElement('div');
 			div.innerHTML = `<div class="item" data-value="${count}">  ${time} </div>`;
 			version_list.appendChild(div.firstChild);

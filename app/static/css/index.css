@@ -113,10 +113,19 @@ body {
 }
 
 #version_select{
-	width: 15%;
+	width: 200px;
 	margin-top: 6px;
 	margin-left: 15px;
 	margin-right: 15px;
-	height: 80%;
+	height: 100%;
 	display: none;
 }
+
+#version_list {
+	max-height: 420px;
+}
+
+.text .remove_map_btn {
+	display: none;
+}
+
