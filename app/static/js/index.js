@@ -589,6 +589,14 @@ function editFloor(current_graph) {
 	console.log(current_graph);
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 
+		loadGraphData(data);
+		window.history.replaceState({}, "Matron", "/" + current_graph);
+	});
+}
+
+function loadGraphData(data) {
+		cy.elements().remove()
+		console.log(cy.elements().remove());
 		console.log(data);
 		if (data.graph.types) {
 			console.log("Adding types")
@@ -609,9 +617,6 @@ function editFloor(current_graph) {
 			console.log(data.graph.pan);
 			cy.pan(data.graph.pan);
 		}
-	});
-
-	fetch(`blueprint/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 
 		const blueprint = data.blueprint;
 		// loads all the versions for a given graph.
@@ -627,14 +632,7 @@ function editFloor(current_graph) {
 		//console.log(types);
 		document.querySelector('#select_floor').style.display = 'none';
 		document.querySelector('#cy').style.visibility = 'visible';
-		});
-
-	console.log(types);
-	document.querySelector('#select_floor').style.display = 'none';
-	document.querySelector('#cy').style.visibility = 'visible';
-	window.history.replaceState({}, "Matron", "/" + current_graph);
 }
-});
 
 const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
@@ -1029,6 +1027,7 @@ let cy2 = cytoscape({
 	headless: true
 });
 
+
 function cleanGraph(invis) {
 	let cyInstance = invis ? cy2 : cy;
 
@@ -1209,15 +1208,17 @@ $("#version_select").dropdown({
 		fetch(`/graph/version/${current_graph}/${date}`).then((resp) => resp.json()).then(function(data) {
 			// here we would do something load our older version graph
 			//console.log(data);
-	
+			console.log(data);
+			loadGraphData(data);
+
 			const blueprint = data.blueprint;
 			// loads all the versions for a given graph.
-			if (data != -1) {
-				console.log(fileData);
-				fileImage = new Image();
-				fileData = blueprint;
-				fileImage.src = fileData;
-			}
+			// if (data != -1) {
+			// 	//console.log(fileData);
+			// 	fileImage = new Image();
+			// 	fileData = blueprint;
+			// 	fileImage.src = fileData;
+			// }
 	
 		});
 
