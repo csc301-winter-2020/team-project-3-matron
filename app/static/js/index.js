@@ -1201,7 +1201,6 @@ function reScalePath(label1, label2, t) {
 // }
 
 $("#version_select").dropdown({
-	
 	onChange: function(value, text, $selectedItem) {
 		// the text corresponds to date
 		const date = text;
@@ -1244,41 +1243,5 @@ function load_graph_versions(){
 		});
 
 	});
-}
-/**
- * Requests a particular version of a graph along with its blueprint image
- * this function is being called when a version is selected from the drop
- * down.
- */
-function change_graph_version(){
-	const date = $("#version_select").dropdown("get value");
-	fetch(`/graph/version/${current_graph}/${date}`).then((resp) => resp.json()).then(function(data) {
-		// here we would do something with graph object and blueprint
-		console.log(data);
-		// if (data.graph.types) {
-		// 	data.graph.types.forEach((e) => {
-		// 		types.push(e);
-		// 	});
-		// }
-		// fillTypes();
-		// if (data.graph.elements.nodes) {
-		// 	console.log(data.graph.elements.nodes);
-		// 	cy.add(data.graph.elements);
-		// }
-
-		const blueprint = data.blueprint;
-		// loads all the versions for a given graph.
-		if (data != -1) {
-			console.log(fileData);
-			fileImage = new Image();
-			fileData = blueprint;
-			fileImage.src = fileData;
-			// Force rerender
-			//document.querySelector('#cy').style.visibility = 'hidden';
-			//document.querySelector('#cy').style.visibility = 'visible';
-		}
-
-	});
-
 }
 
