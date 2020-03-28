@@ -102,7 +102,14 @@ function toggleSelected(e) {
 	e.unselectify();
 }
 
-function addEdge(cyNode1, cyNode2) {
+function addEdge(cyNode1, cyNode2, cyInstance) {
+	// if (!cy.$id(cyNode1.id())[0] || !cy.$id(cyNode2.id())[0]) {
+	// 	return;
+	// }
+
+	cyInstance = cyInstance || cy;
+
+
 	if (cyNode1 == cyNode2) {
 		return;
 	}
@@ -110,7 +117,7 @@ function addEdge(cyNode1, cyNode2) {
 	let id1 = cyNode1.id() + "-" + cyNode2.id();
 	let id2 = cyNode2.id() + "-" + cyNode1.id();
 
-	if (cy.$id(id1)[0] || cy.$id(id2)[0]) {
+	if (cyInstance.$id(id1)[0] || cyInstance.$id(id2)[0]) {
 		return;
 	}
 
@@ -123,10 +130,11 @@ function addEdge(cyNode1, cyNode2) {
 		},
 		classes: []
 	}
-	return cy.add(edge);
+	return cyInstance.add(edge);
 }
 
-function addNode(posX, posY) {
+function addNode(posX, posY, cyInstance) {
+	cyInstance = cyInstance || cy;
 	let node = {
 		data: {
 			label: "",
@@ -138,7 +146,7 @@ function addNode(posX, posY) {
 		},
 		classes: []
 	}
-	return cy.add(node)[0];
+	return cyInstance.add(node)[0];
 }
 
 let ghost = {
@@ -233,17 +241,19 @@ cy.on("tap", function(e) {
 		return;
 	}
 
-	if (!target.selected() && !e.originalEvent.ctrlKey) {
+	ghost.disable();
+
+	if (!e.originalEvent.ctrlKey) {
+		console.log("ttettetetet");
 		unselectAll();
+		//return;
 	}
 
 	if (target.group() == "nodes") {
+		console.log(target.id());
+		// console.log(target.data("type"));
 
-		console.log("a node has been selected!!!");
-
-		console.log(target.data("type"));
-
-		if (target.data("type") == "hallway") {
+		if (target.data("type") == "hallway" || e.originalEvent.ctrlKey) {
 			toggleSelected(target);	
 			return;
 		}
@@ -424,6 +434,8 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
+	unselectAll();
+	unHoverAll();
 	console.log(current_graph);
 	if (current_graph == "") {
 		return;
@@ -448,9 +460,16 @@ function saveGraph() {
 	_graph.types = types;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: _graph, types: types, blueprint: fileImage.src})
+		body: JSON.stringify({graph: _graph, types: types, blueprint: fileImage.src, pan: cy.pan(), zoom: cy.zoom()})
 	});
 
+}
+
+function unHoverAll() {
+	cy.$(".hover").forEach(e => {
+		console.log(e);
+		e.removeClass("hover");
+	});
 }
 
 document.getElementById("floor_search").addEventListener("focusout", function(e) {
@@ -561,6 +580,13 @@ function getImageData() {
 const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
+	if (current_graph) {
+		editFloor(current_graph);
+	}
+});
+
+function editFloor(current_graph) {
+	console.log(current_graph);
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 
 		console.log(data);
@@ -575,6 +601,17 @@ edit_floor_btn.addEventListener('click', (e) => {
 			console.log(data.graph.elements.nodes);
 			cy.add(data.graph.elements);
 		}
+		if (data.graph.zoom) {
+			console.log(data.graph.zoom);
+			cy.zoom(data.graph.zoom);
+		}
+		if (data.graph.pan) {
+			console.log(data.graph.pan);
+			cy.pan(data.graph.pan);
+		}
+	});
+
+	fetch(`blueprint/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 
 		const blueprint = data.blueprint;
 		// loads all the versions for a given graph.
@@ -592,6 +629,11 @@ edit_floor_btn.addEventListener('click', (e) => {
 		document.querySelector('#cy').style.visibility = 'visible';
 		});
 
+	console.log(types);
+	document.querySelector('#select_floor').style.display = 'none';
+	document.querySelector('#cy').style.visibility = 'visible';
+	window.history.replaceState({}, "Matron", "/" + current_graph);
+}
 });
 
 const create_floor_btn = document.querySelector('#create_floor');
@@ -613,6 +655,7 @@ create_floor_btn.addEventListener('click', (e) => {
 
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
+	window.history.replaceState({}, "Matron", "/" + current_graph);
 });
 
 
@@ -760,7 +803,8 @@ function clear_label_inputs(){
 
 const matron_btn = document.querySelector('#matron');
 matron_btn.addEventListener("click", (e) => {
-	location.reload();
+	window.location.pathname = ""
+	//location.reload();
 });
 
 const distance_btn = document.querySelector('#distance_btn');
@@ -832,6 +876,330 @@ distance_btn.addEventListener('click', (e) =>{
 	});	
 });
 
+
+let urlPath = decodeURI(window.location.href);
+let lastSlashIndex = urlPath.lastIndexOf("/")
+let urlMapName = urlPath.substring(lastSlashIndex + 1);
+if (urlMapName != "") {
+	current_graph = urlMapName;
+	editFloor(urlMapName);
+}
+
+function addVec(a, b) {
+	return {x: a.x+b.x, y: a.y+b.y};
+}
+function subVec(a, b) {
+	return {x: a.x-b.x, y: a.y-b.y};
+}
+function scaleVec(a, s) {
+	return {x: a.x*s, y:a.y*s};
+}
+function normalize(a) {
+	return scaleVec(a, 1/len(a));
+}
+function len(a) {
+	return Math.sqrt((a.x*a.x) + (a.y*a.y));
+}
+
+function nodeDist(node1, node2) {
+	// console.log(node1);
+	// console.log(node2);
+	return len(subVec(node1.position(), node2.position()));
+}
+
+
+// function setScale(a, b, t) {
+// 	let node1 = cy.$("node[label='" + a + "']")[0];
+// 	let node2 = cy.$("node[label='" + b + "']")[0];
+
+// 	let cyDist = len(subVec(node1.position(), node2.position()));
+// 	scaleFactor = cyDist/t;
+// 	console.log(scaleFactor);
+// }
+
+function getClean() {
+	fetch(`graph/clean/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+		console.log(data);
+		data = JSON.parse(data.graph);
+		cy.elements().remove();
+		data.nodes.forEach(e => cy.add(e));
+		data.edges.forEach(e => cy.add(e));
+	});
+}
+
+let scaleFactor = 1;
+function reScale(node1pos, node2pos, scale) {
+	let diff = subVec(node2pos, node1pos);
+	let newdiff = scaleVec(diff, scale);
+	let newpos = addVec(subVec(node2pos,diff),newdiff);
+	return newpos;
+	// console.log(newpos);
+
+	// node2.position(newpos);
+}
+
+// neighbor, source, len
+function fillPath(node, id, len) {
+	// console.log(len);
+	let neighbors = node;
+	//let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
+	// console.log(node);
+	// node = node.successors("node[type = 'hallway'][[degree <= 2]][id != '"+ node.id() + "']");
+	let oldNode = node;
+	while (true) {
+		// probably also needs a selector for node has not already been rescaled
+		let newNeighbors = neighbors.closedNeighborhood("node[type = 'hallway'][[degree = 2]]");
+		let newNode = newNeighbors.difference(neighbors)[0];
+		// console.log(neighbors.difference(neighbors));
+		// console.log(newNode);
+		if (!newNode) {
+			break;
+		}
+
+		// console.log(newNode);
+		len += nodeDist(newNode, oldNode);
+		// console.log(len);
+		oldNode = newNode;
+		neighbors = newNeighbors;
+	}
+	// toggleSelected(neighbors);
+	// end is either a non-origin room, a nonorigin junction, or a nonorigin leaf
+	let end = neighbors.openNeighborhood("node[id !='" + id + "'][type != 'hallway'], node[id !='" + id + "'][[degree > 2]], node[id !='" + id + "'][[degree = 1]]")[0];
+	
+	// cycle
+	if (!end) {
+		return {interim: neighbors, end: end, len: len};
+	}
+	// toggleSelected(end);
+	len += nodeDist(oldNode, end);
+	// toggleSelected(end);
+	// console.log(len);
+	// console.log(end);
+	return {interim: neighbors, end: end, len: len};
+}
+
+function fillNode(node) {
+	//let node = cy.$("node[id='" + id + "']")[0];
+	let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree = 2]]");
+	//toggleSelected(neighbors);
+	let paths = [];
+
+	neighbors.forEach(n => {
+		let branch = fillPath(n, node.id(), nodeDist(n, node));
+		// if (branch) {
+			paths.push(branch);
+		// }
+		// toggleSelected(branch.path);
+	});
+
+	// console.log(paths);
+	return paths;
+}
+
+// function cleanNode(label) {
+// 	let node = cy.$("node[label='" + label + "']")[0];
+// 	let paths = fillNode(node);
+// 	paths.forEach(path => {
+// 		cy.remove(path.interim);
+// 		//removeNodes(path.interim);
+// 		if (path.end) {
+// 			addEdge(node, path.end);
+// 		}
+// 	})
+// }
+
+// function cleanNodeID(id) {
+// 	let node = cy.$("node[id='" + id + "']")[0];
+// 	let paths = fillNode(node);
+// 	console.log(paths);
+// 	paths.forEach(path => {
+// 		cy.remove(path.interim);
+// 		//removeNodes(path.interim);
+// 		if (path.end) {
+// 			addEdge(node, path.end);
+// 		}
+// 	})
+// }
+
+let cy2 = cytoscape({
+	layout: {
+		name: "preset"
+	},
+	style: cyStyle,
+	headless: true
+});
+
+function cleanGraph(invis) {
+	let cyInstance = invis ? cy2 : cy;
+
+	cyInstance.add(cy.elements());
+
+	let selector = "node[type != 'hallway'], node[type = 'hallway'][[degree > 2]], node[type = 'hallway'][[degree = 1]]";
+	cyInstance.$(selector).forEach(node => {
+		let paths = fillNode(node);
+		//console.log(fillNode(node));
+		// if this node no longer exist, skip it
+		// console.log(node.id());
+		// console.log(cy.$id(node.id())[0]);
+		// console.log(cy.elements().length);
+		// if (cy.$id(node.id())[0]) {
+
+		let updatedCollection = cyInstance.$(selector);
+		if (updatedCollection.is("node[id='" + node.id() + "']")) {
+			paths.forEach(path => {
+				// console.log(node.id());
+				// console.log(cy.$id(node.id())[0]);
+				//if (cy.$id(node.id())[0]) {
+				console.log(node.data("label"));
+				// if intersection of the selector with this node is nonempty, ie., if this node still fits the selector, continue
+				
+				path.interim.forEach(n => {
+					console.log(n.id());
+				})
+				console.log(path.end);
+
+				cyInstance.remove(path.interim);
+
+				// cy2.add(path.interim);
+
+				if (path.end) {
+					addEdge(node, path.end, cyInstance);
+				}
+				//}
+			});
+		}
+		console.log("");
+		// }
+	});
+
+	let span = cyInstance.elements().kruskal();
+	cyInstance.remove(cyInstance.elements());
+	cyInstance.add(span);
+	console.log(span);
+}
+
+// function removeNodes(collection) {
+// 	collection.forEach(n => {
+// 		if (n) {
+// 			cy.remove(n);
+// 		}
+// 	})
+// }
+
+function rotateVec(point, origin, theta) {
+	// let x = vec.x - origin.x;
+	// let y = vec.y - origin.y;
+	let vec = subVec(point, origin);
+	let x = vec.x*Math.cos(theta) - vec.y*Math.sin(theta);
+	let y = vec.x*Math.sin(theta) + vec.y*Math.cos(theta);
+	vec = {x:x, y:y};
+	vec = addVec(vec, origin);
+	//console.log(vec);
+	return vec;
+}
+
+function getAng(vec) {
+	let x = vec.x;
+	let y = vec.y;
+	let ang = Math.atan(y/x);
+	if (x<0) {
+		ang += Math.PI;
+	}
+	if (x>0 && y<0) {
+		ang += 2*Math.PI;
+	}
+	return ang;
+}
+
+function setScaleFactor(label1, label2, t) {
+	let node1 = cy.$("node[label='" + label1 + "']")[0];
+	let node2 = cy.$("node[label='" + label2 + "']")[0];
+
+	let path = fillNode(node1).find(p => p.end == node2);
+
+	if (!path) {
+		return
+	}
+
+	let cyLen = path.len;
+	scaleFactor = cyLen/t;
+
+	// path.interim.addClass("scaled");
+	// path.end.addClass("scaled");
+
+	console.log(cyLen);
+	console.log(scaleFactor);
+}
+
+function reScalePath(label1, label2, t) {
+	let node1 = cy.$("node[label='" + label1 + "']")[0];
+	let node2 = cy.$("node[label='" + label2 + "']")[0];
+	let node2pos = JSON.parse(JSON.stringify(node2.position()));
+
+	// assume node1 is in MST, ie., is fixed
+	let path = fillNode(node1).find(p => p.end == node2);
+
+	if (!path) {
+		return;
+	}
+
+	let cyLen = path.len;
+	let scale = (t*scaleFactor)/cyLen;
+	console.log(t, cyLen, scaleFactor);
+	console.log(scale);
+
+	path.interim.forEach(n => {
+		n.position(reScale(node1.position(), n.position(), scale));
+	});
+	path.end.position(reScale(node1.position(), path.end.position(), scale));
+
+	let endpaths = fillNode(node2);
+	// for(let i=0; i<endpaths.length; i++) {
+	// 	let p = endpaths[i];
+	// 	if (p.end != node1) {
+	// 		let scale = nodeDist(node2, p.end) / 
+	// 	}
+	// }
+	endpaths.forEach(p => {
+		if (p.end != node1) {
+			// toggleSelected(p.interim);
+
+			let scale = nodeDist(node2, p.end) / len(subVec(node2pos, p.end.position()));
+			let endToNode2 = subVec(node2pos, p.end.position());
+			let endToNewNode2 = subVec(node2.position(), p.end.position());
+			console.log(endToNode2);
+			console.log(getAng(endToNode2));
+
+			p.interim.forEach(n => {
+				n.position(reScale(p.end.position(), n.position(), scale));
+				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
+
+				n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
+
+				// now rotate it
+
+				// console.log(n.position());
+			});
+			// console.log(scale);
+		}
+	});
+}
+
+
+// function fillNode(label) {
+// 	let node = cy.$("node[label='" + label + "']")[0];
+// 	let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
+
+// 	let path = fillPath(neighbors[0]);
+// 	let end = path.openNeighborhood("node[label !='" + label + "'][type != 'hallway'], node[[degree > 2]]");
+
+// 	toggleSelected(path);
+
+// 	console.log(path);
+// 	console.log(end);
+
+// 	//toggleSelected(path.openNeighborhood("node"));
+// }
 
 $("#version_select").dropdown({
 	
@@ -912,6 +1280,4 @@ function change_graph_version(){
 	});
 
 }
-
-
 

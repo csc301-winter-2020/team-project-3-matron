@@ -19,8 +19,9 @@ success = {'status': 200}
 failure = {'status': 400}
 
 
-@app.route('/')
-def index():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
     return render_template("index.html")
 
 
@@ -183,14 +184,6 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     dist = distance(data['graph']['cyGraph']['elements'], room_name0, room_name1)
 
     return jsonify(dist)
-
-
-@app.route('/graph/clean')
-def clean_graph():
-    """cleans the graph"""
-    graph = request.get_json(force=True)
-    return jsonify({'graph': clean_and_dump(graph), 'status': 200})
-
 
 if __name__ == "__main__":
     dao = MongoDAO(url, password)
