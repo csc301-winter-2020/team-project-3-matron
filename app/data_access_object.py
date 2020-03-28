@@ -5,9 +5,8 @@ import gridfs
 class MongoDAO:
     """
     The MongoDAO object, used to interface with a given MongoDB database
-
-    Attributes:
-
+    Attributes
+    ----------
     client : MongoClient
         used to connect to the database server
     graphdb : Database
@@ -18,11 +17,14 @@ class MongoDAO:
         used to save and retrieve blueprints
     meta_collect : Collection
         used to view metadata for stored blueprints
-
-    Methods:
-
+    Methods
+    -------
     save_graph : bool
         saves latest version of a graph in the database
+        returns true if successful, false otherwise
+    save_graph_and_print : bool
+        saves latest version of a graph in the database
+        also saves the blueprint image for that version using GridFS
         returns true if successful, false otherwise
     delete_version : bool
         deletes a version of a graph from the database
@@ -30,22 +32,32 @@ class MongoDAO:
     delete_graph : bool
         deletes all records of a graph from the database
         returns true if successful, false otherwise
-    get_latest : Dict
-        returns the latest version of the specified graph
-    get_version : Dict
-        returns a specified version of the specified graph
+    get_latest : Dict, String
+        returns the latest version of a graph and its blueprint 
+    get_version : Dict, String
+        returns a specified version of a graph and its blueprint 
     get_all_versions : [int]
         returns a list of past versions for the requested graph
     get_all_names : [String]
-        returns a list of all graph names
-    save_blueprint : None
-        saves the blueprint image of a graph using GridFS
+        returns the names of all graphs in the database
     get_blueprint : String
-        returns the blueprint of a graph in base64
+        returns the blueprint for a version of a graph
+    delete_blueprint : None
+        deletes the blueprint for a version of a graph
     """
 
     def __init__(self, connection, password):
-        """Constructor for the mongodb data access object"""
+        """
+        Constructor for the mongodb data access object
+        Parameters
+        ----------
+        connection : String
+            the mongodb+srv:// URI used to connect to the database
+            see https://docs.mongodb.com/manual/reference/connection-string/ for more details
+        password : String
+            the password for the mongodb database
+        
+        """
         self.client = pymongo.MongoClient(connection.replace("<password>", password))
 
         # use self.graphdb to reference the database of graphs
@@ -58,77 +70,206 @@ class MongoDAO:
 
     def save_graph(self, graphname, graph):
         """
-        Saves the newest version of a graph under its corresponding collection
-        If there are 10 versions already stored the oldest version is discarded
+        Saves the newest version of a graph, along with its blueprint
+        
+        Parameters
+        ----------
+        graphname : string
+            name of the graph
+        graph : Dict
+            dictionary representation of the current version
+        Returns
+        -------
+        Bool
+            True if successful, False otherwise
         """
         collection = self.graphdb[graphname]
-        delete = True
+        delete_success = True
 
         if collection.estimated_document_count() >= 10:
-            dates = collection.find({}, {'_id': 0, 'date': 1})
-            stripped = [date['date'] for date in dates]
-            stripped.sort()
-            del_result = collection.delete_one({'date': stripped[0]})
-            delete = del_result.deleted_count == 1
+            # find oldest version saved and delete it
+            versions = self.get_all_versions(graphname)
+            if len(versions) > 0:
+                delete_success = self.delete_version(graphname, versions[0])
 
         ins_result = collection.insert_one(graph)
-        return ins_result.acknowledged and delete
 
-    def save_blueprint(self, graphname, blueprint):
-        existing = self.meta_collect.find_one({"filename": graphname})
-        if existing is not None:
-            self.blueprint_fs.delete(existing['_id'])
-        image = bytes(blueprint)
-        self.blueprint_fs.put(image, filename=graphname)
+        return ins_result.acknowledged and delete_success
+    
+    def save_graph_and_print(self, graphname, graph, blueprint):
+        """
+        Saves the newest version of a graph, along with its blueprint
+        
+        Parameters
+        ----------
+        graphname : string
+            name of the graph
+        graph : Dict
+            dictionary representation of the current version
+        blueprint : String
+            base64 string representation of the current version's blueprint
+        Returns
+        -------
+        Bool
+            True if successful, False otherwise
+        """
+        collection = self.graphdb[graphname]
+        delete_success = True
+        new_date = graph['date']
+
+        if collection.estimated_document_count() >= 10:
+            # find oldest version saved and delete it
+            versions = self.get_all_versions(graphname)
+            if len(versions) > 0:
+                delete_success = self.delete_version(graphname, versions[0])
+
+        # save new graph
+        ins_result = collection.insert_one(graph)
+
+        # save new blueprint
+        image = bytes(blueprint, encoding="ascii")
+        self.blueprint_fs.put(image, filename=graphname, name=new_date)
+
+        return ins_result.acknowledged and delete_success
 
     def delete_version(self, graphname, date):
-        """deletes version of specified graph corresponding to the given date"""
+        """
+        Deletes specified version of the graph
+        Parameters
+        ----------
+        graphname : string
+            name of the graph
+        date : int
+            version number of the graph
+        Returns
+        -------
+        Bool
+            True if successful, False otherwise
+        """
+        # delete version of graph
         collection = self.graphdb[graphname]
         result = collection.delete_one({'date': date})
+
+        # delete associated blueprint if it exists
+        self.delete_blueprint(graphname, date)
+
         return result.deleted_count == 1
 
     def delete_graph(self, graphname):
-        """deletes the collection corresponding to the graph labelled by graphname from the database"""
-        existing = self.meta_collect.find_one({"filename": graphname})
-        if existing is not None:
-            self.blueprint_fs.delete(existing['_id'])
+        """
+        Deletes all records of the given graph from the database
+        
+        Parameters
+        ----------
+        graphname : string
+            name of the graph
+        Returns
+        -------
+        Bool
+            True if successful, False otherwise
+        """
+        # delete all associated blueprints
+        blueprints = self.meta_collect.find({"filename": graphname})
+        for blueprint in blueprints:
+            self.blueprint_fs.delete(blueprint['_id'])
 
         collection = self.graphdb[graphname]
+
         return collection.drop()
 
     def get_latest(self, graphname):
-        """returns a dictionary for the latest version of the specified graph
-           returns None if there are no versions saved for that graph
+        """Returns the latest version of the given graph
+        """
+        # get all versions by date
+        versions = self.get_all_versions(graphname)
+
+        if len(versions) > 0:
+            return self.get_version(graphname, versions[-1])
+        else:
+            return None, None
+        
+
+    def get_version(self, graphname, date):
+        """
+        Returns the requested version of the given graph
+        
+        Parameters
+        ----------
+        graphname : string
+            name of the graph 
+        date: int
+            date specifying the version whose blueprint is to be fetched
+        
+        Returns
+        -------
+        graph: dict or None
+            dictonary representation of the graph, or None if not found
+        blueprint: String or None
+            string representation of the blueprint in base64, or None if not found
+        """
+        collection = self.graphdb[graphname]
+        graph = collection.find_one({'date': date}, {'_id': 0})
+        blueprint = self.get_blueprint(graphname, date)
+        return graph, blueprint
+
+    def get_all_versions(self, graphname):
+        """
+        Returns all stored versions of the specified graph, 
+        
+        Parameters
+        ----------
+        graphname : string
+            name of the graph 
+        
+        Returns
+        -------
+        [int]
+            list of versions for the specified graph (ints)
+            sorted in ascendending order
         """
         collection = self.graphdb[graphname]
         dates = collection.find({}, {'_id': 0, 'date': 1})
         stripped = [date['date'] for date in dates]
-        if (len(stripped) > 0):
-            return collection.find_one({'date': stripped[-1]}, {'_id': 0})
-        else:
-            return None
-        
-
-    def get_version(self, graphname, date):
-        """returns a dictionary for the given version of the specified graph
-           returns None if the specified version does not exist
-        """
-        collection = self.graphdb[graphname]
-        return collection.find_one({'date': date}, {'_id': 0})
-
-    def get_all_versions(self, graphname):
-        """returns all stored versions of the specified graph, in a list dates for those objects"""
-        collection = self.graphdb[graphname]
-        dates = collection.find({}, {'_id': 0, 'date': 1})
-        return [date['date'] for date in dates]
+        stripped.sort()
+        return stripped
 
     def get_all_names(self):
-        """returns a list of names of all graphs in the database"""
+        """Returns a list of the names of all graphs in the database
+        
+        """
         return self.graphdb.list_collection_names()
 
-    def get_blueprint(self, graphname):
-        """returns the blueprint for the given graph"""
-        existing = self.blueprint_fs.find_one({"filename": graphname})
-        if existing is not None:
-            return existing.read().decode("ascii")
-        return -1
+    def get_blueprint(self, graphname, date):
+        """
+        Fetches a given version of a blueprint from the database
+        Parameters
+        ----------
+        graphname : string
+            name of the graph 
+        date: int
+            date specifying the version whose blueprint is to be fetched
+        
+        Returns
+        -------
+        String or None
+            string representation of the image data in base64, or None if image not found
+        """
+        blueprint = self.blueprint_fs.find_one({"filename": graphname, "name": date})
+        if blueprint is not None:
+            return blueprint.read().decode("ascii")
+        else:
+            return None
+
+    def delete_blueprint(self, graphname, date):
+        """
+        Deletes a given version of a blueprint from the database
+        Parameters
+        ----------
+        graphname : string
+            name of the graph 
+        date: int
+            date specifying the version whose blueprint is to be deleted
+        """
+        blueprint = self.meta_collect.find_one({"filename": graphname, "name": date})
+        if blueprint is not None:
+            self.blueprint_fs.delete(blueprint['_id'])
