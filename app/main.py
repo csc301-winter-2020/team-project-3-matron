@@ -10,6 +10,7 @@ from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
 
+
 url = os.environ['DB_URL']
 password = os.environ['DB_PASS']
 dao = None
@@ -18,8 +19,9 @@ success = {'status': 200}
 failure = {'status': 400}
 
 
-@app.route('/')
-def index():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
     return render_template("index.html")
 
 
@@ -34,9 +36,9 @@ def graph_functions(name):
     """
     fetches a saved graph or save a new graph into the database
     depending on the request type
-
     name: the name of the graph
     """
+    print(name)
     if request.method == 'POST':
         g = request.get_json(force=True)
         t = int(time())
@@ -50,9 +52,8 @@ def graph_functions(name):
         if graph is None:
             return jsonify({"status": 404})
         if blueprint is None:
-            print("orgasming!")
             return jsonify({'graph': graph['graph'], 'status': 200})
-        return jsonify({'graph': graph['graph'], 'blueprint': blueprint['blueprint'], 'status': 200})
+        return jsonify({'graph': graph['graph'], 'blueprint': blueprint, 'status': 200})
     elif request.method == 'DELETE':
         if dao.delete_graph(name):
             return jsonify(success)
@@ -66,12 +67,14 @@ def graph_functions(name):
 def graph_and_print(graph_name):
     """
     saves the graph and blueprint together
-
     graph_name: the name of the graph being saved
     """
     incoming_data = request.get_json(force=True)
-    graph = incoming_data['graph']
+    g = incoming_data['graph']
     blueprint = incoming_data['blueprint']
+
+    t = int(time())
+    graph = {"date": t, "graph": g}
 
     if(dao.save_graph_and_print(graph_name, graph, blueprint)):
         return jsonify(success)
@@ -83,7 +86,6 @@ def graph_and_print(graph_name):
 def get_all_versions(name):
     """
     acquires the 10 most recent dates of saves for a particular graph
-
     name: name of the graph to retrieve
     """
     times = []
@@ -108,7 +110,6 @@ def all_db_graphs():
 def graph_version(name, date):
     """
     retrieves/deletes the specified version dates of a given graph
-
     name: name of the graph
     date: the version date wanted
     """
@@ -120,7 +121,7 @@ def graph_version(name, date):
             return jsonify({'status': 404})
         if blueprint is None:
             return jsonify({'graph': graph['graph'], 'status': 200})
-        return jsonify({'graph': graph['graph'], 'blueprint': blueprint['blueprint'], 'status': 200})
+        return jsonify({'graph': graph['graph'], 'blueprint': blueprint, 'status': 200})
     elif request.metohd == 'DELETE':
         if dao.delete_version(name, epoch):
             return jsonify(success)
@@ -136,7 +137,6 @@ def distances_from_room(graph_name, room):
     """
     retrieves all distances of a specific room to the rest
     of the hospital wing
-
     graph_name: the name of the graph
     room:       the name of the room
     """
@@ -144,7 +144,7 @@ def distances_from_room(graph_name, room):
     if graph_data is None:
         return jsonify({"status": 404})
     graph = graph_data['graph']
-    try:
+    try: 
         res = {'distances': find_dist_from_start(graph, room), 'status': 200}
         return jsonify(res)
     except ValueError:
@@ -156,7 +156,6 @@ def all_distances(graph_name):
     """
     retrieves every single distance from every room
     from all rooms for a given hospital wing
-
     graph_name: name of the to be inspected
     """
 
@@ -176,7 +175,6 @@ def all_distances(graph_name):
 def distance_two_rooms(graph_name, room_name0, room_name1):
     """
     find the distance between 2 specific rooms on a floor
-
     graph_name: name of the graph to examine
     room_name0: name of the starting room
     room_name1: name of destination room
@@ -184,17 +182,9 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     data, print_data = dao.get_latest(graph_name)
     if data is None:
         return jsonify({"status": 404})
-    dist = distance(data['graph']['cyGraph']['elements'], room_name0, room_name1)
+    dist = distance(data['graph']['elements'], room_name0, room_name1)
 
     return jsonify(dist)
-
-
-@app.route('/graph/clean')
-def clean_graph():
-    """cleans the graph"""
-    graph = request.get_json(force=True)
-    return jsonify({'graph': clean_and_dump(graph), 'status': 200})
-
 
 if __name__ == "__main__":
     dao = MongoDAO(url, password)
