@@ -1007,6 +1007,12 @@ function fillNode(node) {
 	//toggleSelected(neighbors);
 	let paths = [];
 
+	let adjacentrooms = node.closedNeighborhood("node[type != 'hallway']");
+
+	adjacentrooms.forEach(n => {
+		paths.push({interim: [], end: n, len: nodeDist(node, n)});
+	})
+
 	neighbors.forEach(n => {
 		let branch = fillPath(n, node.id(), nodeDist(n, node));
 		// if (branch) {
@@ -1140,7 +1146,7 @@ function setScaleFactor(label1, label2, t) {
 	let node2 = cy.$("node[label='" + label2 + "']")[0];
 
 	let path = fillNode(node1).find(p => p.end == node2);
-
+	console.log(path);
 	if (!path) {
 		return
 	}
@@ -1210,20 +1216,6 @@ function reScalePath(label1, label2, t) {
 }
 
 
-// function fillNode(label) {
-// 	let node = cy.$("node[label='" + label + "']")[0];
-// 	let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
-
-// 	let path = fillPath(neighbors[0]);
-// 	let end = path.openNeighborhood("node[label !='" + label + "'][type != 'hallway'], node[[degree > 2]]");
-
-// 	toggleSelected(path);
-
-// 	console.log(path);
-// 	console.log(end);
-
-// 	//toggleSelected(path.openNeighborhood("node"));
-// }
 
 $("#version_select").dropdown({
 	onChange: function(value, text, $selectedItem) {
