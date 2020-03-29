@@ -58,8 +58,6 @@ let cyStyle = [
 	}
 ]
 
-
-
 let current_graph = '';
 let types = [];
 let defaulttHoverThresh = [8,1];
@@ -554,6 +552,10 @@ let fileData = -1;
 let fileImage = -1;
 const reader = new FileReader();
 reader.addEventListener("load", function (e) {
+	// Force rerender
+	document.querySelector('#cy').style.visibility = 'hidden';
+	document.querySelector('#cy').style.visibility = 'visible';
+
 	console.log(e.target.result);
 	fileData = e.target.result;
 	let url = `both/${current_graph}`;
@@ -591,7 +593,9 @@ function editFloor(current_graph) {
 	});
 }
 
+let curGraphData;
 function loadGraphData(data) {
+		curGraphData = data;
 		cy.elements().remove()
 		console.log(cy.elements().remove());
 		console.log(data);
@@ -642,10 +646,10 @@ create_floor_btn.addEventListener('click', (e) => {
 	if (file != -1) {
 		reader.readAsDataURL(file);
 	} else {
-		const url = `graph/${current_graph}`;
+		const url = `both/${current_graph}`;
 		fetch(url, {
 			method: 'post',
-			body: JSON.stringify({graph: cy.json()})
+			body: JSON.stringify({graph: cy.json(), blueprint: ""})
 		});
 	}
 
@@ -1213,6 +1217,7 @@ $("#version_select").dropdown({
 			// here we would do something load our older version graph
 			//console.log(data);
 			console.log(data);
+
 			loadGraphData(data);
 
 			const blueprint = data.blueprint;
