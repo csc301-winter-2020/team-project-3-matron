@@ -89,12 +89,14 @@ def find_all_room_distances(json_graph: JSONGraph) -> Dict[str, RoomDistanceMap]
     return maps
 
 
-def distance(json_graph: JSONGraph, room_id_a: str, room_id_b: str) -> float:
+def distance(json_graph: JSONGraph, room_label_a: str, room_label_b: str) -> float:
     """
     Return the distance (edge weight sum along shortest path) between rooms
-    specified by their id's, and given the graph in which they exist.
+    specified by their labels, and given the graph in which they exist.
     """
     g = Graph(json_graph)
+    room_id_a = g.get_node_id(room_label_a)
+    room_id_b = g.get_node_id(room_label_b)
     # dijkstra function returns a tuple. See documentation.
     return dijkstra(g, room_id_a, room_id_b)[0]
 
