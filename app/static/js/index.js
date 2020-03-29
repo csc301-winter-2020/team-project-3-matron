@@ -482,11 +482,11 @@ function getMapNamesFromServer() {
 
 		data.graph.forEach((name) => {
 			console.log(name);
-			if (name.trim() == "demo") {
-				values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
-			} else {
+			// if (name.trim() == "demo") {
+			// 	values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
+			// } else {
 				values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name});
-			}
+			//}
 		});
 
 		$("#floor_search").dropdown({
@@ -595,6 +595,7 @@ function loadGraphData(data) {
 		cy.elements().remove()
 		console.log(cy.elements().remove());
 		console.log(data);
+		types = [];
 		if (data.graph.types) {
 			console.log("Adding types")
 			data.graph.types.forEach((e) => {
@@ -683,6 +684,13 @@ const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', 'violet', 'pu
 // // should really get from server returned map, we need to store manually alongside cy.json();
 
 function fillTypes() {
+	console.log("filling types");
+
+	while(type_list.hasChildNodes()) {
+		console.log("removinnnng");
+		type_list.removeChild(type_list.lastChild);
+	}
+
 	for (let i=0; i<types.length; i++) {
 		let div = document.createElement('div');
 		div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
@@ -1226,7 +1234,7 @@ $("#version_select").dropdown({
  * Function used to load in the graph version on the dropdown
  */
 function load_graph_versions(){
-	console.log("LOAIDNG GRAPH VERSION");
+	console.log("LOADING GRAPH VERSION");
 	const version_list = document.querySelector('#version_list');
 	while(version_list.hasChildNodes()) {
 		version_list.removeChild(version_list.lastChild);
