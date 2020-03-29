@@ -1011,7 +1011,7 @@ function fillNode(node) {
 	//toggleSelected(neighbors);
 	let paths = [];
 
-	let adjacentrooms = node.closedNeighborhood("node[type != 'hallway']");
+	let adjacentrooms = node.openNeighborhood("node[type != 'hallway']");
 
 	adjacentrooms.forEach(n => {
 		paths.push({interim: [], end: n, len: nodeDist(node, n)});
@@ -1183,10 +1183,10 @@ function reScalePath(label1, label2, t) {
 	console.log(t, cyLen, scaleFactor);
 	console.log(scale);
 
-	path.interim.forEach(n => {
-		n.position(reScale(node1.position(), n.position(), scale));
-	});
-	path.end.position(reScale(node1.position(), path.end.position(), scale));
+	// path.interim.forEach(n => {
+	// 	n.position(reScale(node1.position(), n.position(), scale));
+	// });
+	node2.position(reScale(node1.position(), path.end.position(), scale));
 
 	let endpaths = fillNode(node2);
 	// for(let i=0; i<endpaths.length; i++) {
@@ -1196,7 +1196,7 @@ function reScalePath(label1, label2, t) {
 	// 	}
 	// }
 	endpaths.forEach(p => {
-		if (p.end != node1) {
+		//if (p.end != node1) {
 			// toggleSelected(p.interim);
 
 			let scale = nodeDist(node2, p.end) / len(subVec(node2pos, p.end.position()));
@@ -1216,10 +1216,10 @@ function reScalePath(label1, label2, t) {
 				// console.log(n.position());
 			});
 			// console.log(scale);
-		}
+		//}
 	});
 
-
+	console.log(endpaths);
 
 }
 

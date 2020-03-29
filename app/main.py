@@ -182,7 +182,6 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     data, print_data = dao.get_latest(graph_name)
     if data is None:
         return jsonify({"status": 404})
-    print(data['graph']['elements'])
     dist = distance(data['graph']['elements'], room_name0, room_name1)
 
     return jsonify(dist)
