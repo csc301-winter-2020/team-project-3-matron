@@ -1087,9 +1087,10 @@ function cleanGraph(invis) {
 					console.log(n.id());
 				})
 				console.log(path.end);
-
-				cyInstance.remove(path.interim);
-
+				console.log(path.interim);
+				if (path.interim.length > 0) {
+					cyInstance.remove(path.interim);
+				}
 				// cy2.add(path.interim);
 
 				if (path.end) {
