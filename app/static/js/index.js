@@ -462,7 +462,7 @@ function saveGraph() {
 	let blueprint = fileImage == -1 ? "" : fileImage.src;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: _graph, types: types, blueprint: blueprint, pan: cy.pan(), zoom: cy.zoom()})
+		body: JSON.stringify({graph: _graph, blueprint: blueprint})
 	}).then(res=>{
 		load_graph_versions();
 	});
@@ -561,7 +561,7 @@ reader.addEventListener("load", function (e) {
 	_graph.types = types;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: _graph, types: types, blueprint: fileData})
+		body: JSON.stringify({graph: _graph, blueprint: fileData})
 	});
 	fileImage = new Image();
 	fileImage.src = e.target.result;
@@ -645,7 +645,7 @@ create_floor_btn.addEventListener('click', (e) => {
 		const url = `graph/${current_graph}`;
 		fetch(url, {
 			method: 'post',
-			body: JSON.stringify({graph: cy.json(), types: types})
+			body: JSON.stringify({graph: cy.json()})
 		});
 	}
 
@@ -1235,13 +1235,14 @@ $("#version_select").dropdown({
  */
 function load_graph_versions(){
 	console.log("LOADING GRAPH VERSION");
-	const version_list = document.querySelector('#version_list');
-	while(version_list.hasChildNodes()) {
-		version_list.removeChild(version_list.lastChild);
-	}
-
 	document.querySelector('#version_select').style.display = 'block';
 	fetch(`/graph/requestAll/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+
+		const version_list = document.querySelector('#version_list');
+		while(version_list.hasChildNodes()) {
+			version_list.removeChild(version_list.lastChild);
+		}
+
 		let count = 0;
 		console.log(data)
 		data.times.reverse();
@@ -1250,8 +1251,8 @@ function load_graph_versions(){
 			div.innerHTML = `<div class="item" data-value="${count}">  ${time} </div>`;
 			version_list.appendChild(div.firstChild);
 			count += 1;
+			hidePopper();
 		});
-
 	});
 }
 
