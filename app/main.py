@@ -6,6 +6,7 @@ from time import gmtime, strftime, time
 from data_access_object import MongoDAO
 from clean_graph import clean_and_dump
 from distance import find_dist_from_start, find_all_room_distances, distance
+from utility import Graph
 from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
@@ -145,7 +146,7 @@ def distances_from_room(graph_name, room):
         return jsonify({"status": 404})
     graph = graph_data['graph']
     try:
-        res = {'distances': find_dist_from_start(graph, room), 'status': 200}
+        res = {'distances': find_dist_from_start(Graph(graph), room), 'status': 200}
         return jsonify(res)
     except ValueError:
         return jsonify({'status': 400, 'info': "non-connected graph!"})
@@ -166,7 +167,7 @@ def all_distances(graph_name):
     graph = graph_data['graph']
 
     try:
-        res = {'distances': find_all_room_distances(graph), 'status': 200}
+        res = {'distances': find_all_room_distances(Graph(graph)), 'status': 200}
         return jsonify(res)
     except ValueError:
         return jsonify({'status': 400, 'info': "non-connected graph!"})
@@ -184,7 +185,7 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     data, print_data = dao.get_latest(graph_name)
     if data is None:
         return jsonify({"status": 404})
-    dist = distance(data['graph']['cyGraph']['elements'], room_name0, room_name1)
+    dist = distance(Graph(data['graph']['cyGraph']['elements']), room_name0, room_name1)
 
     return jsonify(dist)
 
@@ -193,7 +194,7 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
 def clean_graph():
     """cleans the graph"""
     graph = request.get_json(force=True)
-    return jsonify({'graph': clean_and_dump(graph), 'status': 200})
+    return jsonify({'graph': clean_and_dump(Graph(graph)), 'status': 200})
 
 
 if __name__ == "__main__":
