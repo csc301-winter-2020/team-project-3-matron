@@ -188,10 +188,12 @@ class Graph:
         self._id_to_label = {}
         for i, node in enumerate(self.nodes):
             self._node_id_map[node.get_id()] = i
+            if node.get_type() == "hallway":
+                continue # We don't care about hallway nodes
             if node.get_label() in self._label_to_id:
                 # Duplicate label detected. Not allowed!
-                raise ValueError('Node with id {} has label {},'
-                                 'which is a duplicate of the'
+                raise ValueError('Node with id {} has label {}, '
+                                 'which is a duplicate of the '
                                  'label of node with id {}.'
                                  .format(node.get_id(), node.get_label(),
                                          self._label_to_id[node.get_label()]))
