@@ -64,6 +64,8 @@ let defaulttHoverThresh = [8,1];
 let ghostHOverThresh = [25, 5];
 setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
 
+let changed_graph = false;
+
 let cy = cytoscape({
 	container: document.getElementById("cy"),
 	layout: {
@@ -104,6 +106,7 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 	// if (!cy.$id(cyNode1.id())[0] || !cy.$id(cyNode2.id())[0]) {
 	// 	return;
 	// }
+	
 
 	cyInstance = cyInstance || cy;
 
@@ -128,10 +131,12 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 		},
 		classes: []
 	}
+	changed_graph = true;
 	return cyInstance.add(edge);
 }
 
 function addNode(posX, posY, cyInstance) {
+	changed_graph = true;
 	cyInstance = cyInstance || cy;
 	let node = {
 		data: {
@@ -404,6 +409,10 @@ cy.on("box", "elements", function(e) {
 	toggleSelected(target);
 })
 
+cy.on("drag", "elements", function(e) {
+	changed_graph = true;
+})
+
 window.addEventListener("keydown", function(e) {
 	if (e.code == "Escape") {
 		ghost.disable();
@@ -432,6 +441,7 @@ const node_label_input = document.querySelector('#node_label_input').value = '';
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
+	changed_graph = false;
 	unselectAll();
 	unHoverAll();
 	console.log(current_graph);
@@ -593,9 +603,8 @@ function editFloor(current_graph) {
 	});
 }
 
-let curGraphData;
 function loadGraphData(data) {
-		curGraphData = data;
+		changed_graph = false;
 		cy.elements().remove()
 		console.log(cy.elements().remove());
 		console.log(data);
@@ -607,7 +616,7 @@ function loadGraphData(data) {
 			});
 		}
 		fillTypes();
-		if (data.graph.elements) {
+		if (data.graph.elements.nodes) {
 			console.log(data.graph.elements);
 			cy.add(data.graph.elements);
 		}
@@ -710,7 +719,7 @@ $("#type_select").dropdown({
 		console.log(value, name);
 		if (popperNode != -1) {
 			popperNode.data("type", value);
-
+			changed_graph = true;
 			let input_label = document.querySelector('#node_label_input').value;
 			let input_type = $("#type_select").dropdown("get value");
 			if (input_label == "" && input_type != "hallway") {
@@ -810,7 +819,10 @@ function clear_label_inputs(){
 
 const matron_btn = document.querySelector('#matron');
 matron_btn.addEventListener("click", (e) => {
-	window.location.pathname = ""
+	if (!changed_graph || window.confirm("You have unsaved changed. Continue?")) {
+		window.location.pathname = ""
+	}
+	
 	//location.reload();
 });
 
@@ -825,6 +837,7 @@ const blueprint_reader = new FileReader();
 upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	file = document.querySelector('#new_blue_print').files[0];
 	reader.readAsDataURL(file);
+	changed_graph = true;
 });
 
 blueprint_icon.addEventListener('click', (e)=>{
@@ -1218,9 +1231,12 @@ $("#version_select").dropdown({
 			//console.log(data);
 			console.log(data);
 
-			loadGraphData(data);
+			if (!changed_graph || window.confirm("You have unsaved changed. Continue?")) {
+				loadGraphData(data);
+				const blueprint = data.blueprint;
+			}
 
-			const blueprint = data.blueprint;
+
 			// loads all the versions for a given graph.
 			// if (data != -1) {
 			// 	//console.log(fileData);
@@ -1261,3 +1277,8 @@ function load_graph_versions(){
 	});
 }
 
+window.onbeforeunload = function() {
+	if (changed_graph) {
+		"You have unsaved changed."
+	}
+}
