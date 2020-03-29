@@ -484,28 +484,32 @@ function unHoverAll() {
 	});
 }
 
+let mapnames = [];
+
+function fillmapnames(names) {
+	names.forEach((name) => {
+		console.log(name);
+		// if (name.trim() == "demo") {
+		// 	values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
+		// } else {
+			mapnames.push({name: "<div>" + name + "<a class='item remove_map_btn' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name});
+		//}
+	});
+}
+
 function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
-		values = [];
-
-		data.graph.forEach((name) => {
-			console.log(name);
-			// if (name.trim() == "demo") {
-			// 	values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
-			// } else {
-				values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='delete_map'> <i id='ico' class='close icon delete_map_icon'></i> </a></div>", value: name});
-			//}
-		});
+		fillmapnames(data.graph);
 
 		$("#floor_search").dropdown({
 			allowAdditions: true, 
 			hideAdditions: false,
-			values: values,
+			values: mapnames,
 			forceSelection: false,
 			onChange: function(value, name) {
 				console.log(value, name);
 
-				if (value == "" || values.some(val => val.value == value)) {
+				if (value == "" || mapnames.some(val => val.value == value)) {
 					document.querySelector('#create_floor_inputs').style.display = "none";
 					document.querySelector('#edit_floor').style.display = 'block';
 					document.querySelector('#edit_floor').classList.remove("negative");
@@ -519,13 +523,6 @@ function getMapNamesFromServer() {
 					document.querySelector('#select_floor_header').innerText = 'Create unit';
 					
 				}
-
-				let delete_button = document.querySelector(".text").firstChild.lastChild
-				if (delete_button != null) {
-					delete_button.style.display = "none";
-				}
-
-
 			}
 		});
 
@@ -543,6 +540,12 @@ function getMapNamesFromServer() {
 				}				
 
 				deleteMap(name);
+
+				mapnames = mapnames.filter(function(value, index, arr) {
+					return value.value != name;
+				})
+				console.log(mapnames);
+				//getMapNamesFromServer();
 			})
 		});
 
