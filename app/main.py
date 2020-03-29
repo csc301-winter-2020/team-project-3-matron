@@ -38,6 +38,7 @@ def graph_functions(name):
     depending on the request type
     name: the name of the graph
     """
+    print(name)
     if request.method == 'POST':
         g = request.get_json(force=True)
         t = int(time())

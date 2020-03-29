@@ -594,6 +594,7 @@ edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
 	if (current_graph) {
 		editFloor(current_graph);
+		window.history.replaceState({}, "Matron", "/" + current_graph);
 	}
 });
 
@@ -602,7 +603,7 @@ function editFloor(current_graph) {
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 
 		loadGraphData(data);
-		window.history.replaceState({}, "Matron", "/" + current_graph);
+		
 	});
 }
 
@@ -822,7 +823,7 @@ function clear_label_inputs(){
 
 const matron_btn = document.querySelector('#matron');
 matron_btn.addEventListener("click", (e) => {
-	if (!changed_graph || window.confirm("You have unsaved changed. Continue?")) {
+	if ((!changed_graph || urlParams=="dev") || window.confirm("You have unsaved changed. Continue?")) {
 		window.location.pathname = ""
 	}
 	
@@ -901,8 +902,14 @@ distance_btn.addEventListener('click', (e) =>{
 
 
 let urlPath = decodeURI(window.location.href);
+console.log(urlPath);
 let lastSlashIndex = urlPath.lastIndexOf("/")
-let urlMapName = urlPath.substring(lastSlashIndex + 1);
+let lastQueryIndex = urlPath.lastIndexOf("?")==-1 ? urlPath.length : urlPath.lastIndexOf("?");
+let urlParams = urlPath.substring(lastQueryIndex + 1);
+console.log(urlParams);
+console.log(lastQueryIndex);
+let urlMapName = urlPath.substring(lastSlashIndex + 1, lastQueryIndex);
+console.log(urlMapName);
 if (urlMapName != "") {
 	current_graph = urlMapName;
 	editFloor(urlMapName);
@@ -1241,7 +1248,8 @@ $("#version_select").dropdown({
 			//console.log(data);
 			console.log(data);
 
-			if (!changed_graph || window.confirm("You have unsaved changed. Continue?")) {
+			console.log(urlParams);
+			if ((!changed_graph || urlParams=="dev") || window.confirm("You have unsaved changed. Continue?")) {
 				loadGraphData(data);
 				const blueprint = data.blueprint;
 			}
