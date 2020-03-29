@@ -100,7 +100,7 @@ def get_all_versions(name):
 def all_db_graphs():
     """ Returns a list of the names of all graphs in the db"""
     graphs = dao.get_all_names()
-    if len(graphs) == 0:
+    if len(graphs) != 0:
         return jsonify({'graphs': graphs, 'status': 200})
     else:
         return jsonify({'status': 404})
@@ -189,3 +189,4 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
 if __name__ == "__main__":
     dao = MongoDAO(url, password)
     app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
+    
