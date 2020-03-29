@@ -5,7 +5,7 @@ from time import gmtime, strftime, time
 
 from data_access_object import MongoDAO
 from clean_graph import clean_and_dump
-from distance import find_dist_and_dump, find_all_dist_and_dump, distance
+from distance import find_dist_from_start, find_all_room_distances, distance
 from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
@@ -144,7 +144,7 @@ def distances_from_room(graph_name, room):
         return jsonify({"status": 404})
     graph = graph_data['graph']
     try: 
-        res = {'distances': find_dist_and_dump(graph, room), 'status': 200}
+        res = {'distances': find_dist_from_start(graph, room), 'status': 200}
         return jsonify(res)
     except ValueError:
         return jsonify({'status': 400, 'info': "non-connected graph!"})
@@ -164,7 +164,7 @@ def all_distances(graph_name):
     graph = graph_data['graph']
 
     try:
-        res = {'distances': find_all_dist_and_dump(graph), 'status': 200}
+        res = {'distances': find_all_room_distances(graph), 'status': 200}
         return jsonify(res)
     except ValueError:
         return jsonify({'status': 400, 'info': "non-connected graph!"})
