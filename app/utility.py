@@ -162,7 +162,6 @@ class Graph:
         Must be used anytime the nodes or edges lists are edited to ensure the
         get_node and get_edge functions work correctly.
         """
-        node_index, edge_index = 0, 0
         self._node_id_map = {}
         self._edge_id_map = {}
         for i, node in enumerate(self.nodes):
