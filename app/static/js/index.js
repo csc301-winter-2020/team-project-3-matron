@@ -1214,14 +1214,28 @@ function reScalePath(label1, label2, t) {
 			// console.log(scale);
 		}
 	});
+
+
+
 }
 
 
 
 $("#version_select").dropdown({
+	forceSelection: false,
+	allowReselection: true,
 	onChange: function(value, text, $selectedItem) {
 		// the text corresponds to date
 		const date = text;
+		console.log(value);
+		console.log(text);
+		console.log($selectedItem);
+
+		if (!value) {
+			return;
+		}
+		
+		//
 		fetch(`/graph/version/${current_graph}/${date}`).then((resp) => resp.json()).then(function(data) {
 			// here we would do something load our older version graph
 			//console.log(data);
@@ -1232,18 +1246,7 @@ $("#version_select").dropdown({
 				const blueprint = data.blueprint;
 			}
 
-
-			// loads all the versions for a given graph.
-			// if (data != -1) {
-			// 	//console.log(fileData);
-			// 	fileImage = new Image();
-			// 	fileData = blueprint;
-			// 	fileImage.src = fileData;
-			// }
-	
 		});
-
-
 	  }
 });
 
