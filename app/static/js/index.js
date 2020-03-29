@@ -55,6 +55,12 @@ let cyStyle = [
 			"width": "10",
 			"height": "10"
 		}
+	},
+	{
+		selector: ".rescaled",
+		style: {
+			"shape": 'triangle',
+		}
 	}
 ]
 
@@ -1156,6 +1162,12 @@ function setScaleFactor(label1, label2, t) {
 		return
 	}
 
+	node1.addClass("rescaled");
+	node2.addClass("rescaled");
+	path.interim.forEach(n => {
+		n.addClass("rescaled");
+	});
+
 	let cyLen = path.len;
 	scaleFactor = cyLen/t;
 
@@ -1188,6 +1200,8 @@ function reScalePath(label1, label2, t) {
 	// });
 	node2.position(reScale(node1.position(), path.end.position(), scale));
 
+	node2.addClass("rescaled");
+
 	let endpaths = fillNode(node2);
 	// for(let i=0; i<endpaths.length; i++) {
 	// 	let p = endpaths[i];
@@ -1205,7 +1219,10 @@ function reScalePath(label1, label2, t) {
 			console.log(endToNode2);
 			console.log(getAng(endToNode2));
 
+			p.end.addClass("rescaled")
+
 			p.interim.forEach(n => {
+				n.addClass("rescaled");
 				n.position(reScale(p.end.position(), n.position(), scale));
 				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
 
@@ -1220,6 +1237,7 @@ function reScalePath(label1, label2, t) {
 	});
 
 	console.log(endpaths);
+	
 
 }
 
