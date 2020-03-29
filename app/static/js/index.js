@@ -892,10 +892,7 @@ distance_btn.addEventListener('click', (e) =>{
 		return;
 	}
 
-	node1 = node1[0].id();
-	node2 = node2[0].id();
-
-	fetch(`graph/distance_two_rooms/${current_graph}/${node1}/${node2}`).then((resp) => resp.json()).then(function(data) {
+	fetch(`graph/distance_two_rooms/${current_graph}/${node1_label}/${node2_label}`).then((resp) => resp.json()).then(function(data) {
 		document.querySelector('#dist_result').innerText = "distance : " + data;
 	});	
 });
