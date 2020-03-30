@@ -5,7 +5,23 @@ from tests.test_objs import two_rooms_many_hallway_nodes_json, three_rooms_many_
 from copy import deepcopy
 from distance import *
 
+
+def standardize_labels(json_graph) -> None:
+    """
+    Sets the label of each node in json_graph to be identical to its id.
+    """
+    for i, node in enumerate(json_graph["nodes"]):
+        json_graph["nodes"][i]["data"]["label"] = json_graph["nodes"][i]["data"]["id"]
+
+
 class DistanceFunctionTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        """
+        Standardizes room labels so that the labels match their id's
+        """
+        standardize_labels(two_rooms_many_hallway_nodes_json)
+        standardize_labels(three_rooms_many_hall_ways_nodes_json)
 
     def test_dijkstra(self):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
@@ -18,7 +34,7 @@ class DistanceFunctionTest(unittest.TestCase):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
 
-        output_1 = {'room': [(0, ['r1']), (465.20720723947005, ['r1', 'h1', 'h2', 'h3', 'h4', 'r2'])], 'hallway': [(159.38004893963358, ['r1', 'h1']), (236.9042387128908, ['r1', 'h1', 'h2']), (311.9642147320716, ['r1', 'h1', 'h2', 'h3']), (396.1782278177808, ['r1', 'h1', 'h2', 'h3', 'h4'])]} 
+        output_1 = {'room': [(0, ['r1']), (465.20720723947005, ['r1', 'h1', 'h2', 'h3', 'h4', 'r2'])], 'hallway': [(159.38004893963358, ['r1', 'h1']), (236.9042387128908, ['r1', 'h1', 'h2']), (311.9642147320716, ['r1', 'h1', 'h2', 'h3']), (396.1782278177808, ['r1', 'h1', 'h2', 'h3', 'h4'])]}
         output_2 = {'room': [(0, ['A']), (239.0083680543424, ['A', 'B']), (362.02462714231825, ['A', 'B', 'C'])], 'hallway': [(137.71347065556077, ['A', 'hn1']), (153.07514494521962, ['A', 'hn2'])]}
 
         self.assertEqual(find_dist_from_start(test_go1, 'r1'), output_1, "Invalid output")
@@ -41,7 +57,7 @@ class DistanceFunctionTest(unittest.TestCase):
     def test_distance(self):
 
         self.assertEqual(distance(two_rooms_many_hallway_nodes_json, 'r1', 'r2'), 465.20720723947005, "Invalid output")
-                
+
         self.assertEqual(distance(three_rooms_many_hall_ways_nodes_json, 'A', 'C'), 362.02462714231825, "Invalid output")
 
 
@@ -49,8 +65,8 @@ class DistanceFunctionTest(unittest.TestCase):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
 
-        self.assertEqual(find_dist_and_dump(two_rooms_many_hallway_nodes_json, 'r1'), dumps(find_dist_from_start(test_go1, 'r1')), "Invalid output") 
-        self.assertEqual(find_dist_and_dump(three_rooms_many_hall_ways_nodes_json, 'A'), dumps(find_dist_from_start(test_go2, 'A')), "Invalid output") 
+        self.assertEqual(find_dist_and_dump(two_rooms_many_hallway_nodes_json, 'r1'), dumps(find_dist_from_start(test_go1, 'r1')), "Invalid output")
+        self.assertEqual(find_dist_and_dump(three_rooms_many_hall_ways_nodes_json, 'A'), dumps(find_dist_from_start(test_go2, 'A')), "Invalid output")
 
 
     def find_all_dist_and_dump(self):
