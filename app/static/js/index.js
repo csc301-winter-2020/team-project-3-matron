@@ -1081,51 +1081,53 @@ function reScalePath(label1, label2, t) {
 	interpPath(endpaths, node2pos, node2.position(), node1.id());
 }
 
-function interpPath(paths, originalStartPos, newStartPos, startID) {
-	let startOffset = subVec(newStartPos, originalStartPos);
-	for (let i=0; i<paths.length; i++) {
-		let p = paths[i];
+function translateNode(label, vector) {
+	let node = cy.$("node[label='" + label + "']")[0];
+	let originalPos = JSON.parse(JSON.stringify(node.position()));
+	let newPos = addVec(node.position(), vector);
+	node.position(newPos);
 
-		if (p.end.data("rescaled")) {
-			if (p.end.id() == startID) {
-				continue;
-			}
+	let paths = fillNode(node);
 
-			let originalEndPos = JSON.parse(JSON.stringify(p.end.position()));
-			p.end.position(addVec(p.end.position(), startOffset));
+	paths.forEach(p => {
+		p.interim.forEach(n => {
+			let scale = len(subVec(newPos, p.end.position()))/ len(subVec(originalPos, p.end.position()));
+			let endToNode2 = subVec(originalPos, p.end.position());
+			let endToNewNode2 = subVec(newPos, p.end.position());
 
-			console.log(p.start.id());
-			console.log(startID);
-			if (p.end.id() != startID) {
-				//get paths from p.end
-				//then call this function on them, recursively
-				let endpaths = fillNode(p.end);
-				console.log(endpaths);
-				interpPath(endpaths, originalEndPos, p.end.position(), p.start.id());
-			}
-		} else {
-			p.interim.forEach(n => {
-				if (p.end == node1) {
-					setRescaled(n);
-				}
-
-				let scale = len(subVec(newStartPos, p.end.position()))/ len(subVec(originalStartPos, p.end.position()));
-				let endToNode2 = subVec(originalStartPos, p.end.position());
-				let endToNewNode2 = subVec(newStartPos, p.end.position());
-
-				if (p.end.data("rescaled")) {
-					n.position(addVec(n.position(), startOffset));
-					console.log("TEEEEEEEEEEEEEEEEEEEEEEEEST");
-				} else {
-					n.position(reScale(p.end.position(), n.position(), scale));
-					n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
-
-					n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
-				}
-			});
-		}
-	}	
+			n.position(reScale(p.end.position(), n.position(), scale));
+			n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
+			n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
+		});
+	});
 }
+
+// function interpPath(paths, originalStartPos, newStartPos, startID) {
+// 	let startOffset = subVec(newStartPos, originalStartPos);
+// 	for (let i=0; i<paths.length; i++) {
+// 		let p = paths[i];
+
+// 		p.interim.forEach(n => {
+// 			if (p.end == node1) {
+// 				setRescaled(n);
+// 			}
+
+// 			let scale = len(subVec(newStartPos, p.end.position()))/ len(subVec(originalStartPos, p.end.position()));
+// 			let endToNode2 = subVec(originalStartPos, p.end.position());
+// 			let endToNewNode2 = subVec(newStartPos, p.end.position());
+
+// 			if (p.end.data("rescaled")) {
+// 				n.position(addVec(n.position(), startOffset));
+// 				console.log("TEEEEEEEEEEEEEEEEEEEEEEEEST");
+// 			} else {
+// 				n.position(reScale(p.end.position(), n.position(), scale));
+// 				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
+
+// 				n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
+// 			}
+// 		});
+// 	}	
+// }
 
 let cy2 = cytoscape({
 	layout: {
