@@ -1130,19 +1130,10 @@ function cleanGraph(invis) {
 	let selector = "node[type != 'hallway'], node[type = 'hallway'][[degree > 2]], node[type = 'hallway'][[degree = 1]]";
 	cyInstance.$(selector).forEach(node => {
 		let paths = fillNode(node);
-		//console.log(fillNode(node));
-		// if this node no longer exist, skip it
-		// console.log(node.id());
-		// console.log(cy.$id(node.id())[0]);
-		// console.log(cy.elements().length);
-		// if (cy.$id(node.id())[0]) {
 
 		let updatedCollection = cyInstance.$(selector);
 		if (updatedCollection.is("node[id='" + node.id() + "']")) {
 			paths.forEach(path => {
-				// console.log(node.id());
-				// console.log(cy.$id(node.id())[0]);
-				//if (cy.$id(node.id())[0]) {
 				console.log(node.data("label"));
 				// if intersection of the selector with this node is nonempty, ie., if this node still fits the selector, continue
 				
@@ -1159,16 +1150,33 @@ function cleanGraph(invis) {
 				if (path.end) {
 					addEdge(node, path.end, cyInstance);
 				}
-				//}
 			});
 		}
 		console.log("");
-		// }
 	});
 
-	let span = cyInstance.elements().kruskal();
+	let span = cyInstance.elements().kruskal(function(edge) {
+		return len(subVec(edge.sourceEndpoint(), edge.targetEndpoint()));
+	});
 	cyInstance.remove(cyInstance.elements());
 	cyInstance.add(span);
+
+	// flood fill from node
+	let n1 = labeltonode("1");
+	let n2 = labeltonode("6");
+
+	let neighbors = n2;
+	while(true) {
+		let newNeighbors = neighbors.closedNeighborhood("node[id != '" + n1.id() + "']");
+		let newNode = newNeighbors.difference(neighbors)[0];
+		if (!newNode) {
+			break;
+		}
+		neighbors = newNeighbors;
+	}
+
+	toggleSelected(neighbors);
+
 	console.log(span);
 }
 
