@@ -55,6 +55,12 @@ let cyStyle = [
 			"width": "10",
 			"height": "10"
 		}
+	},
+	{
+		selector: ".rescaled",
+		style: {
+			"shape": 'triangle',
+		}
 	}
 ]
 
@@ -1011,7 +1017,7 @@ function fillNode(node) {
 	//toggleSelected(neighbors);
 	let paths = [];
 
-	let adjacentrooms = node.closedNeighborhood("node[type != 'hallway']");
+	let adjacentrooms = node.openNeighborhood("node[type != 'hallway']");
 
 	adjacentrooms.forEach(n => {
 		paths.push({interim: [], end: n, len: nodeDist(node, n)});
@@ -1156,6 +1162,12 @@ function setScaleFactor(label1, label2, t) {
 		return
 	}
 
+	node1.addClass("rescaled");
+	node2.addClass("rescaled");
+	path.interim.forEach(n => {
+		n.addClass("rescaled");
+	});
+
 	let cyLen = path.len;
 	scaleFactor = cyLen/t;
 
@@ -1183,10 +1195,12 @@ function reScalePath(label1, label2, t) {
 	console.log(t, cyLen, scaleFactor);
 	console.log(scale);
 
-	path.interim.forEach(n => {
-		n.position(reScale(node1.position(), n.position(), scale));
-	});
-	path.end.position(reScale(node1.position(), path.end.position(), scale));
+	// path.interim.forEach(n => {
+	// 	n.position(reScale(node1.position(), n.position(), scale));
+	// });
+	node2.position(reScale(node1.position(), path.end.position(), scale));
+
+	node2.addClass("rescaled");
 
 	let endpaths = fillNode(node2);
 	// for(let i=0; i<endpaths.length; i++) {
@@ -1196,7 +1210,7 @@ function reScalePath(label1, label2, t) {
 	// 	}
 	// }
 	endpaths.forEach(p => {
-		if (p.end != node1) {
+		//if (p.end != node1) {
 			// toggleSelected(p.interim);
 
 			let scale = nodeDist(node2, p.end) / len(subVec(node2pos, p.end.position()));
@@ -1205,7 +1219,10 @@ function reScalePath(label1, label2, t) {
 			console.log(endToNode2);
 			console.log(getAng(endToNode2));
 
+			p.end.addClass("rescaled")
+
 			p.interim.forEach(n => {
+				n.addClass("rescaled");
 				n.position(reScale(p.end.position(), n.position(), scale));
 				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
 
@@ -1216,10 +1233,11 @@ function reScalePath(label1, label2, t) {
 				// console.log(n.position());
 			});
 			// console.log(scale);
-		}
+		//}
 	});
 
-
+	console.log(endpaths);
+	
 
 }
 
