@@ -1,7 +1,7 @@
 import unittest
 from json import dumps
 import utility as u
-from tests.test_objs import two_rooms_many_hallway_nodes_json, three_rooms_many_hall_ways_nodes_json
+from test_objs import two_rooms_many_hallway_nodes_json, three_rooms_many_hall_ways_nodes_json
 from copy import deepcopy
 from distance import *
 
@@ -57,16 +57,16 @@ class DistanceFunctionTest(unittest.TestCase):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
 
-        self.assertEqual(find_dist_and_dump(two_rooms_many_hallway_nodes_json, 'r1'), dumps(find_dist_from_start(test_go1, 'r1')), "Invalid output")
-        self.assertEqual(find_dist_and_dump(three_rooms_many_hall_ways_nodes_json, 'A'), dumps(find_dist_from_start(test_go2, 'A')), "Invalid output")
+        self.assertEqual(find_dist_and_dump(two_rooms_many_hallway_nodes_json, 'r1'), dumps(find_dist_from_start(two_rooms_many_hallway_nodes_json, 'r1')), "Invalid output")
+        self.assertEqual(find_dist_and_dump(three_rooms_many_hall_ways_nodes_json, 'A'), dumps(find_dist_from_start(three_rooms_many_hall_ways_nodes_json, 'A')), "Invalid output")
 
 
     def find_all_dist_and_dump(self):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
 
-        self.assertEqual(find_all_dist_and_dump(two_rooms_many_hallway_nodes_json), dumps(find_all_room_distances(test_go1)))
-        self.assertEqual(find_all_dist_and_dump(three_rooms_many_hall_ways_nodes_json), dumps(find_all_room_distances(test_go2)))
+        self.assertEqual(find_all_dist_and_dump(two_rooms_many_hallway_nodes_json), dumps(find_all_room_distances(two_rooms_many_hallway_nodes_json)))
+        self.assertEqual(find_all_dist_and_dump(three_rooms_many_hall_ways_nodes_json), dumps(find_all_room_distances(three_rooms_many_hall_ways_nodes_json)))
 
 
 if __name__ == "__main__":

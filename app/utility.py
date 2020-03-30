@@ -166,7 +166,7 @@ class Graph:
         Given the label of a node, return its id.
         """
         if label not in self._label_to_id:
-            raise KeyError('No node with label {} in graph.'.format(label))
+            return label
         return self._label_to_id[label]
 
     def get_node_label(self, id: str) -> str:
@@ -174,7 +174,7 @@ class Graph:
         Given the id of a node, return its label.
         """
         if id not in self._id_to_label:
-            raise KeyError('No node with id {} in graph.'.format(id))
+            return id
         return self._id_to_label[id]
 
     def update_internal_maps(self) -> None:

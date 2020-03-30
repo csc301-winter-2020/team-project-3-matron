@@ -107,7 +107,7 @@ def find_dist_and_dump(json_graph: JSONGraph, start_id: str) -> RoomDistanceMap:
     ValueError if graph is not connected, where the arguments are the ids of the
     two unconnected rooms which caused the error.
     """
-    return json.dumps(find_dist_from_start(Graph(json_graph), start_id))
+    return json.dumps(find_dist_from_start(json_graph, start_id))
 
 
 def find_all_dist_and_dump(json_graph: JSONGraph) -> Dict[str, RoomDistanceMap]:
@@ -115,4 +115,4 @@ def find_all_dist_and_dump(json_graph: JSONGraph) -> Dict[str, RoomDistanceMap]:
     Return a json dump of a dict which maps all rooms to their corresponding
     RoomDistanceMaps.
     """
-    return json.dumps(find_all_room_distances(Graph(json_graph)))
+    return json.dumps(find_all_room_distances(json_graph))
