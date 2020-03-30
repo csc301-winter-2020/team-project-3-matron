@@ -10,7 +10,6 @@ from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
 
-
 url = os.environ['DB_URL']
 password = os.environ['DB_PASS']
 dao = None
