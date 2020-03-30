@@ -57,9 +57,9 @@ let cyStyle = [
 		}
 	},
 	{
-		selector: ".rescaled",
+		selector: "node[?rescaled]",
 		style: {
-			"shape": 'triangle',
+			"shape": 'star',
 		}
 	}
 ]
@@ -1035,30 +1035,76 @@ function fillNode(node) {
 	return paths;
 }
 
-// function cleanNode(label) {
-// 	let node = cy.$("node[label='" + label + "']")[0];
-// 	let paths = fillNode(node);
-// 	paths.forEach(path => {
-// 		cy.remove(path.interim);
-// 		//removeNodes(path.interim);
-// 		if (path.end) {
-// 			addEdge(node, path.end);
-// 		}
-// 	})
-// }
+function setScaleFactor(label1, label2, t) {
+	let node1 = cy.$("node[label='" + label1 + "']")[0];
+	let node2 = cy.$("node[label='" + label2 + "']")[0];
 
-// function cleanNodeID(id) {
-// 	let node = cy.$("node[id='" + id + "']")[0];
-// 	let paths = fillNode(node);
-// 	console.log(paths);
-// 	paths.forEach(path => {
-// 		cy.remove(path.interim);
-// 		//removeNodes(path.interim);
-// 		if (path.end) {
-// 			addEdge(node, path.end);
-// 		}
-// 	})
-// }
+	let path = fillNode(node1).find(p => p.end == node2);
+	console.log(path);
+	if (!path) {
+		return
+	}
+
+	setRescaled(node1);
+	setRescaled(node2);
+	path.interim.forEach(n => {
+		setRescaled(n);
+	});
+
+
+	let cyLen = path.len;
+	scaleFactor = cyLen/t;
+
+	console.log(cyLen);
+	console.log(scaleFactor);
+}
+
+function reScalePath(label1, label2, t) {
+	let node1 = cy.$("node[label='" + label1 + "']")[0];
+	let node2 = cy.$("node[label='" + label2 + "']")[0];
+	let node2pos = JSON.parse(JSON.stringify(node2.position()));
+
+	// assume node1 is in MST, ie., is fixed
+	let path = fillNode(node1).find(p => p.end == node2);
+
+	if (!path) {
+		return;
+	}
+
+	console.log(path);
+
+	let cyLen = path.len;
+	let scale = (t*scaleFactor)/cyLen;
+
+	node2.position(reScale(node1.position(), path.end.position(), scale));
+	setRescaled(node2);
+
+	let endpaths = fillNode(node2);
+	console.log(endpaths);
+	endpaths.forEach(p => {
+			let scale = nodeDist(node2, p.end) / len(subVec(node2pos, p.end.position()));
+			let endToNode2 = subVec(node2pos, p.end.position());
+			let endToNewNode2 = subVec(node2.position(), p.end.position());
+
+			p.interim.forEach(n => {
+				
+				console.log(p.end.data("rescaled"));
+
+				if (p.end.data("rescaled")) {
+					n.position(addVec(n.position(), subVec(node2.position(), node2pos)));
+				} else {
+					n.position(reScale(p.end.position(), n.position(), scale));
+					n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
+
+					n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
+				}
+			});
+
+			if (p.end == node1) {
+				setRescaled(n);
+			}
+	});	
+}
 
 let cy2 = cytoscape({
 	layout: {
@@ -1119,14 +1165,6 @@ function cleanGraph(invis) {
 	console.log(span);
 }
 
-// function removeNodes(collection) {
-// 	collection.forEach(n => {
-// 		if (n) {
-// 			cy.remove(n);
-// 		}
-// 	})
-// }
-
 function rotateVec(point, origin, theta) {
 	// let x = vec.x - origin.x;
 	// let y = vec.y - origin.y;
@@ -1152,93 +1190,8 @@ function getAng(vec) {
 	return ang;
 }
 
-function setScaleFactor(label1, label2, t) {
-	let node1 = cy.$("node[label='" + label1 + "']")[0];
-	let node2 = cy.$("node[label='" + label2 + "']")[0];
-
-	let path = fillNode(node1).find(p => p.end == node2);
-	console.log(path);
-	if (!path) {
-		return
-	}
-
-	node1.addClass("rescaled");
-	node2.addClass("rescaled");
-	path.interim.forEach(n => {
-		n.addClass("rescaled");
-	});
-
-	let cyLen = path.len;
-	scaleFactor = cyLen/t;
-
-	// path.interim.addClass("scaled");
-	// path.end.addClass("scaled");
-
-	console.log(cyLen);
-	console.log(scaleFactor);
-}
-
-function reScalePath(label1, label2, t) {
-	let node1 = cy.$("node[label='" + label1 + "']")[0];
-	let node2 = cy.$("node[label='" + label2 + "']")[0];
-	let node2pos = JSON.parse(JSON.stringify(node2.position()));
-
-	// assume node1 is in MST, ie., is fixed
-	let path = fillNode(node1).find(p => p.end == node2);
-
-	if (!path) {
-		return;
-	}
-
-	let cyLen = path.len;
-	let scale = (t*scaleFactor)/cyLen;
-	console.log(t, cyLen, scaleFactor);
-	console.log(scale);
-
-	// path.interim.forEach(n => {
-	// 	n.position(reScale(node1.position(), n.position(), scale));
-	// });
-	node2.position(reScale(node1.position(), path.end.position(), scale));
-
-	node2.addClass("rescaled");
-
-	let endpaths = fillNode(node2);
-	// for(let i=0; i<endpaths.length; i++) {
-	// 	let p = endpaths[i];
-	// 	if (p.end != node1) {
-	// 		let scale = nodeDist(node2, p.end) / 
-	// 	}
-	// }
-	endpaths.forEach(p => {
-		//if (p.end != node1) {
-			// toggleSelected(p.interim);
-
-			let scale = nodeDist(node2, p.end) / len(subVec(node2pos, p.end.position()));
-			let endToNode2 = subVec(node2pos, p.end.position());
-			let endToNewNode2 = subVec(node2.position(), p.end.position());
-			console.log(endToNode2);
-			console.log(getAng(endToNode2));
-
-			p.end.addClass("rescaled")
-
-			p.interim.forEach(n => {
-				n.addClass("rescaled");
-				n.position(reScale(p.end.position(), n.position(), scale));
-				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
-
-				n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
-
-				// now rotate it
-
-				// console.log(n.position());
-			});
-			// console.log(scale);
-		//}
-	});
-
-	console.log(endpaths);
-	
-
+function setRescaled(nodes) {
+	nodes.data("rescaled", true);
 }
 
 
@@ -1304,3 +1257,28 @@ window.onbeforeunload = function() {
 		"You have unsaved changed."
 	}
 }
+
+// function cleanNode(label) {
+// 	let node = cy.$("node[label='" + label + "']")[0];
+// 	let paths = fillNode(node);
+// 	paths.forEach(path => {
+// 		cy.remove(path.interim);
+// 		//removeNodes(path.interim);
+// 		if (path.end) {
+// 			addEdge(node, path.end);
+// 		}
+// 	})
+// }
+
+// function cleanNodeID(id) {
+// 	let node = cy.$("node[id='" + id + "']")[0];
+// 	let paths = fillNode(node);
+// 	console.log(paths);
+// 	paths.forEach(path => {
+// 		cy.remove(path.interim);
+// 		//removeNodes(path.interim);
+// 		if (path.end) {
+// 			addEdge(node, path.end);
+// 		}
+// 	})
+// }
