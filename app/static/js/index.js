@@ -940,32 +940,11 @@ function nodeDist(node1, node2) {
 	return len(subVec(node1.position(), node2.position()));
 }
 
-
-// function setScale(a, b, t) {
-// 	let node1 = cy.$("node[label='" + a + "']")[0];
-// 	let node2 = cy.$("node[label='" + b + "']")[0];
-
-// 	let cyDist = len(subVec(node1.position(), node2.position()));
-// 	scaleFactor = cyDist/t;
-// 	console.log(scaleFactor);
-// }
-
-function getClean() {
-	fetch(`graph/clean/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-		console.log(data);
-		data = JSON.parse(data.graph);
-		cy.elements().remove();
-		data.nodes.forEach(e => cy.add(e));
-		data.edges.forEach(e => cy.add(e));
-	});
-}
-
 let scaleFactor = 1;
 function reScale(node1pos, node2pos, scale) {
 	let diff = subVec(node2pos, node1pos);
 	let newdiff = scaleVec(diff, scale);
 	let newpos = addVec(subVec(node2pos,diff),newdiff);
-	console.log(diff);
 	return newpos;
 	// console.log(newpos);
 
@@ -1064,7 +1043,7 @@ function setScaleFactor(label1, label2, t) {
 function reScalePath(label1, label2, t) {
 	let node1 = cy.$("node[label='" + label1 + "']")[0];
 	let node2 = cy.$("node[label='" + label2 + "']")[0];
-	let node2pos = JSON.parse(JSON.stringify(node2.position()));
+	// let node2pos = JSON.parse(JSON.stringify(node2.position()));
 
 	let endpaths = fillNode(node2);
 	let path = endpaths.find(p => p.end == node1);
@@ -1073,31 +1052,36 @@ function reScalePath(label1, label2, t) {
 
 	let scale = (t*scaleFactor)/path.len;
 
-	console.log(path);
-	node2.position(reScale(node1.position(), node2.position(), scale));
-	setRescaled(node2);
+	let newPos = reScale(node1.position(), node2.position(), scale);
+	let offset = subVec(newPos, node2.position());
 
-	console.log(endpaths);
-	interpPath(endpaths, node2pos, node2.position(), node1.id());
+	console.log(offset);
+	translateNode(node2, offset);
 }
 
-function translateNode(label, vector) {
-	let node = cy.$("node[label='" + label + "']")[0];
-	let originalPos = JSON.parse(JSON.stringify(node.position()));
-	let newPos = addVec(node.position(), vector);
-	node.position(newPos);
+function labeltonode(label) {
+	return cy.$("node[label='" + label + "']")[0];
+}
 
-	let paths = fillNode(node);
+function translateNode(nodes, offset) {
+	nodes.forEach(node => {
+		// let node = cy.$("node[label='" + label + "']")[0];
+		let originalPos = JSON.parse(JSON.stringify(node.position()));
+		let newPos = addVec(node.position(), offset);
+		node.position(newPos);
 
-	paths.forEach(p => {
-		p.interim.forEach(n => {
-			let scale = len(subVec(newPos, p.end.position()))/ len(subVec(originalPos, p.end.position()));
-			let endToNode2 = subVec(originalPos, p.end.position());
-			let endToNewNode2 = subVec(newPos, p.end.position());
+		let paths = fillNode(node);
 
-			n.position(reScale(p.end.position(), n.position(), scale));
-			n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
-			n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
+		paths.forEach(p => {
+			p.interim.forEach(n => {
+				let scale = len(subVec(newPos, p.end.position()))/ len(subVec(originalPos, p.end.position()));
+				let endToNode2 = subVec(originalPos, p.end.position());
+				let endToNewNode2 = subVec(newPos, p.end.position());
+
+				n.position(reScale(p.end.position(), n.position(), scale));
+				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
+				n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
+			});
 		});
 	});
 }
