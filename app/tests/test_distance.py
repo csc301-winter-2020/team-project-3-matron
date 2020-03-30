@@ -17,13 +17,6 @@ def standardize_labels(json_graph: dict) -> dict:
 
 class DistanceFunctionTest(unittest.TestCase):
 
-    def setUp(self) -> None:
-        """
-        Standardizes room labels so that the labels match their id's
-        """
-        two_rooms_many_hallway_nodes_json = standardize_labels(two_rooms_many_hallway_nodes_json)
-        three_rooms_many_hall_ways_nodes_json = standardize_labels(three_rooms_many_hall_ways_nodes_json)
-
     def test_dijkstra(self):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
