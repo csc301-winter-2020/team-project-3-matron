@@ -118,9 +118,13 @@ class Graph:
 
         self.nodes = [Node(json_obj) for json_obj in json_data["nodes"]]
         self.edges = [Edge(json_obj) for json_obj in json_data["edges"]]
-        self._set_edge_weights()  # Since the edge objects dont natively have weights
+        # Since the edge objects dont natively have weights
+        self._set_edge_weights()
         self._node_id_map = {}
         self._edge_id_map = {}
+        # Since routing uses node labels, not id's
+        self._label_to_id = {}
+        self._id_to_label = {}
         self.update_internal_maps()
 
     def __str__(self) -> str:
@@ -157,16 +161,44 @@ class Graph:
     def get_edge(self, id: str) -> Edge:
         return self.edges[self._edge_id_map[id]]
 
+    def get_node_id(self, label: str) -> str:
+        """
+        Given the label of a node, return its id.
+        """
+        if label not in self._label_to_id:
+            return label
+        return self._label_to_id[label]
+
+    def get_node_label(self, id: str) -> str:
+        """
+        Given the id of a node, return its label.
+        """
+        if id not in self._id_to_label:
+            return id
+        return self._id_to_label[id]
+
     def update_internal_maps(self) -> None:
         """
         Must be used anytime the nodes or edges lists are edited to ensure the
         get_node and get_edge functions work correctly.
         """
-        node_index, edge_index = 0, 0
         self._node_id_map = {}
         self._edge_id_map = {}
+        self._label_to_id = {}
+        self._id_to_label = {}
         for i, node in enumerate(self.nodes):
             self._node_id_map[node.get_id()] = i
+            if node.get_type() == "hallway":
+                continue # We don't care about hallway nodes
+            if node.get_label() in self._label_to_id:
+                # Duplicate label detected. Not allowed!
+                raise ValueError('Node with id {} has label {}, '
+                                 'which is a duplicate of the '
+                                 'label of node with id {}.'
+                                 .format(node.get_id(), node.get_label(),
+                                         self._label_to_id[node.get_label()]))
+            self._label_to_id[node.get_label()] = node.get_id()
+            self._id_to_label[node.get_id()] = node.get_label()
         for i, edge in enumerate(self.edges):
             self._edge_id_map[edge.get_id()] = i
 
