@@ -9,14 +9,14 @@ import heapq
 from typing import *
 
 # Key: room id
-# Value: List of tuples (d, id) where id is the id of a room, and d is the distance to it
+# Value: List of tuples (d, label) where label is the label of a room, and d is the distance to it
 AdjacencyMap = Dict[str, List[Tuple[float, str]]]
 
 # (d, vs) where d is the length of a path and vs is a list of room ids
 Path = Tuple[float, List[str]]
 
 # Key: room type
-# Value: ascending-order tuples (d, id) similar to Adjacency map
+# Value: ascending-order tuples (d, label) similar to Adjacency map
 RoomDistanceMap = Dict[str, List[Tuple[float, str]]]
 
 # Key: JSON object type
