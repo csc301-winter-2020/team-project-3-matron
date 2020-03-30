@@ -64,6 +64,9 @@ def find_dist_from_start(json_graph: JSONGraph, start_label: str) -> Union[None,
     graph = Graph(json_graph)
     start_id = graph.get_node_id(start_label)
     for node in graph.nodes:
+        # We don't care about distance from rooms to hallway nodes
+        if node.get_type() == "hallway":
+            continue
         if node.get_type() not in room_distances:
             room_distances[node.get_type()] = []
         weight, ids = dijkstra(graph, start_id, node.get_id())
@@ -84,6 +87,9 @@ def find_all_room_distances(json_graph: JSONGraph) -> Dict[str, RoomDistanceMap]
     """
     maps = {}
     for json_node in json_graph["nodes"]:
+        # Skip hallway nodes, they're not room nodes
+        if json_node["data"]["type"] == "hallway":
+            continue
         start_label = json_node["data"]["label"]
         maps[start_label] = find_dist_from_start(json_graph, start_label)
     return maps
