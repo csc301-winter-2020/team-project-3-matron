@@ -4,7 +4,7 @@ For routing, use find_dist_from_start and find_all_room_distances. See documenta
 Find the distance between any two nodes in a given graph, with a list of node id pairs.
 """
 
-from app.utility import *
+from utility import *
 import json
 
 

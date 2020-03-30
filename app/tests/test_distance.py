@@ -1,9 +1,9 @@
 import unittest
 from json import dumps
-import app.utility as u
-from app.tests.test_objs import two_rooms_many_hallway_nodes_json, three_rooms_many_hall_ways_nodes_json
+import utility as u
+from test_objs import two_rooms_many_hallway_nodes_json, three_rooms_many_hall_ways_nodes_json
 from copy import deepcopy
-from app.distance import *
+from distance import *
 
 
 def standardize_labels(json_graph: dict) -> dict:
