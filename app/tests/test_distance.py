@@ -6,15 +6,6 @@ from copy import deepcopy
 from distance import *
 
 
-def standardize_labels(json_graph: dict) -> dict:
-    """
-    Sets the label of each node in json_graph to be identical to its id.
-    """
-    for i, node in enumerate(json_graph["nodes"]):
-        json_graph["nodes"][i]["data"]["label"] = json_graph["nodes"][i]["data"]["id"]
-    return json_graph
-
-
 class DistanceFunctionTest(unittest.TestCase):
 
     def test_dijkstra(self):
