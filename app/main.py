@@ -143,8 +143,8 @@ def distances_from_room(graph_name, room):
     graph_data, print_data = dao.get_latest(graph_name)
     if graph_data is None:
         return jsonify({"status": 404})
-    graph = graph_data['graph']
-    try: 
+    graph = graph_data['graph']['elements']
+    try:
         res = {'distances': find_dist_from_start(graph, room), 'status': 200}
         return jsonify(res)
     except ValueError:
@@ -162,7 +162,7 @@ def all_distances(graph_name):
     graph_data, print_data = dao.get_latest(graph_name)
     if graph_data is None:
         return jsonify({"status": 404})
-    graph = graph_data['graph']
+    graph = graph_data['graph']['elements']
 
     try:
         res = {'distances': find_all_room_distances(graph), 'status': 200}
