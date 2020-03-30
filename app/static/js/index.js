@@ -61,7 +61,13 @@ let cyStyle = [
 		style: {
 			"shape": 'star',
 		}
-	}
+	},
+	{
+		selector: ".debug",
+		style: {
+			"shape": 'diamond',
+		}
+	},
 ]
 
 let current_graph = '';
@@ -1156,28 +1162,26 @@ function cleanGraph(invis) {
 	});
 
 	let span = cyInstance.elements().kruskal(function(edge) {
-		return len(subVec(edge.sourceEndpoint(), edge.targetEndpoint()));
+		console.log(edge);
+		return len(subVec(edge.source().position(), edge.target().position()));
 	});
 	cyInstance.remove(cyInstance.elements());
 	cyInstance.add(span);
+	span.data("debug", true);
+}
 
-	// flood fill from node
-	let n1 = labeltonode("1");
-	let n2 = labeltonode("6");
-
-	let neighbors = n2;
+function flood(src, pathstart) {
+	let neighbors = pathstart;
 	while(true) {
-		let newNeighbors = neighbors.closedNeighborhood("node[id != '" + n1.id() + "']");
+		let newNeighbors = neighbors.closedNeighborhood("node[id != '" + src.id() + "'][?debug]");
 		let newNode = newNeighbors.difference(neighbors)[0];
 		if (!newNode) {
 			break;
 		}
 		neighbors = newNeighbors;
 	}
-
 	toggleSelected(neighbors);
-
-	console.log(span);
+	return neighbors;
 }
 
 function rotateVec(point, origin, theta) {
