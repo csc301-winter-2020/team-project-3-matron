@@ -63,7 +63,7 @@ let cyStyle = [
 		}
 	},
 	{
-		selector: ".debug",
+		selector: "node[?debug]",
 		style: {
 			"shape": 'diamond',
 		}
@@ -1057,12 +1057,14 @@ function reScalePath(label1, label2, t) {
 	if (!path) {return;}
 
 	let scale = (t*scaleFactor)/path.len;
-
 	let newPos = reScale(node1.position(), node2.position(), scale);
 	let offset = subVec(newPos, node2.position());
 
 	console.log(offset);
-	translateNode(node2, offset);
+	//translateNode(node2, offset);
+
+	cleanGraph(true);
+	translateNode(flood(node1, node2), offset);
 }
 
 function labeltonode(label) {
@@ -1070,11 +1072,17 @@ function labeltonode(label) {
 }
 
 function translateNode(nodes, offset) {
+	console.log(nodes);
+	console.log(offset);
 	nodes.forEach(node => {
+		node = cy.$id(node.id());
 		// let node = cy.$("node[label='" + label + "']")[0];
 		let originalPos = JSON.parse(JSON.stringify(node.position()));
 		let newPos = addVec(node.position(), offset);
 		node.position(newPos);
+
+		console.log(originalPos);
+		console.log(newPos);
 
 		let paths = fillNode(node);
 
@@ -1091,6 +1099,74 @@ function translateNode(nodes, offset) {
 		});
 	});
 }
+
+function cleanGraph(invis) {
+	let cyInstance = invis ? cy2 : cy;
+
+	cyInstance.add(cy.elements());
+
+	let selector = "node[type != 'hallway'], node[type = 'hallway'][[degree > 2]], node[type = 'hallway'][[degree = 1]]";
+	cyInstance.$(selector).forEach(node => {
+		let paths = fillNode(node);
+
+		let updatedCollection = cyInstance.$(selector);
+		if (updatedCollection.is("node[id='" + node.id() + "']")) {
+			paths.forEach(path => {
+				// if intersection of the selector with this node is nonempty, ie., if this node still fits the selector, continue
+				
+				path.interim.forEach(n => {
+				})
+				if (path.interim.length > 0) {
+					cyInstance.remove(path.interim);
+				}
+				// cy2.add(path.interim);
+
+				if (path.end) {
+					addEdge(node, path.end, cyInstance);
+				}
+			});
+		}
+	});
+
+	let span = cyInstance.elements().kruskal(function(edge) {
+		return len(subVec(edge.source().position(), edge.target().position()));
+	});
+	cyInstance.remove(cyInstance.elements());
+	cyInstance.add(span);
+	span.data("debug", true);
+}
+
+function flood(src, pathstart, invis) {
+	console.log(src);
+	console.log(pathstart);
+	// if (!pathstart.data("debug")) {return;}
+	let cyInstance = invis ? cy2 : cy;
+
+	console.log("MADE IT");
+
+	src = cyInstance.$id(src.id());
+	pathstart = cyInstance.$id(pathstart.id());
+
+	let neighbors = pathstart;
+	while(true) {
+		let newNeighbors = neighbors.closedNeighborhood("node[id != '" + src.id() + "'][?debug]");
+		let newNode = newNeighbors.difference(neighbors)[0];
+		if (!newNode) {
+			break;
+		}
+		neighbors = newNeighbors;
+	}
+	toggleSelected(neighbors);
+	return neighbors;
+}
+
+let cy2 = cytoscape({
+	layout: {
+		name: "preset"
+	},
+	style: cyStyle,
+	headless: true
+});
 
 // function interpPath(paths, originalStartPos, newStartPos, startID) {
 // 	let startOffset = subVec(newStartPos, originalStartPos);
@@ -1118,71 +1194,6 @@ function translateNode(nodes, offset) {
 // 		});
 // 	}	
 // }
-
-let cy2 = cytoscape({
-	layout: {
-		name: "preset"
-	},
-	style: cyStyle,
-	headless: true
-});
-
-
-function cleanGraph(invis) {
-	let cyInstance = invis ? cy2 : cy;
-
-	cyInstance.add(cy.elements());
-
-	let selector = "node[type != 'hallway'], node[type = 'hallway'][[degree > 2]], node[type = 'hallway'][[degree = 1]]";
-	cyInstance.$(selector).forEach(node => {
-		let paths = fillNode(node);
-
-		let updatedCollection = cyInstance.$(selector);
-		if (updatedCollection.is("node[id='" + node.id() + "']")) {
-			paths.forEach(path => {
-				console.log(node.data("label"));
-				// if intersection of the selector with this node is nonempty, ie., if this node still fits the selector, continue
-				
-				path.interim.forEach(n => {
-					console.log(n.id());
-				})
-				console.log(path.end);
-				console.log(path.interim);
-				if (path.interim.length > 0) {
-					cyInstance.remove(path.interim);
-				}
-				// cy2.add(path.interim);
-
-				if (path.end) {
-					addEdge(node, path.end, cyInstance);
-				}
-			});
-		}
-		console.log("");
-	});
-
-	let span = cyInstance.elements().kruskal(function(edge) {
-		console.log(edge);
-		return len(subVec(edge.source().position(), edge.target().position()));
-	});
-	cyInstance.remove(cyInstance.elements());
-	cyInstance.add(span);
-	span.data("debug", true);
-}
-
-function flood(src, pathstart) {
-	let neighbors = pathstart;
-	while(true) {
-		let newNeighbors = neighbors.closedNeighborhood("node[id != '" + src.id() + "'][?debug]");
-		let newNode = newNeighbors.difference(neighbors)[0];
-		if (!newNode) {
-			break;
-		}
-		neighbors = newNeighbors;
-	}
-	toggleSelected(neighbors);
-	return neighbors;
-}
 
 function rotateVec(point, origin, theta) {
 	// let x = vec.x - origin.x;
@@ -1212,8 +1223,6 @@ function getAng(vec) {
 function setRescaled(nodes) {
 	nodes.data("rescaled", true);
 }
-
-
 
 $("#version_select").dropdown({
 	forceSelection: false,
