@@ -74,7 +74,7 @@ def find_dist_from_start(json_graph: JSONGraph, start_label: str) -> Union[None,
             # No path, graph isn't connected! That's bad
             raise ValueError(start_label, node.get_label())
         else:
-            shortest_path = (weight, list(map(graph.get_node_label, ids)))
+            shortest_path = (weight, graph.get_node_label(ids[-1]))
             room_distances[node.get_type()] += [shortest_path]
     for type in room_distances.keys():
         room_distances[type] = sorted(room_distances[type])

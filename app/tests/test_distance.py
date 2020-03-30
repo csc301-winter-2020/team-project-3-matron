@@ -30,18 +30,18 @@ class DistanceFunctionTest(unittest.TestCase):
         test_go1 = Graph(two_rooms_many_hallway_nodes_json)
         test_go2 = Graph(three_rooms_many_hall_ways_nodes_json)
 
-        output_1 = {'room': [(0, ['r1']), (465.20720723947005, ['r1', 'h1', 'h2', 'h3', 'h4', 'r2'])]}
-        output_2 = {'room': [(0, ['A']), (239.0083680543424, ['A', 'B']), (362.02462714231825, ['A', 'B', 'C'])]}
+        output_1 = {'room': [(0, 'r1'), (465.20720723947005, 'r2')]}
+        output_2 = {'room': [(0, 'A'), (239.0083680543424, 'B'), (362.02462714231825, 'C')]}
 
         self.assertEqual(find_dist_from_start(two_rooms_many_hallway_nodes_json, 'r1'), output_1, "Invalid output")
         self.assertEqual(find_dist_from_start(three_rooms_many_hall_ways_nodes_json, 'A'), output_2, "Invalid output")
 
     def test_find_dist_from_start(self):
-        output_1 = {'r1': {'room': [(0, ['r1']), (465.20720723947005, ['r1', 'h1', 'h2', 'h3', 'h4', 'r2'])]},
-                    'r2': {'room': [(0, ['r2']), (465.2072072394701, ['r2', 'h4', 'h3', 'h2', 'h1', 'r1'])]}}
-        output_2 = {'A': {'room': [(0, ['A']), (239.0083680543424, ['A', 'B']), (362.02462714231825, ['A', 'B', 'C'])]},
-                    'B': {'room': [(0, ['B']), (123.01625908797584, ['B', 'C']), (239.0083680543424, ['B', 'A'])]},
-                    'C': {'room': [(0, ['C']), (123.01625908797584, ['C', 'B']), (362.02462714231825, ['C', 'B', 'A'])]}}
+        output_1 = {'r1': {'room': [(0, 'r1'), (465.20720723947005, 'r2')]},
+                    'r2': {'room': [(0, 'r2'), (465.2072072394701, 'r1')]}}
+        output_2 = {'A': {'room': [(0, 'A'), (239.0083680543424, 'B'), (362.02462714231825, 'C')]},
+                    'B': {'room': [(0, 'B'), (123.01625908797584, 'C'), (239.0083680543424, 'A')]},
+                    'C': {'room': [(0, 'C'), (123.01625908797584, 'B'), (362.02462714231825, 'A')]}}
 
         self.assertEqual(find_all_room_distances(two_rooms_many_hallway_nodes_json), output_1, "Invalid output")
         self.assertEqual(find_all_room_distances(three_rooms_many_hall_ways_nodes_json), output_2, "Invalid output")
