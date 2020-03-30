@@ -965,6 +965,7 @@ function reScale(node1pos, node2pos, scale) {
 	let diff = subVec(node2pos, node1pos);
 	let newdiff = scaleVec(diff, scale);
 	let newpos = addVec(subVec(node2pos,diff),newdiff);
+	console.log(diff);
 	return newpos;
 	// console.log(newpos);
 
@@ -1020,12 +1021,13 @@ function fillNode(node) {
 	let adjacentrooms = node.openNeighborhood("node[type != 'hallway']");
 
 	adjacentrooms.forEach(n => {
-		paths.push({interim: [], end: n, len: nodeDist(node, n)});
+		paths.push({interim: [], end: n, start: node, len: nodeDist(node, n)});
 	})
 
 	neighbors.forEach(n => {
 		let branch = fillPath(n, node.id(), nodeDist(n, node));
 		// if (branch) {
+			branch.start = node;
 			paths.push(branch);
 		// }
 		// toggleSelected(branch.path);
@@ -1064,34 +1066,56 @@ function reScalePath(label1, label2, t) {
 	let node2 = cy.$("node[label='" + label2 + "']")[0];
 	let node2pos = JSON.parse(JSON.stringify(node2.position()));
 
-	// assume node1 is in MST, ie., is fixed
-	let path = fillNode(node1).find(p => p.end == node2);
+	let endpaths = fillNode(node2);
+	let path = endpaths.find(p => p.end == node1);
 
-	if (!path) {
-		return;
-	}
+	if (!path) {return;}
+
+	let scale = (t*scaleFactor)/path.len;
 
 	console.log(path);
-
-	let cyLen = path.len;
-	let scale = (t*scaleFactor)/cyLen;
-
-	node2.position(reScale(node1.position(), path.end.position(), scale));
+	node2.position(reScale(node1.position(), node2.position(), scale));
 	setRescaled(node2);
 
-	let endpaths = fillNode(node2);
 	console.log(endpaths);
-	endpaths.forEach(p => {
-			let scale = nodeDist(node2, p.end) / len(subVec(node2pos, p.end.position()));
-			let endToNode2 = subVec(node2pos, p.end.position());
-			let endToNewNode2 = subVec(node2.position(), p.end.position());
+	interpPath(endpaths, node2pos, node2.position(), node1.id());
+}
 
+function interpPath(paths, originalStartPos, newStartPos, startID) {
+	let startOffset = subVec(newStartPos, originalStartPos);
+	for (let i=0; i<paths.length; i++) {
+		let p = paths[i];
+
+		if (p.end.data("rescaled")) {
+			if (p.end.id() == startID) {
+				continue;
+			}
+
+			let originalEndPos = JSON.parse(JSON.stringify(p.end.position()));
+			p.end.position(addVec(p.end.position(), startOffset));
+
+			console.log(p.start.id());
+			console.log(startID);
+			if (p.end.id() != startID) {
+				//get paths from p.end
+				//then call this function on them, recursively
+				let endpaths = fillNode(p.end);
+				console.log(endpaths);
+				interpPath(endpaths, originalEndPos, p.end.position(), p.start.id());
+			}
+		} else {
 			p.interim.forEach(n => {
-				
-				console.log(p.end.data("rescaled"));
+				if (p.end == node1) {
+					setRescaled(n);
+				}
+
+				let scale = len(subVec(newStartPos, p.end.position()))/ len(subVec(originalStartPos, p.end.position()));
+				let endToNode2 = subVec(originalStartPos, p.end.position());
+				let endToNewNode2 = subVec(newStartPos, p.end.position());
 
 				if (p.end.data("rescaled")) {
-					n.position(addVec(n.position(), subVec(node2.position(), node2pos)));
+					n.position(addVec(n.position(), startOffset));
+					console.log("TEEEEEEEEEEEEEEEEEEEEEEEEST");
 				} else {
 					n.position(reScale(p.end.position(), n.position(), scale));
 					n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
@@ -1099,11 +1123,8 @@ function reScalePath(label1, label2, t) {
 					n.position(rotateVec(n.position(), p.end.position(), getAng(endToNewNode2)));
 				}
 			});
-
-			if (p.end == node1) {
-				setRescaled(n);
-			}
-	});	
+		}
+	}	
 }
 
 let cy2 = cytoscape({
