@@ -652,6 +652,7 @@ function loadGraphData(data) {
 		load_graph_versions();
 		//console.log(types);
 		document.querySelector('#select_floor').style.display = 'none';
+		document.querySelector('#tool_select').style.display = 'block';
 		document.querySelector('#cy').style.visibility = 'visible';
 }
 
@@ -1270,7 +1271,7 @@ $("#version_select").dropdown({
 			}
 
 		});
-	  }
+	}
 });
 
 /**
@@ -1298,6 +1299,38 @@ function load_graph_versions(){
 		});
 	});
 }
+
+$('#tool_select')
+.dropdown({
+    onChange: function(value, text, $selectedItem) {
+	  // custom action
+	  console.log(value);
+	  console.log(text);
+	  console.log($selectedItem);
+	},
+	values: [
+		{
+		  name: 'Default',
+		  value: 'defualt',
+		  selected: true
+		},
+		{
+		  name: 'Add Node',
+		  value: 'add node',
+		},
+		{
+			name: 'Add edge',
+			value: 'add edge',
+		},
+		  {
+			name: 'Delete',
+			value: 'delete',
+		  }
+	  ]
+  })
+  
+;
+
 
 window.onbeforeunload = function() {
 	if (changed_graph) {
