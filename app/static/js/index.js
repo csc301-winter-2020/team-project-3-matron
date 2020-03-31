@@ -1032,6 +1032,7 @@ function setScaleFactor(node1, node2, t) {
 	if (!path) {return;}
 
 													setRescaled(cy2.$id(node2.id()));
+													cy3.remove(cy3.$id(node2.id()));
 	// setRescaled(node2);
 	// path.interim.forEach(n => {
 	// 	setRescaled(n);
@@ -1056,6 +1057,8 @@ function reScalePath(node1, node2, t) {
 	if (!path) {return;}
 
 													setRescaled(cy2.$id(node2.id()));
+													cy3.remove(cy3.$id(node2.id()));
+													// delete node 2 in cy3
 	//setRescaled(node2);
 
 	let scale = (t*scaleFactor)/path.len;
@@ -1064,7 +1067,7 @@ function reScalePath(node1, node2, t) {
 
 	console.log(offset);
 	//translateNode(node2, offset);
-	translateNode(flood(node1, node2), offset);
+	translateNode(flood(node1, node2, true), offset);
 }
 
 function labeltonode(label) {
@@ -1133,6 +1136,8 @@ function cleanGraph(invis) {
 	});
 	cyInstance.remove(cyInstance.elements());
 	cyInstance.add(span);
+	cy3.add(span);
+	cy3.nodes().data("cy3", true);
 	span.data("debug", true); // the whole point of debug is to differentiate between nodes in cy in and cy2
 								//since closedneighborhood doesn't take a cy instance
 }
@@ -1158,6 +1163,7 @@ function flood(src, pathstart, invis) {
 		neighbors = newNeighbors;
 	}
 	toggleSelected(neighbors);
+	console.log(neighbors);
 	return neighbors;
 }
 
@@ -1182,6 +1188,11 @@ function rescaleAll(t) {
 
 	let cy2Pair = getLeaf();
 
+	if (!cy2Pair) {
+		console.log("Rescaling complete.");
+		return;
+	}
+
 	n2 = cy.$id(cy2Pair.leaf.id());
 	n1 = cy.$id(cy2Pair.neighbor.id());
 
@@ -1197,14 +1208,27 @@ function rescaleAll(t) {
 function getLeaf() {
 	// issue is this degree selector doesn't care about whether the neighbors are rescale or not, it's global
 	// os after a few rescales there won't be any true degree 1 nodes left
-	let leaf =  cy2.$("node[!rescaled][[degree = 1]]"); // the whole point of rescaled is to make this unscaled leaf selector work
+	let leaf =  cy3.$("node[[degree = 1]]"); // the whole point of rescaled is to make this unscaled leaf selector work
 	console.log(leaf);
-	let neighbor = leaf[0].openNeighborhood("node[?debug]");
+
+	if (leaf.length <= 1) {
+		return false;
+	}
+
+	let neighbor = leaf[0].openNeighborhood("node[?cy3]");
 
 	return {leaf, neighbor};
 }
 
 let cy2 = cytoscape({
+	layout: {
+		name: "preset"
+	},
+	style: cyStyle,
+	headless: true
+});
+
+let cy3 = cytoscape({
 	layout: {
 		name: "preset"
 	},
