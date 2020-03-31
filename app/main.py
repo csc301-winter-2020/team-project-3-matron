@@ -11,6 +11,9 @@ from flask import Flask, request, jsonify, send_file, render_template
 app = Flask(__name__)
 
 
+os.environ['DB_URL'] = 'mongodb+srv://matron:<password>@cluster0-9jcvv.azure.mongodb.net/test?retryWrites=true&w=majority'
+os.environ['DB_PASS'] = 'RMS3ZdANUmGEaQ98'
+
 url = os.environ['DB_URL']
 password = os.environ['DB_PASS']
 dao = None
@@ -100,7 +103,7 @@ def get_all_versions(name):
 def all_db_graphs():
     """ Returns a list of the names of all graphs in the db"""
     graphs = dao.get_all_names()
-    if len(graphs) == 0:
+    if len(graphs) != 0:
         return jsonify({'graphs': graphs, 'status': 200})
     else:
         return jsonify({'status': 404})
@@ -143,8 +146,8 @@ def distances_from_room(graph_name, room):
     graph_data, print_data = dao.get_latest(graph_name)
     if graph_data is None:
         return jsonify({"status": 404})
-    graph = graph_data['graph']
-    try: 
+    graph = graph_data['graph']['elements']
+    try:
         res = {'distances': find_dist_from_start(graph, room), 'status': 200}
         return jsonify(res)
     except ValueError:
@@ -162,7 +165,7 @@ def all_distances(graph_name):
     graph_data, print_data = dao.get_latest(graph_name)
     if graph_data is None:
         return jsonify({"status": 404})
-    graph = graph_data['graph']
+    graph = graph_data['graph']['elements']
 
     try:
         res = {'distances': find_all_room_distances(graph), 'status': 200}
@@ -188,4 +191,4 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
 
 if __name__ == "__main__":
     dao = MongoDAO(url, password)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 8000))

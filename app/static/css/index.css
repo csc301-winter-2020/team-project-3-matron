@@ -119,13 +119,35 @@ body {
 	margin-right: 15px;
 	height: 100%;
 	display: none;
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 #version_list {
 	max-height: 420px;
 }
 
+#tool_select{
+	width: 200px;
+	margin-top: 6px;
+	margin-left: 15px;
+	margin-right: 15px;
+	height: 100%;
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 14px;
+	display: none;
+}
+
 .text .remove_map_btn {
 	display: none;
 }
 
+#new_blue_print{
+	margin: auto;
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
