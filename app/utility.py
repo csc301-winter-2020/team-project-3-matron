@@ -8,16 +8,20 @@ import sys
 import heapq
 from typing import *
 
-# Key: room id
+# Key: room id/label
 # Value: List of tuples (d, label) where label is the label of a room, and d is the distance to it
 AdjacencyMap = Dict[str, List[Tuple[float, str]]]
 
 # (d, vs) where d is the length of a path and vs is a list of room ids
 Path = Tuple[float, List[str]]
 
-# Key: room type
-# Value: ascending-order tuples (d, label) similar to Adjacency map
-RoomDistanceMap = Dict[str, List[Tuple[float, str]]]
+# Key: Room label (start_label)
+# Value: Map from room type to list of distance-label pairs
+#       -> Key: Room type (for example, "office" or "supply")
+#       -> Value: List of pairs (d, end_label) where end_label is the label of a
+#       room of the specified type. d is the distance of the minimal path between
+#       rooms start_label and end_label
+RoomDistanceMap = Dict[str, Dict[str, List[Tuple[float, str]]]]
 
 # Key: JSON object type
 # Value: List of objects of that type
