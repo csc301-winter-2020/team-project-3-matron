@@ -150,15 +150,20 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 		},
 		classes: []
 	}
-	changed_graph = true;
+	
 	let cyEdge = cyInstance.add(edge);
 	cyEdge.unselectify();
 	cyEdge.ungrabify();
+	console.trace("changed graph");
+
+	changed_graph = (cyInstance == cy);
+
 	return cyEdge;
 }
 
 function addNode(posX, posY, cyInstance) {
 	changed_graph = true;
+	console.log("changed graph");
 	cyInstance = cyInstance || cy;
 	let node = {
 		data: {
@@ -524,6 +529,7 @@ cy.on("box", "elements", function(e) {
 })
 
 cy.on("drag", "elements", function(e) {
+	console.log("changed graph");
 	changed_graph = true;
 	ghost.disable();
 })
@@ -619,6 +625,15 @@ function fillmapnames(names) {
 function getMapNamesFromServer() {
 	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
 		fillmapnames(data.graph);
+
+		if (urlMapName != "") {
+			console.log(mapnames);
+			console.log(urlMapName);
+			if (mapnames.some(name=>name.value==urlMapName)) {
+				current_graph = urlMapName;
+				editFloor(urlMapName);
+			}
+		}
 
 		$("#floor_search").dropdown({
 			allowAdditions: true, 
@@ -717,10 +732,14 @@ edit_floor_btn.addEventListener('click', (e) => {
 
 function editFloor(current_graph) {
 	console.log(current_graph);
-	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 
-		loadGraphData(data);
-		
+	// if (!(mapnames.some(name => name == current_graph))) {
+	// 	current_graph = "";
+	// 	return;
+	// }
+
+	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
+		loadGraphData(data);		
 	});
 }
 
@@ -843,6 +862,7 @@ $("#type_select").dropdown({
 		console.log(value, name);
 		if (popperNode != -1) {
 			popperNode.data("type", value);
+			console.log("changed graph");
 			changed_graph = true;
 			let input_label = document.querySelector('#node_label_input').value;
 			let input_type = $("#type_select").dropdown("get value");
@@ -962,6 +982,7 @@ upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	file = document.querySelector('#new_blue_print').files[0];
 	reader.readAsDataURL(file);
 	changed_graph = true;
+	console.log("changed graph");
 });
 
 blueprint_icon.addEventListener('click', (e)=>{
@@ -1026,11 +1047,7 @@ let urlParams = urlPath.substring(lastQueryIndex + 1);
 console.log(urlParams);
 console.log(lastQueryIndex);
 let urlMapName = urlPath.substring(lastSlashIndex + 1, lastQueryIndex);
-console.log(urlMapName);
-if (urlMapName != "") {
-	current_graph = urlMapName;
-	editFloor(urlMapName);
-}
+
 
 function addVec(a, b) {
 	return {x: a.x+b.x, y: a.y+b.y};
@@ -1529,6 +1546,11 @@ document.querySelector("#node_info_close").onclick = function() {
 }
 
 document.querySelector("#rescale_icon").onclick = function() {
+
+	if (!current_graph) {
+		return;
+	}
+
 	console.log("begin rescaling");
 	resetRescaler();
 	rescale_menu.style.visibility = "visible";
