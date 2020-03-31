@@ -1333,6 +1333,7 @@ function rescaleAll(t) {
 		}
 	} else if (scaleFactor) {
 		reScalePath(n1, n2, t);
+		changed_graph = true;
 		// might again need to set n1 or n2 to scaled, so that they don't get chosen as leaves again
 	}
 
