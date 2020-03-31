@@ -551,7 +551,15 @@ window.addEventListener("keydown", function(e) {
 		console.log(selected);
 		if (selected.some(e => e == popperNode)) {
 			hidePopper();
-		}		
+		}
+
+		if (selected.data("type")) {
+			console.log("HELLLOOO")
+			if (cy.$("[type = '"+ selected.data("type") +"']").length == 1) {
+				types = types.filter(type => type.name != selected.data("type"));
+				fillTypes();
+			}
+		}
 
 		cy.remove(selected);
 	}
@@ -856,6 +864,12 @@ function fillTypes() {
 		type_list.removeChild(type_list.lastChild);
 	}
 
+	let hallway = types.find(type => type.name == "hallway");
+	if (hallway) {
+		types = types.filter(type => type.name != "hallway");
+		types.push(hallway);
+	}
+
 	for (let i=0; i<types.length; i++) {
 		let div = document.createElement('div');
 		div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
@@ -954,10 +968,12 @@ function add_new_node_type(type_name){
 	}
 
 	let color = colors[types.length%colors.length];
-	let div = document.createElement('div');
-	div.innerHTML = `<div class="item" data-value="${type_name}"> <a class="ui ${color} empty circular label"></a> ${type_name} </div>`;
-	type_list.appendChild(div.firstChild);
 	types.push({name: type_name, color: color});
+
+	// let div = document.createElement('div');
+	// div.innerHTML = `<div class="item" data-value="${type_name}"> <a class="ui ${color} empty circular label"></a> ${type_name} </div>`;
+	// type_list.appendChild(div.firstChild);
+	fillTypes();
 	cy.style().selector("node[type = '" + type_name + "']").style({"background-color": color}).update();
 }
 
