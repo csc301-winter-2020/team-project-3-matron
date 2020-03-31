@@ -230,13 +230,22 @@ cy.on("tap", function(e) {
 	} else if (tool == "Add Nodes") {
 		addNodesTap(e);
 	} else if (tool == "Add Edges") {
-		addEdgesTap(e);
+		ghost.disable();
 	} else if (tool == "Edit Nodes") {
 		editNodesTap(e);
 	} else if (tool == "Delete Nodes") {
 		deleteNodesTap(e);
 	}
 });
+
+function deleteNodesTap(e) {
+	let target = e.target;
+	if (target == cy) {
+		return;
+	}
+
+	cy.remove(target);
+}
 
 // cy.on("tapstart", function(e) {
 // 	let target = e.target;
@@ -380,15 +389,15 @@ function smartTap(e) {
 	toggleSelected(target);
 }
 
-cy.on("cxttapend", function(e) {
+function addEdgesCxtTap(e) {
+	if (tool != "Smart" && tool != "Add Edges") {
+		return;
+	}
+
 	let target = e.target;
 	let hovered = cy.$(".hover")[0];
 
 	unselectAll();
-
-	// if (popperNode != -1) {
-	// 	return;
-	// }
 
 	if (!ghost.enabled) {
 		if (hovered && hovered.group() == "nodes") {
@@ -463,6 +472,16 @@ cy.on("cxttapend", function(e) {
 			ghost.disable();
 		}
 	}
+}
+
+cy.on("cxttapend", function(e) {
+
+
+	// if (popperNode != -1) {
+	// 	return;
+	// }
+	addEdgesCxtTap(e);
+
 });
 
 cy.on("mousemove", function(e) {
@@ -1468,6 +1487,7 @@ $('#tool_select')
 
 	 	unselectAll();
 		unHoverAll();
+		hidePopper();
 	},
 	values: [
 		{

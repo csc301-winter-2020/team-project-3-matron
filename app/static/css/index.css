@@ -159,3 +159,11 @@ body {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+
+#node_info {
+	margin: 0;
+}
+
+#node_info_card {
+	margin: 0;
+}
