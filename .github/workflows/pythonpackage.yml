@@ -45,6 +45,7 @@ jobs:
         pip install pytest
         cd app
         python -m pytest .
+
   Windows-Testing:
       runs-on: windows-latest
       env:
@@ -76,3 +77,4 @@ jobs:
           python -m pytest 
         env:
           SELENIUM_TEST_BROWSER: "IE"
+
