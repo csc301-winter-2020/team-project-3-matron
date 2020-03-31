@@ -245,6 +245,7 @@ function deleteNodesTap(e) {
 		return;
 	}
 
+	resetRescaler();
 	cy.remove(target);
 }
 
@@ -533,6 +534,7 @@ window.addEventListener("keydown", function(e) {
 	}
 
 	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete Nodes")) {
+		resetRescaler();
 		console.log(document.activeElement);
 		if (document.activeElement != document.body) {
 			return;
@@ -556,6 +558,7 @@ const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
 	changed_graph = false;
+
 	unselectAll();
 	unHoverAll();
 	console.log(current_graph);
@@ -685,7 +688,7 @@ reader.addEventListener("load", function (e) {
 	document.querySelector('#cy').style.visibility = 'hidden';
 	document.querySelector('#cy').style.visibility = 'visible';
 
-	console.log(e.target.result);
+	//console.log(e.target.result);
 	fileData = e.target.result;
 	let url = `both/${current_graph}`;
 	let _graph = cy.json()
@@ -701,8 +704,6 @@ reader.addEventListener("load", function (e) {
 function getImageData() {
 	file = document.querySelector('#file_button').files[0];
 }
-
-
 
 // Create/Select Buttons
 const edit_floor_btn = document.querySelector('#edit_floor');
@@ -727,7 +728,7 @@ function loadGraphData(data) {
 		changed_graph = false;
 		cy.elements().remove()
 		console.log(cy.elements().remove());
-		console.log(data);
+		//console.log(data);
 		types = [];
 		if (data.graph.types) {
 			console.log("Adding types")
@@ -764,6 +765,7 @@ function loadGraphData(data) {
 		document.querySelector('#select_floor').style.display = 'none';
 		document.querySelector('#tool_select').style.display = 'block';
 		document.querySelector('#cy').style.visibility = 'visible';
+		cy.elements().removeClass("desiredpath");
 }
 
 const create_floor_btn = document.querySelector('#create_floor');
@@ -1432,12 +1434,12 @@ $("#version_select").dropdown({
 		if (!value) {
 			return;
 		}
-		
+		resetRescaler();
 		//
 		fetch(`/graph/version/${current_graph}/${date}`).then((resp) => resp.json()).then(function(data) {
 			// here we would do something load our older version graph
 			//console.log(data);
-			console.log(data);
+			//console.log(data);
 
 			console.log(urlParams);
 			if ((!changed_graph || urlParams=="dev") || window.confirm("You have unsaved changed. Continue?")) {
@@ -1453,7 +1455,7 @@ $("#version_select").dropdown({
  * Function used to load in the graph version on the dropdown
  */
 function load_graph_versions(){
-	console.log("LOADING GRAPH VERSION");
+	console.log("LOADING GRAPH VERSIONS");
 	document.querySelector('#version_select').style.display = 'block';
 	fetch(`/graph/requestAll/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 
@@ -1529,8 +1531,12 @@ document.querySelector("#node_info_close").onclick = function() {
 document.querySelector("#rescale_icon").onclick = function() {
 	console.log("begin rescaling");
 	resetRescaler();
-	rescaleAll();
 	rescale_menu.style.visibility = "visible";
+
+	if (rescaleAll()) {
+		instructions.innerText = "No rescaleable paths found.";
+		rescale_button.style.display = "none";
+	}
 	
 	console.log(rescale_button.innerText);
 }
@@ -1605,6 +1611,7 @@ function resetRescaler() {
 		n2 = false;
 		scaleFactor = false;
 		clearInterval(timerInterval);
+		cy.elements().removeClass("desiredpath");
 }
 
 // function cleanNode(label) {
