@@ -1521,6 +1521,10 @@ window.onbeforeunload = function() {
 	}
 }
 
+document.querySelector("#node_info_close").onclick = function() {
+	hidePopper();
+}
+
 // function cleanNode(label) {
 // 	let node = cy.$("node[label='" + label + "']")[0];
 // 	let paths = fillNode(node);
