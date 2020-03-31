@@ -154,7 +154,7 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 	let cyEdge = cyInstance.add(edge);
 	cyEdge.unselectify();
 	cyEdge.ungrabify();
-	console.trace("changed graph");
+	console.log("changed graph");
 
 	changed_graph = (cyInstance == cy);
 
@@ -276,6 +276,13 @@ function deleteNodesTap(e) {
 // 	}
 // });
 
+function randomHex() {
+	// from comments in https://www.paulirish.com/2009/random-hex-color-code-snippets/
+	let hex = '#'+ ('000000' + (Math.random()*0xFFFFFF<<0).toString(16)).slice(-6);
+	console.log(hex);
+	return hex;
+}
+
 function addNodesTap(e) {
 	let target = e.target;
 
@@ -308,6 +315,8 @@ function addNodesTap(e) {
 			popperNode.selectify();
 			popperNode.select();
 			popperNode.unselectify();
+
+			colorPicker.color.hexString = randomHex();
 		} else {
 			unselectAll();
 		}
@@ -341,6 +350,12 @@ function editNodesTap(e) {
 			
 			document.querySelector('#node_label_input').value = popperNode.data("label");
 			$("#type_select").dropdown("set selected", popperNode.data("type"));
+			// colorPicker.color.hexString = randomHex();
+
+			let typelist_index = types.findIndex(typ=>typ.name == popperNode.data("type"));
+			if (typelist_index != -1) {
+				colorPicker.color.hexString = types[typelist_index].color;
+			}
 
 			return node_input_card;
 		}
@@ -359,6 +374,7 @@ function editNodesTap(e) {
 	popperNode.unselectify();
 
 	ghost.disable();
+	
 	return;
 }
 
@@ -598,7 +614,7 @@ function saveGraph() {
 	let _graph = cy.json();
 	_graph.types = types;
 	_graph.blueprint_scale = blueprint_scale;
-
+	console.log(_graph);
 	let blueprint = fileImage == -1 ? "" : fileImage.src;
 	fetch(url, {
 		method: 'post',
@@ -851,7 +867,7 @@ function drawBG() {
 
 // Popper stuff
 const type_list = document.querySelector('#type_list');
-const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', 'violet', 'purple', 'pink', 'brown', 'black'];
+//const colors = ['green', 'orange', 'red', 'blue', 'olive', 'teal', 'violet', 'purple', 'pink', 'brown', 'black'];
 
 // let types = [{name: "Patient Room", color: "green"}, {name: "Supply Room", color: "orange"}];
 // // should really get from server returned map, we need to store manually alongside cy.json();
@@ -872,7 +888,9 @@ function fillTypes() {
 
 	for (let i=0; i<types.length; i++) {
 		let div = document.createElement('div');
-		div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
+		// div.innerHTML = `<div class="item" data-value="${types[i].name}"> <a class="ui ${types[i].color} empty circular label"></a> ${types[i].name} </div>`;
+		div.innerHTML = `<div class="item" data-value="${types[i].name}"> <span class="dot" style='background-color: ` + types[i].color + `'></span> ${types[i].name} </div>`;
+
 		type_list.appendChild(div.firstChild);
 		cy.style().selector("node[type = '" + types[i].name + "']").style({"background-color": types[i].color}).update();
 	}
@@ -931,6 +949,8 @@ document.querySelector('#node_label_input').addEventListener("input", function(e
 const set_type_btn = document.querySelector('#set_type');
 set_type_btn.addEventListener("click", (e) => {
 
+	fillTypes();
+
 	let input_label = document.querySelector('#node_label_input').value;
 	let input_type = $("#type_select").dropdown("get value");
 
@@ -967,7 +987,16 @@ function add_new_node_type(type_name){
 		return;
 	}
 
-	let color = colors[types.length%colors.length];
+	console.log("ADDING NEW NODE TYPEEEE");
+
+	// let color = colors[types.length%colors.length];
+	let color;
+	if (type_name == "hallway") {
+		color = "#ff0000";
+	} else {
+		color = colorPicker.color.hexString;
+	}
+	
 	types.push({name: type_name, color: color});
 
 	// let div = document.createElement('div');
@@ -1676,6 +1705,22 @@ function resetRescaler() {
 		clearInterval(timerInterval);
 		cy.elements().removeClass("desiredpath");
 }
+
+let colorPicker = new iro.ColorPicker("#picker", {
+	width: 263
+});
+
+colorPicker.on('color:change', function(color) {
+	let type = $("#type_select").dropdown("get value");
+	cy.style().selector("node[type='" + type + "']").style({
+		"background-color": colorPicker.color.hexString
+	}).update();
+
+	let typelist_index = types.findIndex(typ=>typ.name == type);
+	if (typelist_index != -1) {
+		types[typelist_index].color = colorPicker.color.hexString;
+	}
+});
 
 // function cleanNode(label) {
 // 	let node = cy.$("node[label='" + label + "']")[0];

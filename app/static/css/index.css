@@ -195,3 +195,16 @@ body {
 	margin-right: -2px;*/
 	transform: translate(255px, 13px);
 }
+
+#picker {
+	margin-bottom: 10px;
+}
+
+.dot {
+	height: 15px;
+	width: 15px;
+	border-radius: 50%;
+	background-color: black;
+	display: inline-block;
+	margin-right: 10px;
+}
