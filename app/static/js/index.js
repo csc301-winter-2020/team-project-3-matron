@@ -219,11 +219,25 @@ let ghost = {
 
 let popperNode = -1;
 cy.on("tap", function(e) {
+	
+	if (tool == "Smart") {
+		smartTap(e);
+	} else if (tool == "Add Node") {
+		addNodeTap(e);
+	} else if (tool == "Add Edge") {
+		addEdgeTap(e);
+	} else if (tool == "Delete") {
+		deleteTap(e);
+	}
+});
+
+function addNodeTap(e) {
 	let target = e.target;
 
-	// if (popperNode != -1) {
-	// 	return;
-	// }
+}
+
+function smartTap(e) {
+	let target = e.target;
 
 	if (target == cy) {
 		if (!ghost.enabled) {
@@ -256,9 +270,7 @@ cy.on("tap", function(e) {
 		} else {
 			unselectAll();
 		}
-
 		ghost.disable();
-		
 		return;
 	}
 
@@ -315,7 +327,7 @@ cy.on("tap", function(e) {
 
 	ghost.disable();
 	toggleSelected(target);	
-});
+}
 
 cy.on("cxttapend", function(e) {
 	let target = e.target;
@@ -523,7 +535,7 @@ function getMapNamesFromServer() {
 			allowAdditions: true, 
 			hideAdditions: false,
 			values: mapnames,
-			forceSelection: false,
+			forceSelection: true,
 			onChange: function(value, name) {
 				console.log(value, name);
 
@@ -1378,36 +1390,36 @@ function load_graph_versions(){
 	});
 }
 
+let tool;
 $('#tool_select')
 .dropdown({
-    onChange: function(value, text, $selectedItem) {
+	onChange: function(value, text, $selectedItem) {
 	  // custom action
 	  console.log(value);
 	  console.log(text);
 	  console.log($selectedItem);
+	  tool = value;
 	},
 	values: [
 		{
-		  name: 'Default',
-		  value: 'defualt',
+		  name: 'Smart',
+		  value: 'Smart',
 		  selected: true
 		},
 		{
 		  name: 'Add Node',
-		  value: 'add node',
+		  value: 'Add Node',
 		},
 		{
-			name: 'Add edge',
-			value: 'add edge',
+			name: 'Add Edge',
+			value: 'Add Edge',
 		},
 		  {
 			name: 'Delete',
-			value: 'delete',
+			value: 'Delete',
 		  }
 	  ]
-  })
-  
-;
+  });
 
 
 window.onbeforeunload = function() {

@@ -119,7 +119,7 @@ body {
 	margin-right: 15px;
 	height: 100%;
 	display: none;
-	padding: 10px;
+/*	padding: 10px;*/
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -131,15 +131,19 @@ body {
 #tool_select{
 	width: 200px;
 	margin-top: 6px;
-	margin-left: 15px;
-	margin-right: 15px;
+/*	margin-left: 15px;*/
+/*	margin-right: 15px;*/
 	height: 100%;
-	padding: 10px;
+	margin-bottom: 0px;
+/*	padding: 10px;*/
 	padding-left: 10px;
 	padding-right: 10px;
-	padding-bottom: 14px;
 	display: none;
 }
+
+/*#wrench {
+	float: right;
+}*/
 
 .text .remove_map_btn {
 	display: none;
