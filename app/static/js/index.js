@@ -152,6 +152,7 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 	changed_graph = true;
 	let cyEdge = cyInstance.add(edge);
 	cyEdge.unselectify();
+	cyEdge.ungrabify();
 	return cyEdge;
 }
 
@@ -171,6 +172,7 @@ function addNode(posX, posY, cyInstance) {
 	}
 	let cyNode = cyInstance.add(node)[0];
 	cyNode.unselectify();
+	cyNode.ungrabify();
 	return cyNode;
 }
 
@@ -236,6 +238,28 @@ cy.on("tap", function(e) {
 	}
 });
 
+// cy.on("tapstart", function(e) {
+// 	let target = e.target;
+// 	if (target == cy) {
+// 		return;
+// 	}
+
+// 	if (target.group() == "nodes" && tool == "Smart") {
+// 		target.grabify();
+// 	}
+// });
+
+// cy.on("tapend", function(e) {
+// 	let target = e.target;
+// 	if (target == cy) {
+// 		return;
+// 	}
+
+// 	if (target.group() == "nodes") {
+// 		target.ungrabify();
+// 	}
+// });
+
 function addNodesTap(e) {
 	let target = e.target;
 
@@ -278,6 +302,50 @@ function addNodesTap(e) {
 	ghost.disable();
 }
 
+function editNodesTap(e) {
+	let target = e.target;
+
+	if (target == cy) {
+		return;
+	}
+
+	if (target.group() != "nodes") {
+		return;
+	}
+
+	popperNode = target;
+	let popper = popperNode.popper({
+		content: () => {
+			let node_input_card = document.querySelector('#node_info');
+			node_input_card.style.display = "block";
+			document.body.appendChild(node_input_card);
+			// clear_label_inputs();
+
+			// $("#type_select").dropdown("restore defaults");
+			
+			document.querySelector('#node_label_input').value = popperNode.data("label");
+			$("#type_select").dropdown("set selected", popperNode.data("type"));
+
+			return node_input_card;
+		}
+	});
+
+	let update = () => {
+		popper.scheduleUpdate();
+	};
+
+	popperNode.on("position", update);
+	cy.on("pan zoom resize", update);
+
+	unselectAll();
+	popperNode.selectify();
+	popperNode.select();
+	popperNode.unselectify();
+
+	ghost.disable();
+	return;
+}
+
 function smartTap(e) {
 	let target = e.target;
 	// create a new node
@@ -294,6 +362,8 @@ function smartTap(e) {
 	}
 
 	if (target.group() == "nodes") {
+		target.grabify();
+
 		console.log(target);
 		// console.log(target.data("type"));
 
@@ -302,37 +372,7 @@ function smartTap(e) {
 			return;
 		}
 
-		popperNode = target;
-
-		let popper = popperNode.popper({
-			content: () => {
-				let node_input_card = document.querySelector('#node_info');
-				node_input_card.style.display = "block";
-				document.body.appendChild(node_input_card);
-				// clear_label_inputs();
-
-				// $("#type_select").dropdown("restore defaults");
-				
-				document.querySelector('#node_label_input').value = popperNode.data("label");
-				$("#type_select").dropdown("set selected", popperNode.data("type"));
-
-				return node_input_card;
-			}
-		});
-
-		let update = () => {
-			popper.scheduleUpdate();
-		};
-
-		popperNode.on("position", update);
-		cy.on("pan zoom resize", update);
-
-		unselectAll();
-		popperNode.selectify();
-		popperNode.select();
-		popperNode.unselectify();
-
-		ghost.disable();
+		editNodesTap(e);
 		return;
 	}
 
@@ -425,18 +465,20 @@ cy.on("cxttapend", function(e) {
 	}
 });
 
-
-
 cy.on("mousemove", function(e) {
 	ghost.updateCursor(e.position.x, e.position.y);
 });
 
 cy.on("mouseover", "elements", function(e) {
 	e.target.addClass("hover");
+	if (tool == "Smart") {
+		e.target.grabify();
+	}	
 });
 
 cy.on("mouseout", "elements", function(e) {
 	e.target.removeClass("hover");
+	e.target.ungrabify();
 });
 
 cy.on("cxtdragout", "elements", function(e) {
@@ -462,6 +504,7 @@ cy.on("box", "elements", function(e) {
 
 cy.on("drag", "elements", function(e) {
 	changed_graph = true;
+	ghost.disable();
 })
 
 window.addEventListener("keydown", function(e) {
@@ -469,7 +512,7 @@ window.addEventListener("keydown", function(e) {
 		ghost.disable();
 	}
 
-	if (e.code == "KeyX") {
+	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete Nodes")) {
 		console.log(document.activeElement);
 		if (document.activeElement != document.body) {
 			return;
@@ -1072,8 +1115,8 @@ function setScaleFactor(node1, node2, t) {
 	console.log(path);
 	if (!path) {return;}
 
-													setRescaled(cy2.$id(node2.id()));
-													cy3.remove(cy3.$id(node2.id()));
+	setRescaled(cy2.$id(node2.id()));
+	cy3.remove(cy3.$id(node2.id()));
 	// setRescaled(node2);
 	// path.interim.forEach(n => {
 	// 	setRescaled(n);
@@ -1097,9 +1140,9 @@ function reScalePath(node1, node2, t) {
 
 	if (!path) {return;}
 
-													setRescaled(cy2.$id(node2.id()));
-													cy3.remove(cy3.$id(node2.id()));
-													// delete node 2 in cy3
+	setRescaled(cy2.$id(node2.id()));
+	cy3.remove(cy3.$id(node2.id()));
+	// delete node 2 in cy3
 	//setRescaled(node2);
 
 	let scale = (t*scaleFactor)/path.len;
@@ -1417,11 +1460,14 @@ $('#tool_select')
 .dropdown({
 	onChange: function(value, text, $selectedItem) {
 	  // custom action
-	  console.log(value);
-	  console.log(text);
-	  console.log($selectedItem);
-	  tool = value;
-	  ghost.disable();
+		console.log(value);
+		console.log(text);
+		console.log($selectedItem);
+		tool = value;
+		ghost.disable();
+
+	 	unselectAll();
+		unHoverAll();
 	},
 	values: [
 		{
