@@ -1023,15 +1023,15 @@ function fillNode(node) {
 }
 
 let scaleFactor = false;
-function setScaleFactor(label1, label2, t) {
-	let node1 = cy.$("node[label='" + label1 + "']")[0];
-	let node2 = cy.$("node[label='" + label2 + "']")[0];
+function setScaleFactor(node1, node2, t) {
+	// let node1 = cy.$("node[label='" + label1 + "']")[0];
+	// let node2 = cy.$("node[label='" + label2 + "']")[0];
 
 	let path = fillNode(node1).find(p => p.end == node2);
 	console.log(path);
 	if (!path) {return;}
 
-													setRescaled(cy2.$id(node1.id()));
+													setRescaled(cy2.$id(node2.id()));
 	// setRescaled(node2);
 	// path.interim.forEach(n => {
 	// 	setRescaled(n);
@@ -1045,9 +1045,9 @@ function setScaleFactor(label1, label2, t) {
 	console.log(scaleFactor);
 }
 
-function reScalePath(label1, label2, t) {
-	let node1 = cy.$("node[label='" + label1 + "']")[0];
-	let node2 = cy.$("node[label='" + label2 + "']")[0];
+function reScalePath(node1, node2, t) {
+	// let node1 = cy.$("node[label='" + label1 + "']")[0];
+	// let node2 = cy.$("node[label='" + label2 + "']")[0];
 	// let node2pos = JSON.parse(JSON.stringify(node2.position()));
 
 	let endpaths = fillNode(node2);
@@ -1055,7 +1055,7 @@ function reScalePath(label1, label2, t) {
 
 	if (!path) {return;}
 
-													setRescaled(cy2.$id(node1.id()));
+													setRescaled(cy2.$id(node2.id()));
 	//setRescaled(node2);
 
 	let scale = (t*scaleFactor)/path.len;
@@ -1163,25 +1163,43 @@ function flood(src, pathstart, invis) {
 
 
 let cleanedGraph = false;
-function rescaleAll() {
+let n1 = false;
+let n2 = false;
+function rescaleAll(t) {
 	if (!cleanedGraph) {
 		cleanGraph(true);
 		cleanedGraph = true;
 	}
 	if (!scaleFactor) {
-		let cy2Pair = getLeaf();
-
-		let cyLeaf = cy.$id(cy2Pair.leaf.id());
-		let cyNeighbor = cy.$id(cy2Pair.neighbor.id());
-
-		console.log(cyLeaf.data("label"));
-		console.log(cyNeighbor.data("label"));
+		if (n1 && n2) {
+			setScaleFactor(n1, n2, t);
+			//scalefactor might need to set n1 or n2 to scaled, so that they don't get chosen as leaves again
+		}
+	} else if (scaleFactor) {
+		reScalePath(n1, n2, t);
+		// might again need to set n1 or n2 to scaled, so that they don't get chosen as leaves again
 	}
+
+	let cy2Pair = getLeaf();
+
+	n2 = cy.$id(cy2Pair.leaf.id());
+	n1 = cy.$id(cy2Pair.neighbor.id());
+
+	console.log("");
+	console.log("Please enter dist between");
+	console.log(n1.data("label"));
+	console.log("and")
+	console.log(n2.data("label"));
+	console.log("");
+	return;
 }
 
-function getLeaf() {	
-	let leaf =  cy2.$("node[!rescaled][[degree = 1]]")[0]; // the whole point of rescaled is to make this unscaled leaf selector work
-	let neighbor = leaf.openNeighborhood("node[?debug]");
+function getLeaf() {
+	// issue is this degree selector doesn't care about whether the neighbors are rescale or not, it's global
+	// os after a few rescales there won't be any true degree 1 nodes left
+	let leaf =  cy2.$("node[!rescaled][[degree = 1]]"); // the whole point of rescaled is to make this unscaled leaf selector work
+	console.log(leaf);
+	let neighbor = leaf[0].openNeighborhood("node[?debug]");
 
 	return {leaf, neighbor};
 }
