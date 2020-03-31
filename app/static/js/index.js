@@ -633,6 +633,8 @@ function getMapNamesFromServer() {
 			if (mapnames.some(name=>name.value==urlMapName)) {
 				current_graph = urlMapName;
 				editFloor(urlMapName);
+			} else {
+				window.history.replaceState({}, "Matron", "/");
 			}
 		}
 
@@ -798,7 +800,7 @@ const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
-	current_graph = $("#floor_search").dropdown("get value")[1];
+	current_graph = $("#floor_search").dropdown("get value");
 	console.log(current_graph);
 	
 	if (file != -1) {
@@ -1068,7 +1070,7 @@ let urlParams = urlPath.substring(lastQueryIndex + 1);
 console.log(urlParams);
 console.log(lastQueryIndex);
 let urlMapName = urlPath.substring(lastSlashIndex + 1, lastQueryIndex);
-
+console.log(urlMapName);
 
 function addVec(a, b) {
 	return {x: a.x+b.x, y: a.y+b.y};
