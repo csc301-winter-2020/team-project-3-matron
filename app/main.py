@@ -10,10 +10,6 @@ from flask import Flask, request, jsonify, send_file, render_template
 
 app = Flask(__name__)
 
-
-os.environ['DB_URL'] = 'mongodb+srv://matron:<password>@cluster0-9jcvv.azure.mongodb.net/test?retryWrites=true&w=majority'
-os.environ['DB_PASS'] = 'RMS3ZdANUmGEaQ98'
-
 url = os.environ['DB_URL']
 password = os.environ['DB_PASS']
 dao = None
@@ -191,4 +187,4 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
 
 if __name__ == "__main__":
     dao = MongoDAO(url, password)
-    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 8000))
+    app.run(host='0.0.0.0', debug=True, port=os.environ.get('PORT', 80))
