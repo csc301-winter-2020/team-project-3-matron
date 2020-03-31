@@ -90,16 +90,27 @@
 		</div>
 
 
-		<div class="small ui modal" id="blueprint_modal">
+		<div class="tiny ui modal" id="blueprint_modal">
 			<i class="close icon"></i>
 			<div class="header">
-			  Upload blueprint
+			  Modify blueprint
 			</div>
+			<div class="content">
+				<div class="ui form">
 
-				<input id="new_blue_print" type="file" accept="image/*" onchange="getImageData()">
+				<div class="inline fields">
+					<label> Upload new blueprint: </label>
+					<input id="new_blue_print" type="file" accept="image/*" onchange="getImageData()">
+				</div>
+				<div class="inline fields">
+					<label> Blueprint scale factor: </label>
+					<input id="blueprint_scale_input" type="text" placeholder="Scale factor">
+				</div>
 
+				</div>
+			</div>
 			<div class="actions">
-			  <div class="ui positive button" id="upload_new_blueprint"> Upload</div>
+			  <div class="ui positive button" id="upload_new_blueprint"> Update</div>
 			</div>
 		</div>
 

@@ -168,10 +168,15 @@ body {
 }
 
 #new_blue_print{
-	margin: auto;
+/*	margin: auto;*/
 	display: block;
 	margin-top: 10px;
 	margin-bottom: 10px;
+	width: 250px;
+}
+
+#blueprint_scale_input {
+	width: 250px;
 }
 
 #node_info {

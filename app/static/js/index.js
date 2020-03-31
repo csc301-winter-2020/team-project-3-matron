@@ -589,6 +589,7 @@ function saveGraph() {
 	let url = `both/${current_graph}`;
 	let _graph = cy.json();
 	_graph.types = types;
+	_graph.blueprint_scale = blueprint_scale;
 
 	let blueprint = fileImage == -1 ? "" : fileImage.src;
 	fetch(url, {
@@ -747,7 +748,7 @@ function loadGraphData(data) {
 		changed_graph = false;
 		cy.elements().remove()
 		console.log(cy.elements().remove());
-		//console.log(data);
+		console.log(data);
 		types = [];
 		if (data.graph.types) {
 			console.log("Adding types")
@@ -767,6 +768,12 @@ function loadGraphData(data) {
 		if (data.graph.pan) {
 			console.log(data.graph.pan);
 			cy.pan(data.graph.pan);
+		}
+		if (data.graph.blueprint_scale) {
+			blueprint_scale = data.graph.blueprint_scale;
+			blueprint_scale_input.value = blueprint_scale;
+			drawBG();
+			console.log(blueprint_scale);
 		}
 
 		const blueprint = data.blueprint;
@@ -828,7 +835,7 @@ function drawBG() {
 		canvasLayer.setTransform(ctx);
 		ctx.save();
 		ctx.globalAlpha = 0.5;
-		ctx.drawImage(fileImage, 0, 0, fileImage.width*2, fileImage.height*2);
+		ctx.drawImage(fileImage, 0, 0, fileImage.width*blueprint_scale, fileImage.height*blueprint_scale);
 	}
 }
 
@@ -978,10 +985,24 @@ const blueprint_icon = document.querySelector('#image_icon');
 const upload_new_blueprint_btn = document.querySelector('#upload_new_blueprint');
 const blueprint_reader = new FileReader();
 
+let blueprint_scale = 1;
 upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	file = document.querySelector('#new_blue_print').files[0];
-	reader.readAsDataURL(file);
-	changed_graph = true;
+	console.log(file);
+	if (file) {
+		reader.readAsDataURL(file);
+		changed_graph = true;
+	}
+	
+	console.log(blueprint_scale_input.value);
+	new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
+
+	if (blueprint_scale != new_blueprint_scale) {
+		blueprint_scale = new_blueprint_scale;
+		changed_graph = true;
+		drawBG();
+	}
+	
 	console.log("changed graph");
 });
 
@@ -1567,6 +1588,7 @@ let rescale_menu = document.querySelector("#rescale_menu");
 let instructions = document.querySelector("#instructions");
 let rescale_input = document.querySelector("#rescale_input");
 let rescale_button = document.querySelector("#rescale_button");
+let blueprint_scale_input = document.querySelector("#blueprint_scale_input");
 
 let rescaling_started = false;
 let walking = false;
