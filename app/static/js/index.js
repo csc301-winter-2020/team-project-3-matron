@@ -71,7 +71,8 @@ let cyStyle = [
 	{
 		selector: ".desiredpath",
 		style: {
-			"line-color": "red"
+			"line-color": "red",
+			"width": "10"
 		}
 	},
 ]
@@ -1500,12 +1501,12 @@ $('#tool_select')
 		  value: 'Add Nodes',
 		},
 		{
-			name: 'Add Edges',
-			value: 'Add Edges',
-		},
-		{
 			name: 'Edit Nodes',
 			value: 'Edit Nodes',
+		},
+		{
+			name: 'Add Edges',
+			value: 'Add Edges',
 		},
 		{
 			name: 'Delete Nodes',
@@ -1523,6 +1524,61 @@ window.onbeforeunload = function() {
 
 document.querySelector("#node_info_close").onclick = function() {
 	hidePopper();
+}
+
+document.querySelector("#rescale_icon").onclick = function() {
+	console.log("begin rescaling");
+	rescaleAll();
+	rescale_menu.style.visibility = "visible";
+
+	console.log(rescale_button.innerText);
+}
+
+let rescale_menu = document.querySelector("#rescale_menu");
+let instructions = document.querySelector("#instructions");
+let rescale_input = document.querySelector("#rescale_input");
+let rescale_button = document.querySelector("#rescale_button");
+
+let rescaling_started = false;
+let walking = false;
+let timerInterval;
+rescale_button.onclick = function() {
+	if (!rescaling_started) {
+		rescale_button.innerText = "Go";
+		rescale_input.style.display = "block";
+		instructions.innerText = "Press go and walk along path"
+		rescaling_started = true;
+	} else if (!walking) {
+
+		if (rescale_input.value) {
+			rescaleAll(rescale_input.value);
+			walking = false;
+			rescale_input.value = "";
+			instructions.innerText = "Go to one end of the red path";
+			rescale_input.style.display = "none";
+			rescale_button.innerText = "Done";
+			rescaling_started = false;
+		} else {
+			rescale_button.innerText = "Done";
+			instructions.innerText = "Press stop when done walking"
+			walking = true;
+
+			let startTime = performance.now();
+			timerInterval = setInterval(function() {
+				let t = performance.now() - startTime;
+				rescale_input.value = (t/1000).toFixed(2);
+			}, 16)
+		}
+	} else {
+		rescaleAll(rescale_input.value);
+		clearInterval(timerInterval);
+		walking = false;
+		rescale_input.value = "";
+		instructions.innerText = "Go to one end of the red path";
+		rescale_input.style.display = "none";
+		rescale_button.innerText = "Done";
+		rescaling_started = false;
+	}
 }
 
 // function cleanNode(label) {
