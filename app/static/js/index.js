@@ -150,7 +150,9 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 		classes: []
 	}
 	changed_graph = true;
-	return cyInstance.add(edge);
+	let cyEdge = cyInstance.add(edge);
+	cyEdge.unselectify();
+	return cyEdge;
 }
 
 function addNode(posX, posY, cyInstance) {

@@ -141,6 +141,10 @@ body {
 	display: none;
 }
 
+#tool_list {
+	max-height: 420px;	
+}
+
 /*#wrench {
 	float: right;
 }*/
