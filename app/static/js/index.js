@@ -68,6 +68,12 @@ let cyStyle = [
 			"shape": 'diamond',
 		}
 	},
+	{
+		selector: ".desiredpath",
+		style: {
+			"line-color": "red"
+		}
+	},
 ]
 
 let current_graph = '';
@@ -1106,6 +1112,8 @@ function translateNode(nodes, offset) {
 function cleanGraph(invis) {
 	let cyInstance = invis ? cy2 : cy;
 
+	cy2.remove(cy2.elements());
+	cy3.remove(cy3.elements());
 	cyInstance.add(cy.elements());
 
 	let selector = "node[type != 'hallway'], node[type = 'hallway'][[degree > 2]], node[type = 'hallway'][[degree = 1]]";
@@ -1172,6 +1180,8 @@ let cleanedGraph = false;
 let n1 = false;
 let n2 = false;
 function rescaleAll(t) {
+	cy.elements().removeClass("desiredpath");
+
 	if (!cleanedGraph) {
 		cleanGraph(true);
 		cleanedGraph = true;
@@ -1195,6 +1205,25 @@ function rescaleAll(t) {
 
 	n2 = cy.$id(cy2Pair.leaf.id());
 	n1 = cy.$id(cy2Pair.neighbor.id());
+
+	let desiredpath = fillNode(n1).find(p => p.end == n2);
+	console.log(desiredpath);
+	// desiredpath.start.addClass("desiredpath");
+	// desiredpath.end.addClass("desiredpath");
+	//desiredpath.interim.connectedEdges().addClass("desiredpath");
+
+	n1.edgesWith(n2).addClass("desiredpath");
+
+	// desiredpath.start.connectedEdges().addClass("desiredpath");
+	// desiredpath.interim.forEach(n => {
+	// 	n.connectedEdges().addClass("diredpath");
+	// })
+
+	if (desiredpath.interim.length > 0) {
+		desiredpath.interim.connectedEdges().addClass("desiredpath");
+	}
+	
+	
 
 	console.log("");
 	console.log("Please enter dist between");
