@@ -59,7 +59,7 @@ let cyStyle = [
 	{
 		selector: "node[?rescaled]",
 		style: {
-			"shape": 'star',
+			"width": '50%',
 		}
 	},
 	{
@@ -946,7 +946,7 @@ function nodeDist(node1, node2) {
 	return len(subVec(node1.position(), node2.position()));
 }
 
-let scaleFactor = 1;
+
 function reScale(node1pos, node2pos, scale) {
 	let diff = subVec(node2pos, node1pos);
 	let newdiff = scaleVec(diff, scale);
@@ -1022,21 +1022,20 @@ function fillNode(node) {
 	return paths;
 }
 
+let scaleFactor = false;
 function setScaleFactor(label1, label2, t) {
 	let node1 = cy.$("node[label='" + label1 + "']")[0];
 	let node2 = cy.$("node[label='" + label2 + "']")[0];
 
 	let path = fillNode(node1).find(p => p.end == node2);
 	console.log(path);
-	if (!path) {
-		return
-	}
+	if (!path) {return;}
 
-	setRescaled(node1);
-	setRescaled(node2);
-	path.interim.forEach(n => {
-		setRescaled(n);
-	});
+													setRescaled(cy2.$id(node1.id()));
+	// setRescaled(node2);
+	// path.interim.forEach(n => {
+	// 	setRescaled(n);
+	// });
 
 
 	let cyLen = path.len;
@@ -1056,14 +1055,15 @@ function reScalePath(label1, label2, t) {
 
 	if (!path) {return;}
 
+													setRescaled(cy2.$id(node1.id()));
+	//setRescaled(node2);
+
 	let scale = (t*scaleFactor)/path.len;
 	let newPos = reScale(node1.position(), node2.position(), scale);
 	let offset = subVec(newPos, node2.position());
 
 	console.log(offset);
 	//translateNode(node2, offset);
-
-	cleanGraph(true);
 	translateNode(flood(node1, node2), offset);
 }
 
@@ -1088,7 +1088,7 @@ function translateNode(nodes, offset) {
 
 		paths.forEach(p => {
 			p.interim.forEach(n => {
-				let scale = len(subVec(newPos, p.end.position()))/ len(subVec(originalPos, p.end.position()));
+				let scale = len(subVec(newPos, p.end.position())) / len(subVec(originalPos, p.end.position()));
 				let endToNode2 = subVec(originalPos, p.end.position());
 				let endToNewNode2 = subVec(newPos, p.end.position());
 
@@ -1133,7 +1133,8 @@ function cleanGraph(invis) {
 	});
 	cyInstance.remove(cyInstance.elements());
 	cyInstance.add(span);
-	span.data("debug", true);
+	span.data("debug", true); // the whole point of debug is to differentiate between nodes in cy in and cy2
+								//since closedneighborhood doesn't take a cy instance
 }
 
 function flood(src, pathstart, invis) {
@@ -1158,6 +1159,31 @@ function flood(src, pathstart, invis) {
 	}
 	toggleSelected(neighbors);
 	return neighbors;
+}
+
+
+let cleanedGraph = false;
+function rescaleAll() {
+	if (!cleanedGraph) {
+		cleanGraph(true);
+		cleanedGraph = true;
+	}
+	if (!scaleFactor) {
+		let cy2Pair = getLeaf();
+
+		let cyLeaf = cy.$id(cy2Pair.leaf.id());
+		let cyNeighbor = cy.$id(cy2Pair.neighbor.id());
+
+		console.log(cyLeaf.data("label"));
+		console.log(cyNeighbor.data("label"));
+	}
+}
+
+function getLeaf() {	
+	let leaf =  cy2.$("node[!rescaled][[degree = 1]]")[0]; // the whole point of rescaled is to make this unscaled leaf selector work
+	let neighbor = leaf.openNeighborhood("node[?debug]");
+
+	return {leaf, neighbor};
 }
 
 let cy2 = cytoscape({
