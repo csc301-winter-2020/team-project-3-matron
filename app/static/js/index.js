@@ -588,7 +588,9 @@ function saveGraph() {
 	}).then(res=>{
 		load_graph_versions();
 	});
-	
+	if (rescale_complete) {
+		rescale_menu.style.visibility = "hidden";
+	}
 }
 
 function unHoverAll() {
@@ -1298,7 +1300,7 @@ function rescaleAll(t) {
 
 	if (!cy2Pair) {
 		console.log("Rescaling complete.");
-		return;
+		return true;
 	}
 
 	n2 = cy.$id(cy2Pair.leaf.id());
@@ -1321,15 +1323,13 @@ function rescaleAll(t) {
 		desiredpath.interim.connectedEdges().addClass("desiredpath");
 	}
 	
-	
-
 	console.log("");
 	console.log("Please enter dist between");
 	console.log(n1.data("label"));
 	console.log("and")
 	console.log(n2.data("label"));
 	console.log("");
-	return;
+	return false;
 }
 
 function getLeaf() {
@@ -1528,9 +1528,10 @@ document.querySelector("#node_info_close").onclick = function() {
 
 document.querySelector("#rescale_icon").onclick = function() {
 	console.log("begin rescaling");
+	resetRescaler();
 	rescaleAll();
 	rescale_menu.style.visibility = "visible";
-
+	
 	console.log(rescale_button.innerText);
 }
 
@@ -1541,6 +1542,7 @@ let rescale_button = document.querySelector("#rescale_button");
 
 let rescaling_started = false;
 let walking = false;
+let rescale_complete = false;
 let timerInterval;
 rescale_button.onclick = function() {
 	if (!rescaling_started) {
@@ -1551,13 +1553,7 @@ rescale_button.onclick = function() {
 	} else if (!walking) {
 
 		if (rescale_input.value) {
-			rescaleAll(rescale_input.value);
-			walking = false;
-			rescale_input.value = "";
-			instructions.innerText = "Go to one end of the red path";
-			rescale_input.style.display = "none";
-			rescale_button.innerText = "Done";
-			rescaling_started = false;
+			rescaleUIHelper();
 		} else {
 			rescale_button.innerText = "Done";
 			instructions.innerText = "Press stop when done walking"
@@ -1570,8 +1566,22 @@ rescale_button.onclick = function() {
 			}, 16)
 		}
 	} else {
-		rescaleAll(rescale_input.value);
 		clearInterval(timerInterval);
+		rescaleUIHelper();
+	}
+}
+
+function rescaleUIHelper() {
+	console.log("RESCALE UI HELPER");
+	if (rescaleAll(rescale_input.value)) {
+		rescaling_started = false;
+		walking = false;
+		rescale_input.value = "";
+		instructions.innerText = "Rescaling complete. Consider saving.";
+		rescale_input.style.display = "none";
+		rescale_button.style.display = "none";
+		rescale_complete = true;
+	} else {
 		walking = false;
 		rescale_input.value = "";
 		instructions.innerText = "Go to one end of the red path";
@@ -1579,6 +1589,22 @@ rescale_button.onclick = function() {
 		rescale_button.innerText = "Done";
 		rescaling_started = false;
 	}
+}
+
+function resetRescaler() {
+		rescale_menu.style.visibility = "hidden";
+		instructions.innerText = "Go to one end of the red path";
+		rescale_input.style.display = "none";
+		rescale_button.innerText = "Done";
+		rescale_button.style.display = "block";
+		rescale_complete = false;
+		walking = false;
+		rescaling_started = false;
+		cleanedGraph = false;
+		n1 = false;
+		n2 = false;
+		scaleFactor = false;
+		clearInterval(timerInterval);
 }
 
 // function cleanNode(label) {
