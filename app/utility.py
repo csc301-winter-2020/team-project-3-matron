@@ -4,8 +4,6 @@ to read for reference.
 """
 
 import json
-import sys
-import heapq
 from typing import *
 
 # Key: room id/label
@@ -26,13 +24,6 @@ RoomDistanceMap = Dict[str, Dict[str, List[Tuple[float, str]]]]
 # Key: JSON object type
 # Value: List of objects of that type
 JSONGraph = Dict[str, List[Dict]]
-
-
-def get_sys_args() -> List[str]:
-    """
-    Return command line arguments.
-    """
-    return sys.argv
 
 
 class GraphObject:
