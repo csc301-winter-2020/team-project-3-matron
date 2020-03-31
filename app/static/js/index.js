@@ -1003,7 +1003,7 @@ function fillNode(node) {
 	//toggleSelected(neighbors);
 	let paths = [];
 
-	let adjacentrooms = node.openNeighborhood("node[type != 'hallway']");
+	let adjacentrooms = node.openNeighborhood("node[type != 'hallway'], node[type = 'hallway'][[degree < 2]], node[type = 'hallway'][[degree > 2]]");
 
 	adjacentrooms.forEach(n => {
 		paths.push({interim: [], end: n, start: node, len: nodeDist(node, n)});
