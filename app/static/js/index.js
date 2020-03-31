@@ -907,6 +907,12 @@ $("#type_select").dropdown({
 			changed_graph = true;
 			let input_label = document.querySelector('#node_label_input').value;
 			let input_type = $("#type_select").dropdown("get value");
+
+			let typelist_index = types.findIndex(typ=>typ.name == input_type);
+			if (typelist_index != -1) {
+				colorPicker.color.hexString = types[typelist_index].color;
+			}
+
 			if (input_label == "" && input_type != "hallway") {
 				set_type_btn.classList.remove("positive");
 				set_type_btn.classList.add("negative");
