@@ -116,7 +116,7 @@ body {
 	width: 200px;
 	margin-top: 6px;
 	margin-left: 15px;
-	margin-right: 15px;
+	/*margin-right: 15px;*/
 	height: 100%;
 	display: none;
 /*	padding: 10px;*/
@@ -131,7 +131,7 @@ body {
 #tool_select{
 	width: 200px;
 	margin-top: 6px;
-/*	margin-left: 15px;*/
+	margin-left: 15px;
 /*	margin-right: 15px;*/
 	height: 100%;
 	margin-bottom: 0px;

@@ -167,7 +167,9 @@ function addNode(posX, posY, cyInstance) {
 		},
 		classes: []
 	}
-	return cyInstance.add(node)[0];
+	let cyNode = cyInstance.add(node)[0];
+	cyNode.unselectify();
+	return cyNode;
 }
 
 let ghost = {
@@ -219,26 +221,23 @@ let ghost = {
 
 let popperNode = -1;
 cy.on("tap", function(e) {
-	
 	if (tool == "Smart") {
 		smartTap(e);
-	} else if (tool == "Add Node") {
-		addNodeTap(e);
-	} else if (tool == "Add Edge") {
-		addEdgeTap(e);
-	} else if (tool == "Delete") {
-		deleteTap(e);
+	} else if (tool == "Add Nodes") {
+		addNodesTap(e);
+	} else if (tool == "Add Edges") {
+		addEdgesTap(e);
+	} else if (tool == "Edit Nodes") {
+		editNodesTap(e);
+	} else if (tool == "Delete Nodes") {
+		deleteNodesTap(e);
 	}
 });
 
-function addNodeTap(e) {
+function addNodesTap(e) {
 	let target = e.target;
 
-}
-
-function smartTap(e) {
-	let target = e.target;
-
+	// create a new node
 	if (target == cy) {
 		if (!ghost.enabled) {
 			let newNode = addNode(e.position.x, e.position.y);
@@ -275,7 +274,17 @@ function smartTap(e) {
 	}
 
 	ghost.disable();
+}
 
+function smartTap(e) {
+	let target = e.target;
+	// create a new node
+	if (target == cy) {
+		addNodesTap(e);
+		return;
+	}
+
+	// if we're not holding control, deslect everything (if we clicked on a node we'll reselect it later)
 	if (!e.originalEvent.ctrlKey) {
 		console.log("ttettetetet");
 		unselectAll();
@@ -283,7 +292,7 @@ function smartTap(e) {
 	}
 
 	if (target.group() == "nodes") {
-		console.log(target.id());
+		console.log(target);
 		// console.log(target.data("type"));
 
 		if (target.data("type") == "hallway" || e.originalEvent.ctrlKey) {
@@ -326,7 +335,7 @@ function smartTap(e) {
 	}
 
 	ghost.disable();
-	toggleSelected(target);	
+	toggleSelected(target);
 }
 
 cy.on("cxttapend", function(e) {
@@ -414,6 +423,8 @@ cy.on("cxttapend", function(e) {
 	}
 });
 
+
+
 cy.on("mousemove", function(e) {
 	ghost.updateCursor(e.position.x, e.position.y);
 });
@@ -431,11 +442,19 @@ cy.on("cxtdragout", "elements", function(e) {
 });
 
 cy.on("boxstart", function(e) {
+	console.log("aa");
 	ghost.disable();
 })
 
 cy.on("box", "elements", function(e) {
+	console.log("aa");
+
+	if (tool != "Smart") {
+		return;
+	}
+
 	let target = e.target;
+	console.log(target);
 	toggleSelected(target);
 })
 
@@ -684,7 +703,7 @@ const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
 	img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
-	current_graph = $('.ui.dropdown').dropdown("get value")[1];
+	current_graph = $("#floor_search").dropdown("get value")[1];
 	console.log(current_graph);
 	
 	if (file != -1) {
@@ -699,6 +718,7 @@ create_floor_btn.addEventListener('click', (e) => {
 
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
+	document.querySelector('#tool_select').style.display = 'block';
 	window.history.replaceState({}, "Matron", "/" + current_graph);
 });
 
@@ -1399,6 +1419,7 @@ $('#tool_select')
 	  console.log(text);
 	  console.log($selectedItem);
 	  tool = value;
+	  ghost.disable();
 	},
 	values: [
 		{
@@ -1407,17 +1428,21 @@ $('#tool_select')
 		  selected: true
 		},
 		{
-		  name: 'Add Node',
-		  value: 'Add Node',
+		  name: 'Add Nodes',
+		  value: 'Add Nodes',
 		},
 		{
-			name: 'Add Edge',
-			value: 'Add Edge',
+			name: 'Add Edges',
+			value: 'Add Edges',
 		},
-		  {
-			name: 'Delete',
-			value: 'Delete',
-		  }
+		{
+			name: 'Edit Nodes',
+			value: 'Edit Nodes',
+		},
+		{
+			name: 'Delete Nodes',
+			value: 'Delete Nodes',
+		}
 	  ]
   });
 
