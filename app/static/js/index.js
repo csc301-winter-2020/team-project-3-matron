@@ -584,7 +584,7 @@ function duplicateLabelCheck() {
 	for (let i=0; i<nodes.length; i++ ) {
 		let n = nodes[i];
 
-		if (n.data("type") != "hallway") {
+		if ((!n.data("type")) || n.data("type") != "hallway") {
 			let label = n.data("label");
 
 			if (label in labels) {
@@ -1132,6 +1132,9 @@ distance_btn.addEventListener('click', (e) =>{
 	let node1_label = document.querySelector('#node1').value;
 	let node2_label = document.querySelector('#node2').value;
 
+	console.log(node1_label);
+	console.log(node2_label);
+
 	if (node1_label == "" || node2_label == "") {
 		document.querySelector('#dist_result').innerText = "Cannot search for empty room.";
 		return;
@@ -1151,7 +1154,7 @@ distance_btn.addEventListener('click', (e) =>{
 	} else if (node2.length == 0) {
 		document.querySelector('#dist_result').innerText = "Second room was not found.";
 		return;
-	} else if (duplicate_label) {
+	} else if (duplicate_label !== false) {
 		document.querySelector('#dist_result').innerText = "Duplicate label '"+duplicate_label+"' detected. Aborting.";
 		return;
 	}
