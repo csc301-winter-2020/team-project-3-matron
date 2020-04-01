@@ -239,7 +239,7 @@ cy.on("tap", function(e) {
 		ghost.disable();
 	} else if (tool == "Edit Nodes") {
 		editNodesTap(e);
-	} else if (tool == "Delete Nodes") {
+	} else if (tool == "Delete") {
 		deleteNodesTap(e);
 	}
 });
@@ -552,7 +552,7 @@ window.addEventListener("keydown", function(e) {
 		ghost.disable();
 	}
 
-	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete Nodes")) {
+	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete")) {
 		resetRescaler();
 		console.log(document.activeElement);
 		if (document.activeElement != document.body) {
@@ -1655,8 +1655,8 @@ $('#tool_select')
 			value: 'Add Edges',
 		},
 		{
-			name: 'Delete Nodes',
-			value: 'Delete Nodes',
+			name: 'Delete',
+			value: 'Delete',
 		}
 	  ]
   });
