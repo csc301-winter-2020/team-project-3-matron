@@ -615,7 +615,7 @@ function saveGraph() {
 	}
 
 	let duplicateLabel = duplicateLabelCheck();
-	if (duplicateLabel) {
+	if (duplicateLabel !== false) {
 		if (!window.confirm("You have duplicate label '" + duplicateLabel + "'.\nDistance queries will not work on this graph.\nContinue?")) {
 			return;
 		}
