@@ -911,6 +911,8 @@ $("#type_select").dropdown({
 			let typelist_index = types.findIndex(typ=>typ.name == input_type);
 			if (typelist_index != -1) {
 				colorPicker.color.hexString = types[typelist_index].color;
+			} else {
+				colorPicker.color.hexString = randomHex();
 			}
 
 			if (input_label == "" && input_type != "hallway") {
