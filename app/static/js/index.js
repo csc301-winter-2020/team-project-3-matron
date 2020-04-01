@@ -1051,6 +1051,7 @@ upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
 
 	if (blueprint_scale != new_blueprint_scale) {
+		scale_full_graph(new_blueprint_scale/blueprint_scale);
 		blueprint_scale = new_blueprint_scale;
 		changed_graph = true;
 		drawBG();
@@ -1058,6 +1059,14 @@ upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	
 	console.log("changed graph");
 });
+
+function scale_full_graph(factor) {
+	cy.nodes().forEach(n => {
+		let oldpos = n.position();
+		let newpos = scaleVec(oldpos, factor);
+		n.position(newpos);
+	})
+}
 
 blueprint_icon.addEventListener('click', (e)=>{
 	if (current_graph == "") {
