@@ -1665,7 +1665,8 @@ $('#tool_select')
 
 window.onbeforeunload = function() {
 	if (changed_graph) {
-		"You have unsaved changed."
+		let confirm_close = confirm("You have unsaved changed. Continue?");
+		return confirm_close;
 	}
 }
 
