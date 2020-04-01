@@ -239,7 +239,7 @@ cy.on("tap", function(e) {
 		ghost.disable();
 	} else if (tool == "Edit Nodes") {
 		editNodesTap(e);
-	} else if (tool == "Delete Nodes") {
+	} else if (tool == "Delete") {
 		deleteNodesTap(e);
 	}
 });
@@ -550,9 +550,10 @@ cy.on("drag", "elements", function(e) {
 window.addEventListener("keydown", function(e) {
 	if (e.code == "Escape") {
 		ghost.disable();
+		hidePopper();
 	}
 
-	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete Nodes")) {
+	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete")) {
 		resetRescaler();
 		console.log(document.activeElement);
 		if (document.activeElement != document.body) {
@@ -584,7 +585,7 @@ function duplicateLabelCheck() {
 	for (let i=0; i<nodes.length; i++ ) {
 		let n = nodes[i];
 
-		if (n.data("type") != "hallway") {
+		if ((!n.data("type")) || n.data("type") != "hallway") {
 			let label = n.data("label");
 
 			if (label in labels) {
@@ -1132,6 +1133,9 @@ distance_btn.addEventListener('click', (e) =>{
 	let node1_label = document.querySelector('#node1').value;
 	let node2_label = document.querySelector('#node2').value;
 
+	console.log(node1_label);
+	console.log(node2_label);
+
 	if (node1_label == "" || node2_label == "") {
 		document.querySelector('#dist_result').innerText = "Cannot search for empty room.";
 		return;
@@ -1151,7 +1155,7 @@ distance_btn.addEventListener('click', (e) =>{
 	} else if (node2.length == 0) {
 		document.querySelector('#dist_result').innerText = "Second room was not found.";
 		return;
-	} else if (duplicate_label) {
+	} else if (duplicate_label !== false) {
 		document.querySelector('#dist_result').innerText = "Duplicate label '"+duplicate_label+"' detected. Aborting.";
 		return;
 	}
@@ -1652,8 +1656,8 @@ $('#tool_select')
 			value: 'Add Edges',
 		},
 		{
-			name: 'Delete Nodes',
-			value: 'Delete Nodes',
+			name: 'Delete',
+			value: 'Delete',
 		}
 	  ]
   });
@@ -1732,9 +1736,10 @@ rescale_button.onclick = function() {
 	}
 }
 
+let first = 1;
 function rescaleUIHelper() {
 	console.log("RESCALE UI HELPER");
-	if (rescaleAll(rescale_input.value)) {
+	if (rescaleAll(rescale_input.value + (0.0001*first))) {
 		rescaling_started = false;
 		walking = false;
 		rescale_input.value = "";
@@ -1750,6 +1755,7 @@ function rescaleUIHelper() {
 		rescale_button.innerText = "Done";
 		rescaling_started = false;
 	}
+	first = 0;
 	rescaled_edges += 1;
 	let percent = 100 * rescaled_edges / cy2.edges().length;
 	console.log(percent);
@@ -1758,6 +1764,7 @@ function rescaleUIHelper() {
 }
 
 function resetRescaler() {
+	first = 1;
 	// rescale_menu.style.visibility = "hidden";
 	$("#progress_bar").progress("set percent", 0);
 	progress_bar.style.display = "hidden";
