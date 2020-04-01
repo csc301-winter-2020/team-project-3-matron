@@ -208,3 +208,13 @@ body {
 	display: inline-block;
 	margin-right: 10px;
 }
+
+#progress_bar {
+	position: absolute;
+	width: 100%;
+	display: none;
+}
+
+#top_menu {
+	padding: 0;
+}

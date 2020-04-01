@@ -1628,11 +1628,17 @@ document.querySelector("#rescale_icon").onclick = function() {
 
 	console.log("begin rescaling");
 	resetRescaler();
-	rescale_menu.style.visibility = "visible";
+	if (rescale_menu.style.visibility != "visible") {
+		rescale_menu.style.visibility = "visible";
+		progress_bar.style.display = "block";
 
-	if (rescaleAll()) {
-		instructions.innerText = "No rescaleable paths found.";
-		rescale_button.style.display = "none";
+		if (rescaleAll()) {
+			instructions.innerText = "No rescaleable paths found.";
+			rescale_button.style.display = "none";
+		}
+	} else {
+		rescale_menu.style.visibility = "hidden";
+		progress_bar.style.display = "none";
 	}
 	
 	console.log(rescale_button.innerText);
@@ -1643,7 +1649,9 @@ let instructions = document.querySelector("#instructions");
 let rescale_input = document.querySelector("#rescale_input");
 let rescale_button = document.querySelector("#rescale_button");
 let blueprint_scale_input = document.querySelector("#blueprint_scale_input");
+let progress_bar = document.querySelector("#progress_bar");
 
+let rescaled_edges = 0;
 let rescaling_started = false;
 let walking = false;
 let rescale_complete = false;
@@ -1693,23 +1701,33 @@ function rescaleUIHelper() {
 		rescale_button.innerText = "Done";
 		rescaling_started = false;
 	}
+	rescaled_edges += 1;
+	let percent = 100 * rescaled_edges / cy2.edges().length;
+	console.log(percent);
+	console.log($("#progress_bar"));
+	$("#progress_bar").progress("set percent", percent);
+	//$("#progress_bar").progress("complete");
 }
 
 function resetRescaler() {
-		rescale_menu.style.visibility = "hidden";
-		instructions.innerText = "Go to one end of the red path";
-		rescale_input.style.display = "none";
-		rescale_button.innerText = "Done";
-		rescale_button.style.display = "block";
-		rescale_complete = false;
-		walking = false;
-		rescaling_started = false;
-		cleanedGraph = false;
-		n1 = false;
-		n2 = false;
-		scaleFactor = false;
-		clearInterval(timerInterval);
-		cy.elements().removeClass("desiredpath");
+	// rescale_menu.style.visibility = "hidden";
+	$("#progress_bar").progress("set percent", 0);
+	progress_bar.style.display = "hidden";
+	instructions.innerText = "Go to one end of the red path";
+	rescale_input.style.display = "none";
+	rescale_button.innerText = "Done";
+	rescale_button.style.display = "block";
+	rescale_complete = false;
+	walking = false;
+	rescaling_started = false;
+	cleanedGraph = false;
+	n1 = false;
+	n2 = false;
+	scaleFactor = false;
+	clearInterval(timerInterval);
+	cy.elements().removeClass("desiredpath");
+	rescaled_edges = 0;
+	//$("#progress_bar").progress({percent: percent});
 }
 
 let colorPicker = new iro.ColorPicker("#picker", {
@@ -1727,6 +1745,8 @@ colorPicker.on('color:change', function(color) {
 		types[typelist_index].color = colorPicker.color.hexString;
 	}
 });
+
+$("#progress_bar").progress({percent: 0});
 
 // function cleanNode(label) {
 // 	let node = cy.$("node[label='" + label + "']")[0];
