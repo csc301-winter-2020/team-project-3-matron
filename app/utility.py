@@ -4,31 +4,26 @@ to read for reference.
 """
 
 import json
-import sys
-import heapq
 from typing import *
 
-# Key: room id
-# Value: List of tuples (d, id) where id is the id of a room, and d is the distance to it
+# Key: room id/label
+# Value: List of tuples (d, label) where label is the label of a room, and d is the distance to it
 AdjacencyMap = Dict[str, List[Tuple[float, str]]]
 
 # (d, vs) where d is the length of a path and vs is a list of room ids
 Path = Tuple[float, List[str]]
 
-# Key: room type
-# Value: ascending-order tuples (d, id) similar to Adjacency map
-RoomDistanceMap = Dict[str, List[Tuple[float, str]]]
+# Key: Room label (start_label)
+# Value: Map from room type to list of distance-label pairs
+#       -> Key: Room type (for example, "office" or "supply")
+#       -> Value: List of pairs (d, end_label) where end_label is the label of a
+#       room of the specified type. d is the distance of the minimal path between
+#       rooms start_label and end_label
+RoomDistanceMap = Dict[str, Dict[str, List[Tuple[float, str]]]]
 
 # Key: JSON object type
 # Value: List of objects of that type
 JSONGraph = Dict[str, List[Dict]]
-
-
-def get_sys_args() -> List[str]:
-    """
-    Return command line arguments.
-    """
-    return sys.argv
 
 
 class GraphObject:
@@ -118,9 +113,13 @@ class Graph:
 
         self.nodes = [Node(json_obj) for json_obj in json_data["nodes"]]
         self.edges = [Edge(json_obj) for json_obj in json_data["edges"]]
-        self._set_edge_weights()  # Since the edge objects dont natively have weights
+        # Since the edge objects dont natively have weights
+        self._set_edge_weights()
         self._node_id_map = {}
         self._edge_id_map = {}
+        # Since routing uses node labels, not id's
+        self._label_to_id = {}
+        self._id_to_label = {}
         self.update_internal_maps()
 
     def __str__(self) -> str:
@@ -157,16 +156,44 @@ class Graph:
     def get_edge(self, id: str) -> Edge:
         return self.edges[self._edge_id_map[id]]
 
+    def get_node_id(self, label: str) -> str:
+        """
+        Given the label of a node, return its id.
+        """
+        if label not in self._label_to_id:
+            return label
+        return self._label_to_id[label]
+
+    def get_node_label(self, id: str) -> str:
+        """
+        Given the id of a node, return its label.
+        """
+        if id not in self._id_to_label:
+            return id
+        return self._id_to_label[id]
+
     def update_internal_maps(self) -> None:
         """
         Must be used anytime the nodes or edges lists are edited to ensure the
         get_node and get_edge functions work correctly.
         """
-        node_index, edge_index = 0, 0
         self._node_id_map = {}
         self._edge_id_map = {}
+        self._label_to_id = {}
+        self._id_to_label = {}
         for i, node in enumerate(self.nodes):
             self._node_id_map[node.get_id()] = i
+            if node.get_type() == "hallway":
+                continue # We don't care about hallway nodes
+            if node.get_label() in self._label_to_id:
+                # Duplicate label detected. Not allowed!
+                raise ValueError('Node with id {} has label {}, '
+                                 'which is a duplicate of the '
+                                 'label of node with id {}.'
+                                 .format(node.get_id(), node.get_label(),
+                                         self._label_to_id[node.get_label()]))
+            self._label_to_id[node.get_label()] = node.get_id()
+            self._id_to_label[node.get_id()] = node.get_label()
         for i, edge in enumerate(self.edges):
             self._edge_id_map[edge.get_id()] = i
 

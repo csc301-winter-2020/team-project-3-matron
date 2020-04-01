@@ -2,9 +2,12 @@
 /env
 ./env
 env/
+/node_modules
 
 # misc
 .DS_store
 */__pycache__/
 *.swp
+*.swo
 *.pyc
+drivers/
