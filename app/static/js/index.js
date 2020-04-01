@@ -357,6 +357,8 @@ function editNodesTap(e) {
 				colorPicker.color.hexString = types[typelist_index].color;
 			}
 
+			changeLabel();
+
 			return node_input_card;
 		}
 	});
@@ -528,24 +530,19 @@ cy.on("cxtdragout", "elements", function(e) {
 });
 
 cy.on("boxstart", function(e) {
-	console.log("aa");
 	ghost.disable();
 })
 
 cy.on("box", "elements", function(e) {
-	console.log("aa");
-
 	if (tool != "Smart") {
 		return;
 	}
 
 	let target = e.target;
-	console.log(target);
 	toggleSelected(target);
 })
 
 cy.on("drag", "elements", function(e) {
-	console.log("changed graph");
 	changed_graph = true;
 	ghost.disable();
 })
@@ -570,7 +567,6 @@ window.addEventListener("keydown", function(e) {
 		}
 
 		if (selected.data("type")) {
-			console.log("HELLLOOO")
 			if (cy.$("[type = '"+ selected.data("type") +"']").length == 1) {
 				types = types.filter(type => type.name != selected.data("type"));
 				fillTypes();
@@ -580,6 +576,27 @@ window.addEventListener("keydown", function(e) {
 		cy.remove(selected);
 	}
 });
+
+function duplicateLabelCheck() {
+	let labels = {};
+	let nodes = cy.nodes();
+
+	for (let i=0; i<nodes.length; i++ ) {
+		let n = nodes[i];
+
+		if (n.data("type") != "hallway") {
+			let label = n.data("label");
+
+			if (label in labels) {
+				return label;
+			}
+
+			labels[label] = 1;
+		}	
+	}
+	//console.log(labels);
+	return false;
+}
 
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
@@ -594,14 +611,21 @@ function saveGraph() {
 	console.log(current_graph);
 	if (current_graph == "") {
 		return;
-	}	
+	}
+
+	let duplicateLabel = duplicateLabelCheck();
+	if (duplicateLabel) {
+		if (!window.confirm("You have duplicate label '" + duplicateLabel + "'.\nDistance queries will not work on this graph.\nContinue?")) {
+			return;
+		}
+	}
 
 	console.log('SAVED');
 
 	let graph = cy.json();
 
-	console.log(graph.elements.nodes);
-	console.log(graph.elements.edges);
+	// console.log(graph.elements.nodes);
+	// console.log(graph.elements.edges);
 
 	if (!graph.elements.nodes) {
 		graph.elements.nodes = [];
@@ -614,7 +638,7 @@ function saveGraph() {
 	let _graph = cy.json();
 	_graph.types = types;
 	_graph.blueprint_scale = blueprint_scale;
-	console.log(_graph);
+	// console.log(_graph);
 	let blueprint = fileImage == -1 ? "" : fileImage.src;
 	fetch(url, {
 		method: 'post',
@@ -638,7 +662,7 @@ let mapnames = [];
 
 function fillmapnames(names) {
 	names.forEach((name) => {
-		console.log(name);
+		// console.log(name);
 		// if (name.trim() == "demo") {
 		// 	values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
 		// } else {
@@ -705,7 +729,7 @@ function getMapNamesFromServer() {
 				mapnames = mapnames.filter(function(value, index, arr) {
 					return value.value != name;
 				})
-				console.log(mapnames);
+				// console.log(mapnames);
 				//getMapNamesFromServer();
 			})
 		});
@@ -773,8 +797,8 @@ function editFloor(current_graph) {
 function loadGraphData(data) {
 		changed_graph = false;
 		cy.elements().remove()
-		console.log(cy.elements().remove());
-		console.log(data);
+		// console.log(cy.elements().remove());
+		// console.log(data);
 		types = [];
 		if (data.graph.types) {
 			console.log("Adding types")
@@ -873,10 +897,10 @@ const type_list = document.querySelector('#type_list');
 // // should really get from server returned map, we need to store manually alongside cy.json();
 
 function fillTypes() {
-	console.log("filling types");
+	// console.log("filling types");
 
 	while(type_list.hasChildNodes()) {
-		console.log("removinnnng");
+		// console.log("removinnnng");
 		type_list.removeChild(type_list.lastChild);
 	}
 
@@ -935,6 +959,10 @@ $("#type_select").dropdown({
 });
 
 document.querySelector('#node_label_input').addEventListener("input", function(e) {
+	changeLabel();
+});
+
+function changeLabel() {
 	let input_label = document.querySelector('#node_label_input').value;
 	let input_type = $("#type_select").dropdown("get value");
 	if (input_label == "" && input_type != "hallway") {
@@ -952,7 +980,7 @@ document.querySelector('#node_label_input').addEventListener("input", function(e
 	set_type_btn.classList.remove("negative");
 	set_type_btn.classList.add("positive");
 	set_type_btn.innerHTML = "Save node";
-});
+}
 
 const set_type_btn = document.querySelector('#set_type');
 set_type_btn.addEventListener("click", (e) => {
@@ -988,6 +1016,7 @@ function hidePopper() {
 		popperNode = -1;
 		info.style.display = "none";
 	}
+	fillTypes();
 }
 
 function add_new_node_type(type_name){
@@ -1043,7 +1072,7 @@ const blueprint_reader = new FileReader();
 let blueprint_scale = 1;
 upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	file = document.querySelector('#new_blue_print').files[0];
-	console.log(file);
+	// console.log(file);
 	if (file) {
 		reader.readAsDataURL(file);
 		changed_graph = true;
@@ -1111,6 +1140,8 @@ distance_btn.addEventListener('click', (e) =>{
 	let node1 = cy.$("node[label='" + node1_label + "']");
 	let node2 = cy.$("node[label='" + node2_label + "']");
 
+	let duplicate_label = duplicateLabelCheck();
+
 	if (node1.length == 0 && node2.length == 0) {
 		document.querySelector('#dist_result').innerText = "Neither room was not found.";
 		return;
@@ -1119,6 +1150,9 @@ distance_btn.addEventListener('click', (e) =>{
 		return;
 	} else if (node2.length == 0) {
 		document.querySelector('#dist_result').innerText = "Second room was not found.";
+		return;
+	} else if (duplicate_label) {
+		document.querySelector('#dist_result').innerText = "Duplicate label '"+duplicate_label+"' detected. Aborting.";
 		return;
 	}
 
@@ -1242,7 +1276,7 @@ function setScaleFactor(node1, node2, t) {
 	// let node2 = cy.$("node[label='" + label2 + "']")[0];
 
 	let path = fillNode(node1).find(p => p.end == node2);
-	console.log(path);
+	// console.log(path);
 	if (!path) {return;}
 
 	setRescaled(cy2.$id(node2.id()));
@@ -1416,7 +1450,7 @@ function rescaleAll(t) {
 	n1 = cy.$id(cy2Pair.neighbor.id());
 
 	let desiredpath = fillNode(n1).find(p => p.end == n2);
-	console.log(desiredpath);
+	// console.log(desiredpath);
 	// desiredpath.start.addClass("desiredpath");
 	// desiredpath.end.addClass("desiredpath");
 	//desiredpath.interim.connectedEdges().addClass("desiredpath");
@@ -1445,7 +1479,7 @@ function getLeaf() {
 	// issue is this degree selector doesn't care about whether the neighbors are rescale or not, it's global
 	// os after a few rescales there won't be any true degree 1 nodes left
 	let leaf =  cy3.$("node[[degree = 1]]"); // the whole point of rescaled is to make this unscaled leaf selector work
-	console.log(leaf);
+	// console.log(leaf);
 
 	if (leaf.length <= 1) {
 		return false;
@@ -1572,7 +1606,7 @@ function load_graph_versions(){
 		}
 
 		let count = 0;
-		console.log(data)
+		// console.log(data)
 		data.times.reverse();
 		data.times.forEach((time)=>{
 			const div = document.createElement('div');
@@ -1719,7 +1753,6 @@ function rescaleUIHelper() {
 	rescaled_edges += 1;
 	let percent = 100 * rescaled_edges / cy2.edges().length;
 	console.log(percent);
-	console.log($("#progress_bar"));
 	$("#progress_bar").progress("set percent", percent);
 	//$("#progress_bar").progress("complete");
 }
