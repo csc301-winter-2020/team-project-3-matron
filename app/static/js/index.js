@@ -1294,6 +1294,7 @@ function setScaleFactor(node1, node2, t) {
 	let cyLen = path.len;
 	scaleFactor = cyLen/t;
 
+	console.log(t);
 	console.log(cyLen);
 	console.log(scaleFactor);
 }
@@ -1665,7 +1666,8 @@ $('#tool_select')
 
 window.onbeforeunload = function() {
 	if (changed_graph) {
-		"You have unsaved changed."
+		let confirm_close = confirm("You have unsaved changed. Continue?");
+		return confirm_close;
 	}
 }
 
@@ -1731,6 +1733,7 @@ rescale_button.onclick = function() {
 			}, 16)
 		}
 	} else {
+		console.log(rescale_input.value);
 		clearInterval(timerInterval);
 		rescaleUIHelper();
 	}
@@ -1739,7 +1742,7 @@ rescale_button.onclick = function() {
 let first = 1;
 function rescaleUIHelper() {
 	console.log("RESCALE UI HELPER");
-	if (rescaleAll(rescale_input.value + (0.0001*first))) {
+	if (rescaleAll(parseFloat(rescale_input.value) + (0.0001*first))) {
 		rescaling_started = false;
 		walking = false;
 		rescale_input.value = "";
