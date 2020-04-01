@@ -1063,6 +1063,10 @@ upload_new_blueprint_btn.addEventListener('click', (e)=>{
 });
 
 function scale_full_graph(factor) {
+	let oldpan = cy.pan();
+	let newpan = scaleVec(oldpan, factor);
+	cy.pan(newpan);
+
 	cy.nodes().forEach(n => {
 		let oldpos = n.position();
 		let newpos = scaleVec(oldpos, factor);
