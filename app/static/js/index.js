@@ -550,6 +550,7 @@ cy.on("drag", "elements", function(e) {
 window.addEventListener("keydown", function(e) {
 	if (e.code == "Escape") {
 		ghost.disable();
+		hidePopper();
 	}
 
 	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete")) {
@@ -1735,9 +1736,10 @@ rescale_button.onclick = function() {
 	}
 }
 
+let first = 1;
 function rescaleUIHelper() {
 	console.log("RESCALE UI HELPER");
-	if (rescaleAll(rescale_input.value)) {
+	if (rescaleAll(rescale_input.value + (0.0001*first))) {
 		rescaling_started = false;
 		walking = false;
 		rescale_input.value = "";
@@ -1753,6 +1755,7 @@ function rescaleUIHelper() {
 		rescale_button.innerText = "Done";
 		rescaling_started = false;
 	}
+	first = 0;
 	rescaled_edges += 1;
 	let percent = 100 * rescaled_edges / cy2.edges().length;
 	console.log(percent);
@@ -1761,6 +1764,7 @@ function rescaleUIHelper() {
 }
 
 function resetRescaler() {
+	first = 1;
 	// rescale_menu.style.visibility = "hidden";
 	$("#progress_bar").progress("set percent", 0);
 	progress_bar.style.display = "hidden";
