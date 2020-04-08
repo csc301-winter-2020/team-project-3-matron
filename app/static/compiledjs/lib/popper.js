@@ -1,16 +1,60 @@
-(function (global, factory) {
-  if (typeof define === "function" && define.amd) {
-    define([], factory);
-  } else if (typeof exports !== "undefined") {
-    factory();
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory();
-    global.popper = mod.exports;
-  }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
+require("core-js/modules/es.symbol");
+
+require("core-js/modules/es.symbol.description");
+
+require("core-js/modules/es.symbol.iterator");
+
+require("core-js/modules/es.array.concat");
+
+require("core-js/modules/es.array.filter");
+
+require("core-js/modules/es.array.find");
+
+require("core-js/modules/es.array.find-index");
+
+require("core-js/modules/es.array.for-each");
+
+require("core-js/modules/es.array.index-of");
+
+require("core-js/modules/es.array.iterator");
+
+require("core-js/modules/es.array.map");
+
+require("core-js/modules/es.array.reduce");
+
+require("core-js/modules/es.array.slice");
+
+require("core-js/modules/es.array.some");
+
+require("core-js/modules/es.function.name");
+
+require("core-js/modules/es.object.assign");
+
+require("core-js/modules/es.object.keys");
+
+require("core-js/modules/es.object.to-string");
+
+require("core-js/modules/es.promise");
+
+require("core-js/modules/es.regexp.exec");
+
+require("core-js/modules/es.string.iterator");
+
+require("core-js/modules/es.string.match");
+
+require("core-js/modules/es.string.replace");
+
+require("core-js/modules/es.string.search");
+
+require("core-js/modules/es.string.split");
+
+require("core-js/modules/es.string.trim");
+
+require("core-js/modules/web.dom-collections.for-each");
+
+require("core-js/modules/web.dom-collections.iterator");
+
+define([], function () {
   "use strict";
 
   function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }

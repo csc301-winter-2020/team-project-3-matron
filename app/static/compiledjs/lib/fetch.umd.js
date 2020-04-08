@@ -1,16 +1,98 @@
-(function (global, factory) {
-  if (typeof define === "function" && define.amd) {
-    define([], factory);
-  } else if (typeof exports !== "undefined") {
-    factory();
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory();
-    global.fetchUmd = mod.exports;
-  }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
+require("core-js/modules/es.symbol");
+
+require("core-js/modules/es.symbol.description");
+
+require("core-js/modules/es.symbol.iterator");
+
+require("core-js/modules/es.array.for-each");
+
+require("core-js/modules/es.array.index-of");
+
+require("core-js/modules/es.array.iterator");
+
+require("core-js/modules/es.array.join");
+
+require("core-js/modules/es.array.map");
+
+require("core-js/modules/es.array.slice");
+
+require("core-js/modules/es.array-buffer.constructor");
+
+require("core-js/modules/es.function.name");
+
+require("core-js/modules/es.object.get-own-property-names");
+
+require("core-js/modules/es.object.to-string");
+
+require("core-js/modules/es.promise");
+
+require("core-js/modules/es.regexp.exec");
+
+require("core-js/modules/es.regexp.to-string");
+
+require("core-js/modules/es.string.iterator");
+
+require("core-js/modules/es.string.replace");
+
+require("core-js/modules/es.string.split");
+
+require("core-js/modules/es.string.trim");
+
+require("core-js/modules/es.typed-array.uint8-array");
+
+require("core-js/modules/es.typed-array.copy-within");
+
+require("core-js/modules/es.typed-array.every");
+
+require("core-js/modules/es.typed-array.fill");
+
+require("core-js/modules/es.typed-array.filter");
+
+require("core-js/modules/es.typed-array.find");
+
+require("core-js/modules/es.typed-array.find-index");
+
+require("core-js/modules/es.typed-array.for-each");
+
+require("core-js/modules/es.typed-array.includes");
+
+require("core-js/modules/es.typed-array.index-of");
+
+require("core-js/modules/es.typed-array.iterator");
+
+require("core-js/modules/es.typed-array.join");
+
+require("core-js/modules/es.typed-array.last-index-of");
+
+require("core-js/modules/es.typed-array.map");
+
+require("core-js/modules/es.typed-array.reduce");
+
+require("core-js/modules/es.typed-array.reduce-right");
+
+require("core-js/modules/es.typed-array.reverse");
+
+require("core-js/modules/es.typed-array.set");
+
+require("core-js/modules/es.typed-array.slice");
+
+require("core-js/modules/es.typed-array.some");
+
+require("core-js/modules/es.typed-array.sort");
+
+require("core-js/modules/es.typed-array.subarray");
+
+require("core-js/modules/es.typed-array.to-locale-string");
+
+require("core-js/modules/es.typed-array.to-string");
+
+require("core-js/modules/web.dom-collections.for-each");
+
+require("core-js/modules/web.dom-collections.iterator");
+
+require("core-js/modules/web.url");
+
+define([], function () {
   "use strict";
 
   function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }

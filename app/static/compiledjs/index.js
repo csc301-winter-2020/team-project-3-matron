@@ -1,16 +1,34 @@
-(function (global, factory) {
-  if (typeof define === "function" && define.amd) {
-    define([], factory);
-  } else if (typeof exports !== "undefined") {
-    factory();
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory();
-    global.index = mod.exports;
-  }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
+require("core-js/modules/es.array.concat");
+
+require("core-js/modules/es.array.filter");
+
+require("core-js/modules/es.array.find");
+
+require("core-js/modules/es.array.find-index");
+
+require("core-js/modules/es.array.for-each");
+
+require("core-js/modules/es.array.last-index-of");
+
+require("core-js/modules/es.array.slice");
+
+require("core-js/modules/es.array.some");
+
+require("core-js/modules/es.function.name");
+
+require("core-js/modules/es.number.to-fixed");
+
+require("core-js/modules/es.object.to-string");
+
+require("core-js/modules/es.promise");
+
+require("core-js/modules/es.regexp.to-string");
+
+require("core-js/modules/es.string.trim");
+
+require("core-js/modules/web.dom-collections.for-each");
+
+define([], function () {
   "use strict";
 
   var cyStyle = [{

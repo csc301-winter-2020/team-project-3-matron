@@ -1,16 +1,26 @@
-(function (global, factory) {
-  if (typeof define === "function" && define.amd) {
-    define([], factory);
-  } else if (typeof exports !== "undefined") {
-    factory();
-  } else {
-    var mod = {
-      exports: {}
-    };
-    factory();
-    global.cytoscapePopper = mod.exports;
-  }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function () {
+require("core-js/modules/es.symbol");
+
+require("core-js/modules/es.symbol.description");
+
+require("core-js/modules/es.symbol.iterator");
+
+require("core-js/modules/es.array.for-each");
+
+require("core-js/modules/es.array.iterator");
+
+require("core-js/modules/es.object.assign");
+
+require("core-js/modules/es.object.keys");
+
+require("core-js/modules/es.object.to-string");
+
+require("core-js/modules/es.string.iterator");
+
+require("core-js/modules/web.dom-collections.for-each");
+
+require("core-js/modules/web.dom-collections.iterator");
+
+define([], function () {
   "use strict";
 
   function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
