@@ -1,0 +1,30 @@
+{
+  "name": "team-project-3-matron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-modules-umd": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
+    "@babel/register": "^7.9.0",
+    "core-js": "^3.6.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel app/static/js --out-dir app/static/compiledjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csc301-winter-2020/team-project-3-matron.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/csc301-winter-2020/team-project-3-matron/issues"
+  },
+  "homepage": "https://github.com/csc301-winter-2020/team-project-3-matron#readme"
+}
