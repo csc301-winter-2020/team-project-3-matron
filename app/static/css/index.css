@@ -223,5 +223,5 @@ body {
 	font-size: 10px;
 	position: fixed;
 	z-index: 100000;
-	/*display: none;*/
+	display: none;
 }

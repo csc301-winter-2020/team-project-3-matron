@@ -187,10 +187,6 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
 # From https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
 @app.after_request
 def add_header(r):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minutes.
-    """
     r.headers["Pragma"] = "no-cache"
     r.headers["Expires"] = "0"
     r.headers['Cache-Control'] = 'public, max-age=0'

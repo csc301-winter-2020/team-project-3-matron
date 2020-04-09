@@ -523,12 +523,14 @@ cy.on("drag", "elements", function (e) {
   ghost.disable();
 });
 window.addEventListener("keydown", function (e) {
-  if (e.code == "Escape") {
+  console.log(e);
+
+  if (e.key == "Escape" || e.key == "Esc") {
     ghost.disable();
     hidePopper();
   }
 
-  if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete")) {
+  if (e.key == "x" && (tool == "Smart" || tool == "Delete")) {
     resetRescaler();
     log(document.activeElement);
 
@@ -1092,7 +1094,7 @@ upload_new_blueprint_btn.addEventListener('click', function (e) {
   }
 
   log(blueprint_scale_input.value);
-  new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
+  var new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
 
   if (blueprint_scale != new_blueprint_scale) {
     scale_full_graph(new_blueprint_scale / blueprint_scale);

@@ -21,7 +21,8 @@
   "scripts": {
     "dev": "watch \"npm run build\" app/static/js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel app/static/js/index.js --out-dir app/static/compiledjs && rollup -c"
+    "build": "babel app/static/js/index.js --out-dir app/static/compiledjs && rollup -c",
+    "temp": "babel app/static/js/lib/iro.js --out-dir app/static/compiledjs && rollup -c"
   },
   "repository": {
     "type": "git",

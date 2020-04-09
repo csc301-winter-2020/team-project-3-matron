@@ -548,12 +548,14 @@ cy.on("drag", "elements", function(e) {
 })
 
 window.addEventListener("keydown", function(e) {
-	if (e.code == "Escape") {
+	console.log(e)
+
+	if (e.key == "Escape" || e.key == "Esc") {
 		ghost.disable();
 		hidePopper();
 	}
 
-	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete")) {
+	if (e.key == "x" && (tool == "Smart" || tool == "Delete")) {
 		resetRescaler();
 		log(document.activeElement);
 		if (document.activeElement != document.body) {
@@ -1080,7 +1082,7 @@ upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	}
 	
 	log(blueprint_scale_input.value);
-	new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
+	let new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
 
 	if (blueprint_scale != new_blueprint_scale) {
 		scale_full_graph(new_blueprint_scale/blueprint_scale);
@@ -1602,7 +1604,7 @@ $("#version_select").dropdown({
  * Function used to load in the graph version on the dropdown
  */
 function load_graph_versions(){
-	log("LOADING GRAPH VERSIONS");
+	log("LOADING GRAPH VERSIONS")
 	document.querySelector('#version_select').style.display = 'block';
 	fetch(`/graph/requestAll/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		debugtext.innerText = performance.now() + data.times;
