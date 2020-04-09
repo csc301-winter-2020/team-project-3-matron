@@ -1,5 +1,3 @@
-import "core-js/modules/es.object.assign";
-
 (function () {
   // registers the extension on a cytoscape lib ref
   var register = function register(cytoscape) {
