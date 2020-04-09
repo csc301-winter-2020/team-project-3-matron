@@ -540,6 +540,7 @@ cy.on("box", "elements", function(e) {
 
 	let target = e.target;
 	toggleSelected(target);
+	target.grabify();
 })
 
 cy.on("drag", "elements", function(e) {
@@ -604,11 +605,15 @@ function duplicateLabelCheck() {
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
+function ungrabifyAll() {
+	cy.nodes().ungrabify();
+}
+
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
 	changed_graph = false;
-
+	ungrabifyAll();
 	unselectAll();
 	unHoverAll();
 	log(current_graph);
@@ -1646,6 +1651,7 @@ $('#tool_select')
 		tool = value;
 		ghost.disable();
 
+		ungrabifyAll();
 	 	unselectAll();
 		unHoverAll();
 		hidePopper();
