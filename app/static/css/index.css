@@ -36,8 +36,6 @@ body {
 	bottom: 50%;
   }
 
-
-
 .hide{
 	display: none;
 }
@@ -225,4 +223,16 @@ body {
 	position: fixed;
 	z-index: 100000;
 	display: none;
+}
+
+#blueprint_name_input{
+	width: 250px;
+}
+
+.modify_map_label {
+	min-width: 150px; 
+}
+
+#blueprint_modal {
+	max-width: 462px !important;
 }

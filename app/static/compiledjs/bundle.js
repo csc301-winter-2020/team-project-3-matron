@@ -1132,6 +1132,7 @@
       return;
     }
 
+    blueprint_scale_input.value = blueprint_scale;
     $('#blueprint_modal').modal('show');
   });
   distance_icon.addEventListener('click', function (e) {

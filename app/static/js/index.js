@@ -1136,6 +1136,8 @@ blueprint_icon.addEventListener('click', (e)=>{
 		return
 	}
 	
+	
+	blueprint_scale_input.value = blueprint_scale;
 	$('#blueprint_modal')
 		.modal('show')
 	;
