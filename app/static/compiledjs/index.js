@@ -637,6 +637,7 @@ function saveGraph() {
 
   if (rescale_complete) {
     rescale_menu.style.visibility = "hidden";
+    progress_bar.style.display = "none";
   }
 }
 
@@ -845,6 +846,7 @@ function loadGraphData(data) {
   document.querySelector('#tool_select').style.display = 'block';
   document.querySelector('#cy').style.visibility = 'visible';
   cy.elements().removeClass("desiredpath");
+  rescale_icon_helper();
 }
 
 var create_floor_btn = document.querySelector('#create_floor');
@@ -1694,6 +1696,10 @@ document.querySelector("#node_info_close").onclick = function () {
 };
 
 document.querySelector("#rescale_icon").onclick = function () {
+  rescale_icon_helper();
+};
+
+function rescale_icon_helper() {
   if (!current_graph) {
     return;
   }
@@ -1715,7 +1721,7 @@ document.querySelector("#rescale_icon").onclick = function () {
   }
 
   log(rescale_button.innerText);
-};
+}
 
 var rescale_menu = document.querySelector("#rescale_menu");
 var instructions = document.querySelector("#instructions");
