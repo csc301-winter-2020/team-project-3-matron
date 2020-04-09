@@ -17,7 +17,6 @@ dao = None
 success = {'status': 200}
 failure = {'status': 400}
 
-
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def index(path):
@@ -184,6 +183,14 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
     dist = distance(data['graph']['elements'], room_name0, room_name1)
 
     return jsonify(dist)
+
+# From https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
+@app.after_request
+def add_header(r):
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
 
 if __name__ == "__main__":
     dao = MongoDAO(url, password)

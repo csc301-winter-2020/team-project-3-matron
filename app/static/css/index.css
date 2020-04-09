@@ -19,7 +19,7 @@ body {
 }
 
 #node_label_input{
-	width: 250px;
+	min-width: 187px;
 }
 
 #node_info{
@@ -194,6 +194,7 @@ body {
 /*	margin-top: -140px;
 	margin-right: -2px;*/
 	transform: translate(255px, 13px);
+	top: 0;
 }
 
 #picker {
@@ -217,4 +218,11 @@ body {
 
 #top_menu {
 	padding: 0;
+}
+
+#debugtext {
+	font-size: 10px;
+	position: fixed;
+	z-index: 100000;
+	display: none;
 }

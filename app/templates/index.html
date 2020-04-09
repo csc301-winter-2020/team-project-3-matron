@@ -2,17 +2,27 @@
 <html>
 	<head>
 		<title>Matron Maps</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta charset="utf-8"/>
 		<link rel="stylesheet" href="../static/css/index.css">
-		<script src="../static/js/lib/cytoscape.umd.js"></script>
-		<script src="https://unpkg.com/popper.js@1.16.0/dist/umd/popper.js"></script>
-		<script src="../static/js/lib/cytoscape-popper.js"></script>
-		<script src="../static/js/lib/cytoscape-canvas.js"></script>
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.find,Promise,Object.assign,String.prototype.padStart,Array.prototype.findIndex"></script>
+
 		<script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
 		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.0.0/fetch.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+
+		<script src="../static/js/lib/cytoscape.umd.js"></script>
+		<script src="../static/js/lib/popper.js"></script>
+		<script src="../static/js/lib/cytoscape-popper.js"></script>
+		<script src="../static/compiledjs/lib/cytoscape-canvas.js"></script>
+		<script src="../static/js/lib/fetch.umd.js"></script>
+
+		<script src="../static/compiledjs/iro_bundle.js"></script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script> -->
+
+
+	<!-- 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.0.0/fetch.js"></script> -->
+		
 <!-- 		<script src='../static/js/lib/spectrum.js'></script>
 		<link rel='stylesheet' href='../static/css/spectrum.css' /> -->
 		<script>
@@ -21,6 +31,10 @@
 		
 	</head>
 	<body>
+		<div id="debugtext">
+			Hello world
+		</div>
+
 		<div id="top_menu" class="ui top fixed menu segment">
 			<div id="matron" class="item">
 			  <h3> Matron </h3>
@@ -65,8 +79,10 @@
 			</div>
 		  </div>
 
-
 		<div id="cy"></div>
+
+
+
 		<div class="small ui modal" id="distance_modal">
 			<i class="close icon"></i>
 			<div class="header">
@@ -105,7 +121,7 @@
 
 				<div class="inline fields">
 					<label> Upload new blueprint: </label>
-					<input id="new_blue_print" type="file" accept="image/*" onchange="getImageData()">
+					<input id="new_blue_print" type="file" accept="image/*">
 				</div>
 				<div class="inline fields">
 					<label> Blueprint scale factor: </label>
@@ -138,7 +154,7 @@
 			<div class="extra content">
 				<div id="create_floor_inputs"class="hide">
 					<label > Upload blueprint: </label>
-					<input id="file_button" type="file" accept="image/*" onchange="getImageData()">
+					<input id="file_button" type="file" accept="image/*">
 					<button id="create_floor" class="positive fluid ui button">Create floor</button>
 				</div>
 				<button id="edit_floor" class="negative fluid ui button"> Enter map name </button>
@@ -185,6 +201,6 @@
 			</div>
 
 		</div>
-		<script src="../static/js/index.js"></script>
+		<script src="../static/compiledjs/bundle.js"></script>
 	</body>
 </html>

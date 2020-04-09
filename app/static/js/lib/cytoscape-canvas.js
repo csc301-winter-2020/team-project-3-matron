@@ -34,19 +34,19 @@
 				canvas.width = canvasWidth;
 				canvas.height = canvasHeight;
 
-				canvas.style.width = `${width}px`;
-				canvas.style.height = `${height}px`;
+				canvas.style.width = width + "px";
+				canvas.style.height = height + "px";
 
 				cy.trigger("cyCanvas.resize");
 			}
 
-			cy.on("resize", () => {
+			cy.on("resize", function() {
 				resize();
 			});
 
 			canvas.setAttribute(
 				"style",
-				`position:absolute; top:0; left:0; z-index:${options.zIndex};`,
+				"position:absolute; top:0; left:0; z-index:" + options.zIndex + ";"
 			);
 
 			resize();

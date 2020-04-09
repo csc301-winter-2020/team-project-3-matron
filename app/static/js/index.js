@@ -154,7 +154,7 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 	let cyEdge = cyInstance.add(edge);
 	cyEdge.unselectify();
 	cyEdge.ungrabify();
-	console.log("changed graph");
+	log("changed graph");
 
 	changed_graph = (cyInstance == cy);
 
@@ -163,7 +163,7 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 
 function addNode(posX, posY, cyInstance) {
 	changed_graph = true;
-	console.log("changed graph");
+	log("changed graph");
 	cyInstance = cyInstance || cy;
 	let node = {
 		data: {
@@ -279,7 +279,7 @@ function deleteNodesTap(e) {
 function randomHex() {
 	// from comments in https://www.paulirish.com/2009/random-hex-color-code-snippets/
 	let hex = '#'+ ('000000' + (Math.random()*0xFFFFFF<<0).toString(16)).slice(-6);
-	console.log(hex);
+	log(hex);
 	return hex;
 }
 
@@ -390,7 +390,7 @@ function smartTap(e) {
 
 	// if we're not holding control, deslect everything (if we clicked on a node we'll reselect it later)
 	if (!e.originalEvent.ctrlKey) {
-		console.log("ttettetetet");
+		log("ttettetetet");
 		unselectAll();
 		//return;
 	}
@@ -398,8 +398,8 @@ function smartTap(e) {
 	if (target.group() == "nodes") {
 		target.grabify();
 
-		console.log(target);
-		// console.log(target.data("type"));
+		log(target);
+		// log(target.data("type"));
 
 		if (target.data("type") == "hallway" || e.originalEvent.ctrlKey) {
 			toggleSelected(target);	
@@ -540,6 +540,7 @@ cy.on("box", "elements", function(e) {
 
 	let target = e.target;
 	toggleSelected(target);
+	target.grabify();
 })
 
 cy.on("drag", "elements", function(e) {
@@ -548,21 +549,23 @@ cy.on("drag", "elements", function(e) {
 })
 
 window.addEventListener("keydown", function(e) {
-	if (e.code == "Escape") {
+	console.log(e)
+
+	if (e.key == "Escape" || e.key == "Esc") {
 		ghost.disable();
 		hidePopper();
 	}
 
-	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete")) {
+	if (e.key == "x" && (tool == "Smart" || tool == "Delete")) {
 		resetRescaler();
-		console.log(document.activeElement);
+		log(document.activeElement);
 		if (document.activeElement != document.body) {
 			return;
 		}
 
 		let selected = cy.$(":selected");
 		
-		console.log(selected);
+		log(selected);
 		if (selected.some(e => e == popperNode)) {
 			hidePopper();
 		}
@@ -595,21 +598,25 @@ function duplicateLabelCheck() {
 			labels[label] = 1;
 		}	
 	}
-	//console.log(labels);
+	//log(labels);
 	return false;
 }
 
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
+function ungrabifyAll() {
+	cy.nodes().ungrabify();
+}
+
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
 	changed_graph = false;
-
+	ungrabifyAll();
 	unselectAll();
 	unHoverAll();
-	console.log(current_graph);
+	log(current_graph);
 	if (current_graph == "") {
 		return;
 	}
@@ -621,12 +628,12 @@ function saveGraph() {
 		}
 	}
 
-	console.log('SAVED');
+	log('SAVED');
 
 	let graph = cy.json();
 
-	// console.log(graph.elements.nodes);
-	// console.log(graph.elements.edges);
+	// log(graph.elements.nodes);
+	// log(graph.elements.edges);
 
 	if (!graph.elements.nodes) {
 		graph.elements.nodes = [];
@@ -639,7 +646,7 @@ function saveGraph() {
 	let _graph = cy.json();
 	_graph.types = types;
 	_graph.blueprint_scale = blueprint_scale;
-	// console.log(_graph);
+	// log(_graph);
 	let blueprint = fileImage == -1 ? "" : fileImage.src;
 	fetch(url, {
 		method: 'post',
@@ -649,12 +656,13 @@ function saveGraph() {
 	});
 	if (rescale_complete) {
 		rescale_menu.style.visibility = "hidden";
+		progress_bar.style.display = "none";
 	}
 }
 
 function unHoverAll() {
 	cy.$(".hover").forEach(e => {
-		console.log(e);
+		log(e);
 		e.removeClass("hover");
 	});
 }
@@ -663,7 +671,7 @@ let mapnames = [];
 
 function fillmapnames(names) {
 	names.forEach((name) => {
-		// console.log(name);
+		// log(name);
 		// if (name.trim() == "demo") {
 		// 	values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
 		// } else {
@@ -677,8 +685,8 @@ function getMapNamesFromServer() {
 		fillmapnames(data.graph);
 
 		if (urlMapName != "") {
-			console.log(mapnames);
-			console.log(urlMapName);
+			log(mapnames);
+			log(urlMapName);
 			if (mapnames.some(name=>name.value==urlMapName)) {
 				current_graph = urlMapName;
 				editFloor(urlMapName);
@@ -693,7 +701,7 @@ function getMapNamesFromServer() {
 			values: mapnames,
 			forceSelection: true,
 			onChange: function(value, name) {
-				console.log(value, name);
+				log(value, name);
 
 				if (value == "" || mapnames.some(val => val.value == value)) {
 					document.querySelector('#create_floor_inputs').style.display = "none";
@@ -702,7 +710,7 @@ function getMapNamesFromServer() {
 					document.querySelector('#edit_floor').classList.add("positive");
 					document.querySelector('#edit_floor').innerHTML = "Edit map"
 					document.querySelector('#select_floor_header').innerText = 'Select unit';
-					console.log("oldd");
+					log("oldd");
 				} else {
 					document.querySelector('#create_floor_inputs').style.display = "block";
 					document.querySelector('#edit_floor').style.display = 'none';
@@ -721,7 +729,7 @@ function getMapNamesFromServer() {
 				let curValue = $("#floor_search").dropdown("get value").trim();
 
 				if (name == curValue) {
-					console.log("match");
+					log("match");
 					$("#floor_search").dropdown("restore defaults");
 				}				
 
@@ -730,7 +738,7 @@ function getMapNamesFromServer() {
 				mapnames = mapnames.filter(function(value, index, arr) {
 					return value.value != name;
 				})
-				// console.log(mapnames);
+				// log(mapnames);
 				//getMapNamesFromServer();
 			})
 		});
@@ -755,7 +763,7 @@ reader.addEventListener("load", function (e) {
 	document.querySelector('#cy').style.visibility = 'hidden';
 	document.querySelector('#cy').style.visibility = 'visible';
 
-	//console.log(e.target.result);
+	//log(e.target.result);
 	fileData = e.target.result;
 	let url = `both/${current_graph}`;
 	let _graph = cy.json()
@@ -783,7 +791,7 @@ edit_floor_btn.addEventListener('click', (e) => {
 });
 
 function editFloor(current_graph) {
-	console.log(current_graph);
+	log(current_graph);
 
 	// if (!(mapnames.some(name => name == current_graph))) {
 	// 	current_graph = "";
@@ -798,33 +806,33 @@ function editFloor(current_graph) {
 function loadGraphData(data) {
 		changed_graph = false;
 		cy.elements().remove()
-		// console.log(cy.elements().remove());
-		// console.log(data);
+		// log(cy.elements().remove());
+		// log(data);
 		types = [];
 		if (data.graph.types) {
-			console.log("Adding types")
+			log("Adding types")
 			data.graph.types.forEach((e) => {
 				types.push(e);
 			});
 		}
 		fillTypes();
 		if (data.graph.elements.nodes) {
-			console.log(data.graph.elements);
+			log(data.graph.elements);
 			cy.add(data.graph.elements);
 		}
 		if (data.graph.zoom) {
-			console.log(data.graph.zoom);
+			log(data.graph.zoom);
 			cy.zoom(data.graph.zoom);
 		}
 		if (data.graph.pan) {
-			console.log(data.graph.pan);
+			log(data.graph.pan);
 			cy.pan(data.graph.pan);
 		}
 		if (data.graph.blueprint_scale) {
 			blueprint_scale = data.graph.blueprint_scale;
 			blueprint_scale_input.value = blueprint_scale;
 			drawBG();
-			console.log(blueprint_scale);
+			log(blueprint_scale);
 		}
 
 		const blueprint = data.blueprint;
@@ -838,19 +846,22 @@ function loadGraphData(data) {
 			document.querySelector('#cy').style.visibility = 'visible';
 		}
 		load_graph_versions();
-		//console.log(types);
+		//log(types);
 		document.querySelector('#select_floor').style.display = 'none';
 		document.querySelector('#tool_select').style.display = 'block';
 		document.querySelector('#cy').style.visibility = 'visible';
 		cy.elements().removeClass("desiredpath");
+		resetRescaler();
+		rescale_menu.style.visibility = "hidden";
+		progress_bar.style.display = "none";
 }
 
 const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
-	img_src = document.querySelector('#img');
+	// img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
 	current_graph = $("#floor_search").dropdown("get value");
-	console.log(current_graph);
+	log(current_graph);
 	
 	if (file != -1) {
 		reader.readAsDataURL(file);
@@ -898,10 +909,10 @@ const type_list = document.querySelector('#type_list');
 // // should really get from server returned map, we need to store manually alongside cy.json();
 
 function fillTypes() {
-	// console.log("filling types");
+	// log("filling types");
 
 	while(type_list.hasChildNodes()) {
-		// console.log("removinnnng");
+		// log("removinnnng");
 		type_list.removeChild(type_list.lastChild);
 	}
 
@@ -925,10 +936,10 @@ $("#type_select").dropdown({
 	allowAdditions: true, 
 	hideAdditions: false,
 	onChange: function(value, name) {
-		console.log(value, name);
+		log(value, name);
 		if (popperNode != -1) {
 			popperNode.data("type", value);
-			console.log("changed graph");
+			log("changed graph");
 			changed_graph = true;
 			let input_label = document.querySelector('#node_label_input').value;
 			let input_type = $("#type_select").dropdown("get value");
@@ -991,7 +1002,7 @@ set_type_btn.addEventListener("click", (e) => {
 	let input_label = document.querySelector('#node_label_input').value;
 	let input_type = $("#type_select").dropdown("get value");
 
-	console.log(input_label, input_type);
+	log(input_label, input_type);
 	if (set_type_btn.classList.contains("negative")) {
 		return;
 	}
@@ -1025,7 +1036,7 @@ function add_new_node_type(type_name){
 		return;
 	}
 
-	console.log("ADDING NEW NODE TYPEEEE");
+	log("ADDING NEW NODE TYPEEEE");
 
 	// let color = colors[types.length%colors.length];
 	let color;
@@ -1062,6 +1073,10 @@ matron_btn.addEventListener("click", (e) => {
 	//location.reload();
 });
 
+document.querySelector('#file_button').onchange = function() {
+	getImageData();
+}
+
 const distance_btn = document.querySelector('#distance_btn');
 const distance_result_div = document.querySelector('#distance_result_div');
 const distance_icon = document.querySelector('#distance_icon');
@@ -1073,14 +1088,14 @@ const blueprint_reader = new FileReader();
 let blueprint_scale = 1;
 upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	file = document.querySelector('#new_blue_print').files[0];
-	// console.log(file);
+	// log(file);
 	if (file) {
 		reader.readAsDataURL(file);
 		changed_graph = true;
 	}
 	
-	console.log(blueprint_scale_input.value);
-	new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
+	log(blueprint_scale_input.value);
+	let new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
 
 	if (blueprint_scale != new_blueprint_scale) {
 		scale_full_graph(new_blueprint_scale/blueprint_scale);
@@ -1089,7 +1104,7 @@ upload_new_blueprint_btn.addEventListener('click', (e)=>{
 		drawBG();
 	}
 	
-	console.log("changed graph");
+	log("changed graph");
 });
 
 function scale_full_graph(factor) {
@@ -1133,8 +1148,8 @@ distance_btn.addEventListener('click', (e) =>{
 	let node1_label = document.querySelector('#node1').value;
 	let node2_label = document.querySelector('#node2').value;
 
-	console.log(node1_label);
-	console.log(node2_label);
+	log(node1_label);
+	log(node2_label);
 
 	if (node1_label == "" || node2_label == "") {
 		document.querySelector('#dist_result').innerText = "Cannot search for empty room.";
@@ -1167,14 +1182,14 @@ distance_btn.addEventListener('click', (e) =>{
 
 
 let urlPath = decodeURI(window.location.href);
-console.log(urlPath);
+log(urlPath);
 let lastSlashIndex = urlPath.lastIndexOf("/")
 let lastQueryIndex = urlPath.lastIndexOf("?")==-1 ? urlPath.length : urlPath.lastIndexOf("?");
 let urlParams = urlPath.substring(lastQueryIndex + 1);
-console.log(urlParams);
-console.log(lastQueryIndex);
+log(urlParams);
+log(lastQueryIndex);
 let urlMapName = urlPath.substring(lastSlashIndex + 1, lastQueryIndex);
-console.log(urlMapName);
+log(urlMapName);
 
 function addVec(a, b) {
 	return {x: a.x+b.x, y: a.y+b.y};
@@ -1193,8 +1208,8 @@ function len(a) {
 }
 
 function nodeDist(node1, node2) {
-	// console.log(node1);
-	// console.log(node2);
+	// log(node1);
+	// log(node2);
 	return len(subVec(node1.position(), node2.position()));
 }
 
@@ -1204,32 +1219,32 @@ function reScale(node1pos, node2pos, scale) {
 	let newdiff = scaleVec(diff, scale);
 	let newpos = addVec(subVec(node2pos,diff),newdiff);
 	return newpos;
-	// console.log(newpos);
+	// log(newpos);
 
 	// node2.position(newpos);
 }
 
 // neighbor, source, len
 function fillPath(node, id, len) {
-	// console.log(len);
+	// log(len);
 	let neighbors = node;
 	//let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
-	// console.log(node);
+	// log(node);
 	// node = node.successors("node[type = 'hallway'][[degree <= 2]][id != '"+ node.id() + "']");
 	let oldNode = node;
 	while (true) {
 		// probably also needs a selector for node has not already been rescaled
 		let newNeighbors = neighbors.closedNeighborhood("node[type = 'hallway'][[degree = 2]]");
 		let newNode = newNeighbors.difference(neighbors)[0];
-		// console.log(neighbors.difference(neighbors));
-		// console.log(newNode);
+		// log(neighbors.difference(neighbors));
+		// log(newNode);
 		if (!newNode) {
 			break;
 		}
 
-		// console.log(newNode);
+		// log(newNode);
 		len += nodeDist(newNode, oldNode);
-		// console.log(len);
+		// log(len);
 		oldNode = newNode;
 		neighbors = newNeighbors;
 	}
@@ -1244,8 +1259,8 @@ function fillPath(node, id, len) {
 	// toggleSelected(end);
 	len += nodeDist(oldNode, end);
 	// toggleSelected(end);
-	// console.log(len);
-	// console.log(end);
+	// log(len);
+	// log(end);
 	return {interim: neighbors, end: end, len: len};
 }
 
@@ -1270,7 +1285,7 @@ function fillNode(node) {
 		// toggleSelected(branch.path);
 	});
 
-	// console.log(paths);
+	// log(paths);
 	return paths;
 }
 
@@ -1280,7 +1295,7 @@ function setScaleFactor(node1, node2, t) {
 	// let node2 = cy.$("node[label='" + label2 + "']")[0];
 
 	let path = fillNode(node1).find(p => p.end == node2);
-	// console.log(path);
+	// log(path);
 	if (!path) {return;}
 
 	setRescaled(cy2.$id(node2.id()));
@@ -1294,9 +1309,9 @@ function setScaleFactor(node1, node2, t) {
 	let cyLen = path.len;
 	scaleFactor = cyLen/t;
 
-	console.log(t);
-	console.log(cyLen);
-	console.log(scaleFactor);
+	log(t);
+	log(cyLen);
+	log(scaleFactor);
 }
 
 function reScalePath(node1, node2, t) {
@@ -1318,7 +1333,7 @@ function reScalePath(node1, node2, t) {
 	let newPos = reScale(node1.position(), node2.position(), scale);
 	let offset = subVec(newPos, node2.position());
 
-	console.log(offset);
+	log(offset);
 	//translateNode(node2, offset);
 	translateNode(flood(node1, node2, true), offset);
 }
@@ -1328,8 +1343,8 @@ function labeltonode(label) {
 }
 
 function translateNode(nodes, offset) {
-	console.log(nodes);
-	console.log(offset);
+	log(nodes);
+	log(offset);
 	nodes.forEach(node => {
 		node = cy.$id(node.id());
 		// let node = cy.$("node[label='" + label + "']")[0];
@@ -1337,8 +1352,8 @@ function translateNode(nodes, offset) {
 		let newPos = addVec(node.position(), offset);
 		node.position(newPos);
 
-		console.log(originalPos);
-		console.log(newPos);
+		log(originalPos);
+		log(newPos);
 
 		let paths = fillNode(node);
 
@@ -1398,12 +1413,12 @@ function cleanGraph(invis) {
 }
 
 function flood(src, pathstart, invis) {
-	console.log(src);
-	console.log(pathstart);
+	log(src);
+	log(pathstart);
 	// if (!pathstart.data("debug")) {return;}
 	let cyInstance = invis ? cy2 : cy;
 
-	console.log("MADE IT");
+	log("MADE IT");
 
 	src = cyInstance.$id(src.id());
 	pathstart = cyInstance.$id(pathstart.id());
@@ -1418,7 +1433,7 @@ function flood(src, pathstart, invis) {
 		neighbors = newNeighbors;
 	}
 	toggleSelected(neighbors);
-	console.log(neighbors);
+	log(neighbors);
 	return neighbors;
 }
 
@@ -1447,7 +1462,7 @@ function rescaleAll(t) {
 	let cy2Pair = getLeaf();
 
 	if (!cy2Pair) {
-		console.log("Rescaling complete.");
+		log("Rescaling complete.");
 		return true;
 	}
 
@@ -1455,7 +1470,7 @@ function rescaleAll(t) {
 	n1 = cy.$id(cy2Pair.neighbor.id());
 
 	let desiredpath = fillNode(n1).find(p => p.end == n2);
-	// console.log(desiredpath);
+	// log(desiredpath);
 	// desiredpath.start.addClass("desiredpath");
 	// desiredpath.end.addClass("desiredpath");
 	//desiredpath.interim.connectedEdges().addClass("desiredpath");
@@ -1471,12 +1486,12 @@ function rescaleAll(t) {
 		desiredpath.interim.connectedEdges().addClass("desiredpath");
 	}
 	
-	console.log("");
-	console.log("Please enter dist between");
-	console.log(n1.data("label"));
-	console.log("and")
-	console.log(n2.data("label"));
-	console.log("");
+	log("");
+	log("Please enter dist between");
+	log(n1.data("label"));
+	log("and")
+	log(n2.data("label"));
+	log("");
 	return false;
 }
 
@@ -1484,7 +1499,7 @@ function getLeaf() {
 	// issue is this degree selector doesn't care about whether the neighbors are rescale or not, it's global
 	// os after a few rescales there won't be any true degree 1 nodes left
 	let leaf =  cy3.$("node[[degree = 1]]"); // the whole point of rescaled is to make this unscaled leaf selector work
-	// console.log(leaf);
+	// log(leaf);
 
 	if (leaf.length <= 1) {
 		return false;
@@ -1527,7 +1542,7 @@ let cy3 = cytoscape({
 
 // 			if (p.end.data("rescaled")) {
 // 				n.position(addVec(n.position(), startOffset));
-// 				console.log("TEEEEEEEEEEEEEEEEEEEEEEEEST");
+// 				log("TEEEEEEEEEEEEEEEEEEEEEEEEST");
 // 			} else {
 // 				n.position(reScale(p.end.position(), n.position(), scale));
 // 				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
@@ -1546,7 +1561,7 @@ function rotateVec(point, origin, theta) {
 	let y = vec.x*Math.sin(theta) + vec.y*Math.cos(theta);
 	vec = {x:x, y:y};
 	vec = addVec(vec, origin);
-	//console.log(vec);
+	//log(vec);
 	return vec;
 }
 
@@ -1573,9 +1588,9 @@ $("#version_select").dropdown({
 	onChange: function(value, text, $selectedItem) {
 		// the text corresponds to date
 		const date = text;
-		console.log(value);
-		console.log(text);
-		console.log($selectedItem);
+		log(value);
+		log(text);
+		log($selectedItem);
 
 		if (!value) {
 			return;
@@ -1584,10 +1599,11 @@ $("#version_select").dropdown({
 		//
 		fetch(`/graph/version/${current_graph}/${date}`).then((resp) => resp.json()).then(function(data) {
 			// here we would do something load our older version graph
-			//console.log(data);
-			//console.log(data);
-
-			console.log(urlParams);
+			//log(data);
+			//log(data);
+			log("dataaaaaaaaa");
+			log(data);
+			log(urlParams);
 			if ((!changed_graph || urlParams=="dev") || window.confirm("You have unsaved changed. Continue?")) {
 				loadGraphData(data);
 				const blueprint = data.blueprint;
@@ -1601,17 +1617,18 @@ $("#version_select").dropdown({
  * Function used to load in the graph version on the dropdown
  */
 function load_graph_versions(){
-	console.log("LOADING GRAPH VERSIONS");
+	log("LOADING GRAPH VERSIONS")
 	document.querySelector('#version_select').style.display = 'block';
 	fetch(`/graph/requestAll/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-
+		debugtext.innerText = performance.now() + data.times;
+		
 		const version_list = document.querySelector('#version_list');
 		while(version_list.hasChildNodes()) {
 			version_list.removeChild(version_list.lastChild);
 		}
 
 		let count = 0;
-		// console.log(data)
+		// log(data)
 		data.times.reverse();
 		data.times.forEach((time)=>{
 			const div = document.createElement('div');
@@ -1628,12 +1645,13 @@ $('#tool_select')
 .dropdown({
 	onChange: function(value, text, $selectedItem) {
 	  // custom action
-		console.log(value);
-		console.log(text);
-		console.log($selectedItem);
+		log(value);
+		log(text);
+		log($selectedItem);
 		tool = value;
 		ghost.disable();
 
+		ungrabifyAll();
 	 	unselectAll();
 		unHoverAll();
 		hidePopper();
@@ -1676,12 +1694,15 @@ document.querySelector("#node_info_close").onclick = function() {
 }
 
 document.querySelector("#rescale_icon").onclick = function() {
+	rescale_icon_helper();
+}
 
+function rescale_icon_helper() {
 	if (!current_graph) {
 		return;
 	}
 
-	console.log("begin rescaling");
+	log("begin rescaling");
 	resetRescaler();
 	if (rescale_menu.style.visibility != "visible") {
 		rescale_menu.style.visibility = "visible";
@@ -1696,7 +1717,7 @@ document.querySelector("#rescale_icon").onclick = function() {
 		progress_bar.style.display = "none";
 	}
 	
-	console.log(rescale_button.innerText);
+	log(rescale_button.innerText);
 }
 
 let rescale_menu = document.querySelector("#rescale_menu");
@@ -1733,7 +1754,7 @@ rescale_button.onclick = function() {
 			}, 16)
 		}
 	} else {
-		console.log(rescale_input.value);
+		log(rescale_input.value);
 		clearInterval(timerInterval);
 		rescaleUIHelper();
 	}
@@ -1741,7 +1762,7 @@ rescale_button.onclick = function() {
 
 let first = 1;
 function rescaleUIHelper() {
-	console.log("RESCALE UI HELPER");
+	log("RESCALE UI HELPER");
 	if (rescaleAll(parseFloat(rescale_input.value) + (0.0001*first))) {
 		rescaling_started = false;
 		walking = false;
@@ -1761,7 +1782,7 @@ function rescaleUIHelper() {
 	first = 0;
 	rescaled_edges += 1;
 	let percent = 100 * rescaled_edges / cy2.edges().length;
-	console.log(percent);
+	log(percent);
 	$("#progress_bar").progress("set percent", percent);
 	//$("#progress_bar").progress("complete");
 }
@@ -1806,6 +1827,14 @@ colorPicker.on('color:change', function(color) {
 
 $("#progress_bar").progress({percent: 0});
 
+let debugtext = document.querySelector("#debugtext");
+
+function log(data) {
+	if (window.console) {
+		console.log(data);
+	}
+}
+
 // function cleanNode(label) {
 // 	let node = cy.$("node[label='" + label + "']")[0];
 // 	let paths = fillNode(node);
@@ -1821,7 +1850,7 @@ $("#progress_bar").progress({percent: 0});
 // function cleanNodeID(id) {
 // 	let node = cy.$("node[id='" + id + "']")[0];
 // 	let paths = fillNode(node);
-// 	console.log(paths);
+// 	log(paths);
 // 	paths.forEach(path => {
 // 		cy.remove(path.interim);
 // 		//removeNodes(path.interim);
