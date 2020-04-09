@@ -652,6 +652,7 @@
   var mapnames = [];
 
   function fillmapnames(names) {
+    mapnames = [];
     names.forEach(function (name) {
       // log(name);
       // if (name.trim() == "demo") {
@@ -1095,25 +1096,34 @@
   var upload_new_blueprint_btn = document.querySelector('#upload_new_blueprint');
   var blueprint_reader = new FileReader();
   var blueprint_scale = 1;
-  upload_new_blueprint_btn.addEventListener('click', function (e) {
-    file = document.querySelector('#new_blue_print').files[0]; // log(file);
+  upload_new_blueprint_btn.addEventListener('click', function (e) {});
+  $('#blueprint_modal').modal({
+    onApprove: function onApprove() {
+      file = document.querySelector('#new_blue_print').files[0]; // log(file);
 
-    if (file) {
-      reader.readAsDataURL(file);
-      changed_graph = true;
+      if (file) {
+        reader.readAsDataURL(file);
+        changed_graph = true;
+      }
+
+      log(blueprint_scale_input.value);
+      var new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
+
+      if (blueprint_scale != new_blueprint_scale) {
+        scale_full_graph(new_blueprint_scale / blueprint_scale);
+        blueprint_scale = new_blueprint_scale;
+        changed_graph = true;
+        drawBG();
+      } // fetch('graph/names').then((resp) => resp.json()).then(function(data) {
+      // 	console.log(data);
+      // });
+
+
+      log("changed graph");
+    },
+    onDeny: function onDeny() {
+      return false;
     }
-
-    log(blueprint_scale_input.value);
-    var new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
-
-    if (blueprint_scale != new_blueprint_scale) {
-      scale_full_graph(new_blueprint_scale / blueprint_scale);
-      blueprint_scale = new_blueprint_scale;
-      changed_graph = true;
-      drawBG();
-    }
-
-    log("changed graph");
   });
 
   function scale_full_graph(factor) {
@@ -1125,14 +1135,55 @@
       var newpos = scaleVec(oldpos, factor);
       n.position(newpos);
     });
-  }
+  } // blueprint_name_input.onchange = function() {
+  // 	console.log("changinggggg")
+  // }
+
+
+  document.querySelector("#blueprint_name_input").oninput = function () {
+    console.log("changeeeee");
+    var newname = document.querySelector("#blueprint_name_input").value;
+
+    if (newname == current_graph) {
+      return;
+    }
+
+    if (newname.trim() == "") {
+      upload_new_blueprint_btn.classList.remove("positive");
+      upload_new_blueprint_btn.classList.add("negative");
+      upload_new_blueprint_btn.innerText = "Empty name not allowed";
+      return;
+    }
+
+    if (mapnames.some(function (name) {
+      return newname == name.value;
+    })) {
+      upload_new_blueprint_btn.classList.remove("positive");
+      upload_new_blueprint_btn.classList.add("negative");
+      upload_new_blueprint_btn.innerText = "Name already taken";
+      return;
+    }
+
+    upload_new_blueprint_btn.classList.remove("negative");
+    upload_new_blueprint_btn.classList.add("positive");
+    upload_new_blueprint_btn.innerText = "Update";
+  };
 
   blueprint_icon.addEventListener('click', function (e) {
     if (current_graph == "") {
       return;
     }
 
+    upload_new_blueprint_btn.classList.remove("negative");
+    upload_new_blueprint_btn.classList.add("positive");
+    upload_new_blueprint_btn.innerText = "Update";
     blueprint_scale_input.value = blueprint_scale;
+    blueprint_name_input.value = current_graph;
+    fetch('graph/names').then(function (resp) {
+      return resp.json();
+    }).then(function (data) {
+      fillmapnames(data.graph);
+    });
     $('#blueprint_modal').modal('show');
   });
   distance_icon.addEventListener('click', function (e) {
@@ -1725,6 +1776,7 @@
   var rescale_input = document.querySelector("#rescale_input");
   var rescale_button = document.querySelector("#rescale_button");
   var blueprint_scale_input = document.querySelector("#blueprint_scale_input");
+  var blueprint_name_input = document.querySelector("#blueprint_name_input");
   var progress_bar = document.querySelector("#progress_bar");
   var rescaled_edges = 0;
   var rescaling_started = false;

@@ -682,6 +682,7 @@ function unHoverAll() {
 let mapnames = [];
 
 function fillmapnames(names) {
+	mapnames = [];
 	names.forEach((name) => {
 		// log(name);
 		// if (name.trim() == "demo") {
@@ -1099,24 +1100,37 @@ const blueprint_reader = new FileReader();
 
 let blueprint_scale = 1;
 upload_new_blueprint_btn.addEventListener('click', (e)=>{
-	file = document.querySelector('#new_blue_print').files[0];
-	// log(file);
-	if (file) {
-		reader.readAsDataURL(file);
-		changed_graph = true;
-	}
-	
-	log(blueprint_scale_input.value);
-	let new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
 
-	if (blueprint_scale != new_blueprint_scale) {
-		scale_full_graph(new_blueprint_scale/blueprint_scale);
-		blueprint_scale = new_blueprint_scale;
-		changed_graph = true;
-		drawBG();
+});
+
+$('#blueprint_modal').modal({
+	onApprove: function() {
+		file = document.querySelector('#new_blue_print').files[0];
+		// log(file);
+		if (file) {
+			reader.readAsDataURL(file);
+			changed_graph = true;
+		}
+		
+		log(blueprint_scale_input.value);
+		let new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
+
+		if (blueprint_scale != new_blueprint_scale) {
+			scale_full_graph(new_blueprint_scale/blueprint_scale);
+			blueprint_scale = new_blueprint_scale;
+			changed_graph = true;
+			drawBG();
+		}
+
+		// fetch('graph/names').then((resp) => resp.json()).then(function(data) {
+		// 	console.log(data);
+		// });
+		
+		log("changed graph");
+	},
+	onDeny: function() {
+		return false;
 	}
-	
-	log("changed graph");
 });
 
 function scale_full_graph(factor) {
@@ -1131,13 +1145,55 @@ function scale_full_graph(factor) {
 	})
 }
 
+// blueprint_name_input.onchange = function() {
+// 	console.log("changinggggg")
+// }
+
+document.querySelector("#blueprint_name_input").oninput = function() {
+	console.log("changeeeee");
+	let newname = document.querySelector("#blueprint_name_input").value;
+
+	if (newname == current_graph) {
+		return;
+	}
+
+	if (newname.trim() == "") {
+		upload_new_blueprint_btn.classList.remove("positive");
+		upload_new_blueprint_btn.classList.add("negative");
+		upload_new_blueprint_btn.innerText = "Empty name not allowed"
+		return;
+	}
+
+	if (mapnames.some(name => newname == name.value)) {
+		upload_new_blueprint_btn.classList.remove("positive");
+		upload_new_blueprint_btn.classList.add("negative");
+		upload_new_blueprint_btn.innerText = "Name already taken"
+		return;
+	}
+
+	upload_new_blueprint_btn.classList.remove("negative");
+	upload_new_blueprint_btn.classList.add("positive");
+	upload_new_blueprint_btn.innerText = "Update"
+}
+
+
+
 blueprint_icon.addEventListener('click', (e)=>{
 	if (current_graph == "") {
 		return
 	}
 	
-	
+	upload_new_blueprint_btn.classList.remove("negative");
+	upload_new_blueprint_btn.classList.add("positive");
+	upload_new_blueprint_btn.innerText = "Update"
+
 	blueprint_scale_input.value = blueprint_scale;
+	blueprint_name_input.value = current_graph;
+
+	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
+		fillmapnames(data.graph);
+	});
+
 	$('#blueprint_modal')
 		.modal('show')
 	;
@@ -1739,6 +1795,7 @@ let instructions = document.querySelector("#instructions");
 let rescale_input = document.querySelector("#rescale_input");
 let rescale_button = document.querySelector("#rescale_button");
 let blueprint_scale_input = document.querySelector("#blueprint_scale_input");
+let blueprint_name_input = document.querySelector("#blueprint_name_input");
 let progress_bar = document.querySelector("#progress_bar");
 
 let rescaled_edges = 0;
