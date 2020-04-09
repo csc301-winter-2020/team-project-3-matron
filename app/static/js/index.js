@@ -846,7 +846,9 @@ function loadGraphData(data) {
 		document.querySelector('#tool_select').style.display = 'block';
 		document.querySelector('#cy').style.visibility = 'visible';
 		cy.elements().removeClass("desiredpath");
-		rescale_icon_helper();
+		resetRescaler();
+		rescale_menu.style.visibility = "hidden";
+		progress_bar.style.display = "none";
 }
 
 const create_floor_btn = document.querySelector('#create_floor');
