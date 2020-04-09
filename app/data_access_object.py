@@ -17,6 +17,8 @@ class MongoDAO:
         used to save and retrieve blueprints
     meta_collect : Collection
         used to view metadata for stored blueprints
+    bucket : GridFSBucket
+        alternate object for blueprint_fs, used for renaming
     Methods
     -------
     save_graph : bool
@@ -32,6 +34,10 @@ class MongoDAO:
     delete_graph : bool
         deletes all records of a graph from the database
         returns true if successful, false otherwise
+    rename_graph : int
+        renames a graph in the database
+        returns 0 if successful, -1 if not given a String and -2 if
+        given an invalid string
     get_latest : Dict, String
         returns the latest version of a graph and its blueprint 
     get_version : Dict, String
@@ -67,6 +73,7 @@ class MongoDAO:
         self.blueprintdb = self.client.blueprints
         self.blueprint_fs = gridfs.GridFS(self.blueprintdb)
         self.meta_collect = self.blueprintdb.fs.files
+        self.bucket = gridfs.GridFSBucket(self.blueprintdb)
 
     def save_graph(self, graphname, graph):
         """
@@ -177,6 +184,39 @@ class MongoDAO:
 
         return collection.drop()
 
+    def rename_graph(self, oldname, newname):
+        """
+        Renames a graph and all associated blueprints in the database
+        Parameters
+        ----------
+        oldname : string
+            old name of the graph
+        newname : string
+            new name of te graph
+        Returns
+        -------
+        int
+             0 if successful
+            -1 if newname is not a string
+            -2 if newname is not a valid name
+        """
+        # rename the graph objects in the database
+        try:
+            collection = self.graphdb[oldname]
+            collection.rename(newname)
+        except TypeError:
+            return -1
+        except pymongo.errors.InvalidName:
+            return -2
+
+        # rename the associated blueprints
+        blueprints = self.meta_collect.find({"filename": oldname})
+        for blueprint in blueprints:
+            self.bucket.rename(blueprint['_id'], newname)
+
+        return 0
+
+
     def get_latest(self, graphname):
         """Returns the latest version of the given graph
         """
@@ -186,7 +226,7 @@ class MongoDAO:
         if len(versions) > 0:
             return self.get_version(graphname, versions[-1])
         else:
-            return None, None
+            return None
         
 
     def get_version(self, graphname, date):

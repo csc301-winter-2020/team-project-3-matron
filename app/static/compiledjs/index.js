@@ -625,12 +625,26 @@ function saveGraph() {
   _graph.blueprint_scale = blueprint_scale; // log(_graph);
 
   var blueprint = fileImage == -1 ? "" : fileImage.src;
-  fetch(url, {
-    method: 'post',
-    body: JSON.stringify({
+  var body;
+
+  if (new_graph_name != '') {
+    body = JSON.stringify({
+      graph: _graph,
+      blueprint: blueprint,
+      new_name: new_graph_name
+    });
+    current_graph = new_graph_name;
+    new_graph_name = '';
+  } else {
+    body = JSON.stringify({
       graph: _graph,
       blueprint: blueprint
-    })
+    });
+  }
+
+  fetch(url, {
+    method: 'post',
+    body: body
   }).then(function (res) {
     load_graph_versions();
   });
@@ -741,6 +755,7 @@ var file = -1;
 var fileData = -1;
 var fileImage = -1;
 var reader = new FileReader();
+var new_graph_name = '';
 reader.addEventListener("load", function (e) {
   // Force rerender
   document.querySelector('#cy').style.visibility = 'hidden';
@@ -756,7 +771,8 @@ reader.addEventListener("load", function (e) {
     method: 'post',
     body: JSON.stringify({
       graph: _graph,
-      blueprint: fileData
+      blueprint: fileData,
+      new_name: new_graph_name
     })
   });
   fileImage = new Image();
@@ -1093,7 +1109,8 @@ var upload_new_blueprint_btn = document.querySelector('#upload_new_blueprint');
 var blueprint_reader = new FileReader();
 var blueprint_scale = 1;
 upload_new_blueprint_btn.addEventListener('click', function (e) {
-  file = document.querySelector('#new_blue_print').files[0]; // log(file);
+  file = document.querySelector('#new_blue_print').files[0];
+  var new_blueprint_name = document.querySelector('#blueprint_name_input').value; // log(file);
 
   if (file) {
     reader.readAsDataURL(file);
@@ -1110,7 +1127,12 @@ upload_new_blueprint_btn.addEventListener('click', function (e) {
     drawBG();
   }
 
+  if (new_blueprint_name != '' && new_blueprint_name !== current_graph) {
+    new_graph_name = new_blueprint_name;
+  }
+
   log("changed graph");
+  saveGraph();
 });
 
 function scale_full_graph(factor) {
@@ -1129,6 +1151,9 @@ blueprint_icon.addEventListener('click', function (e) {
     return;
   }
 
+  document.querySelector('#blueprint_name_input').display = 'block';
+  document.querySelector('#blueprint_name_input').placeholder = current_graph;
+  document.querySelector('#blueprint_name_input').display = 'none';
   $('#blueprint_modal').modal('show');
 });
 distance_icon.addEventListener('click', function (e) {

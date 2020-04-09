@@ -15,7 +15,7 @@ password = os.environ['DB_PASS']
 dao = None
 
 success = {'status': 200}
-failure = {'status': 400}
+failure = {'status': 400}    
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -36,11 +36,28 @@ def graph_functions(name):
     depending on the request type
     name: the name of the graph
     """
-    print(name)
+
     if request.method == 'POST':
-        g = request.get_json(force=True)
+        data = request.get_json(force=True)
+        g = data['graph']
+
+        if 'new_name' in data:
+            new_name = data['new_name']
+        else:
+            new_name = ''
+
         t = int(time())
         graph = {"date": t, "graph": g}
+        
+        # sets a new name for the graph if one is posted
+        if new_name != "":
+            check = dao.rename_graph(name, new_name)
+            if(check == -1):
+                return jsonify({"status": 400, "error": "new name is not a string"})
+            elif (check == -2):
+                return jsonify({"status": 400, "error": "not a valid new name"})
+            name = new_name
+
         if dao.save_graph(name, graph):
             return jsonify(success)
         else:
@@ -70,6 +87,19 @@ def graph_and_print(graph_name):
     incoming_data = request.get_json(force=True)
     g = incoming_data['graph']
     blueprint = incoming_data['blueprint']
+    if 'new_name' in incoming_data:
+        new_name = incoming_data['new_name']
+    else:
+        new_name = ''
+
+    # sets a new name for the graph if one is posted
+    if new_name != "":
+        check = dao.rename_graph(graph_name, new_name)
+        if(check == -1):
+            return jsonify({"status": 400, "error": "new name is not a string"})
+        elif (check == -2):
+            return jsonify({"status": 400, "error": "not a valid new name"})
+        graph_name = new_name
 
     t = int(time())
     graph = {"date": t, "graph": g}
@@ -184,13 +214,6 @@ def distance_two_rooms(graph_name, room_name0, room_name1):
 
     return jsonify(dist)
 
-# From https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
-@app.after_request
-def add_header(r):
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
 
 if __name__ == "__main__":
     dao = MongoDAO(url, password)

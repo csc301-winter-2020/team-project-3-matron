@@ -641,11 +641,21 @@ function saveGraph() {
 	let _graph = cy.json();
 	_graph.types = types;
 	_graph.blueprint_scale = blueprint_scale;
+
 	// log(_graph);
 	let blueprint = fileImage == -1 ? "" : fileImage.src;
+
+	let body;
+	if (new_graph_name != ''){
+		body = JSON.stringify({graph: _graph, blueprint: blueprint, new_name: new_graph_name});
+		current_graph = new_graph_name;
+		new_graph_name = '';
+	} else {
+		body = JSON.stringify({graph: _graph, blueprint: blueprint})
+	}
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: _graph, blueprint: blueprint})
+		body: body
 	}).then(res=>{
 		load_graph_versions();
 	});
@@ -753,6 +763,7 @@ let file = -1;
 let fileData = -1;
 let fileImage = -1;
 const reader = new FileReader();
+var new_graph_name = '';
 reader.addEventListener("load", function (e) {
 	// Force rerender
 	document.querySelector('#cy').style.visibility = 'hidden';
@@ -765,7 +776,7 @@ reader.addEventListener("load", function (e) {
 	_graph.types = types;
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: _graph, blueprint: fileData})
+		body: JSON.stringify({graph: _graph, blueprint: fileData, new_name: new_graph_name})
 	});
 	fileImage = new Image();
 	fileImage.src = e.target.result;
@@ -781,6 +792,7 @@ edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
 	if (current_graph) {
 		editFloor(current_graph);
+		
 		window.history.replaceState({}, "Matron", "/" + current_graph);
 	}
 });
@@ -792,9 +804,8 @@ function editFloor(current_graph) {
 	// 	current_graph = "";
 	// 	return;
 	// }
-
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-		loadGraphData(data);		
+		loadGraphData(data);
 	});
 }
 
@@ -1079,8 +1090,10 @@ const upload_new_blueprint_btn = document.querySelector('#upload_new_blueprint')
 const blueprint_reader = new FileReader();
 
 let blueprint_scale = 1;
+
 upload_new_blueprint_btn.addEventListener('click', (e)=>{
 	file = document.querySelector('#new_blue_print').files[0];
+	const new_blueprint_name = document.querySelector('#blueprint_name_input').value;
 	// log(file);
 	if (file) {
 		reader.readAsDataURL(file);
@@ -1096,8 +1109,14 @@ upload_new_blueprint_btn.addEventListener('click', (e)=>{
 		changed_graph = true;
 		drawBG();
 	}
+	if (new_blueprint_name != '' && new_blueprint_name !== current_graph){
+		new_graph_name = new_blueprint_name;
+	}
 	
 	log("changed graph");
+	saveGraph();
+
+	
 });
 
 function scale_full_graph(factor) {
@@ -1116,6 +1135,9 @@ blueprint_icon.addEventListener('click', (e)=>{
 	if (current_graph == "") {
 		return
 	}
+	document.querySelector('#blueprint_name_input').display = 'block';
+	document.querySelector('#blueprint_name_input').placeholder = current_graph;
+	document.querySelector('#blueprint_name_input').display = 'none';
 	
 	$('#blueprint_modal')
 		.modal('show')
