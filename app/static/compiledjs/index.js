@@ -849,8 +849,8 @@ function loadGraphData(data) {
 
 var create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', function (e) {
-  img_src = document.querySelector('#img'); // load empty graph with this img (we'll send it to server on save)
-
+  // img_src = document.querySelector('#img');
+  // load empty graph with this img (we'll send it to server on save)
   current_graph = $("#floor_search").dropdown("get value");
   log(current_graph);
 
@@ -1078,6 +1078,11 @@ matron_btn.addEventListener("click", function (e) {
   } //location.reload();
 
 });
+
+document.querySelector('#file_button').onchange = function () {
+  getImageData();
+};
+
 var distance_btn = document.querySelector('#distance_btn');
 var distance_result_div = document.querySelector('#distance_result_div');
 var distance_icon = document.querySelector('#distance_icon');

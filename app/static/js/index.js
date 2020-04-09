@@ -849,7 +849,7 @@ function loadGraphData(data) {
 
 const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
-	img_src = document.querySelector('#img');
+	// img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
 	current_graph = $("#floor_search").dropdown("get value");
 	log(current_graph);
@@ -1063,6 +1063,10 @@ matron_btn.addEventListener("click", (e) => {
 	
 	//location.reload();
 });
+
+document.querySelector('#file_button').onchange = function() {
+	getImageData();
+}
 
 const distance_btn = document.querySelector('#distance_btn');
 const distance_result_div = document.querySelector('#distance_result_div');
