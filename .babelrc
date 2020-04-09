@@ -8,7 +8,7 @@
 		},
 		"useBuiltIns": "usage",
 		"corejs": "3",
-		"modules": "amd",
+		"modules": false,
 		"forceAllTransforms": true
 	  }
 	]
