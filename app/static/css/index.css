@@ -218,3 +218,10 @@ body {
 #top_menu {
 	padding: 0;
 }
+
+#debugtext {
+	font-size: 10px;
+	position: fixed;
+	z-index: 100000;
+	/*display: none;*/
+}
