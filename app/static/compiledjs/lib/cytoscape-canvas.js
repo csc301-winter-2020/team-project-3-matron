@@ -27,15 +27,15 @@
         var canvasHeight = height * options.pixelRatio;
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
-        canvas.style.width = "".concat(width, "px");
-        canvas.style.height = "".concat(height, "px");
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
         cy.trigger("cyCanvas.resize");
       }
 
       cy.on("resize", function () {
         resize();
       });
-      canvas.setAttribute("style", "position:absolute; top:0; left:0; z-index:".concat(options.zIndex, ";"));
+      canvas.setAttribute("style", "position:absolute; top:0; left:0; z-index:" + options.zIndex + ";");
       resize();
       return {
         /**

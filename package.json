@@ -12,13 +12,14 @@
     "@babel/register": "^7.9.0",
     "browserify": "^16.5.1",
     "core-js": "^3.6.4",
-    "requirejs-babel": "0.0.9"
+    "requirejs-babel": "0.0.9",
+    "rollup": "^2.3.4",
+    "watch": "^1.0.2"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel app/static/js --out-dir app/static/compiledjs",
-    "build2": "browserify app/static/compiledjs/index.js -o bundle.js"
+    "build": "babel app/static/js/index.js --out-dir app/static/compiledjs && rollup -c"
   },
   "repository": {
     "type": "git",
