@@ -660,9 +660,11 @@ function saveGraph() {
 	_graph.blueprint_scale = blueprint_scale;
 	// log(_graph);
 	let blueprint = fileImage == -1 ? "" : fileImage.src;
+	console.log("nameeeee");
+	console.log(current_graph);
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: _graph, blueprint: blueprint})
+		body: JSON.stringify({graph: _graph, blueprint: blueprint, new_name: current_graph})
 	}).then(res=>{
 		load_graph_versions();
 	});
@@ -1121,11 +1123,7 @@ $('#blueprint_modal').modal({
 			changed_graph = true;
 			drawBG();
 		}
-
-		// fetch('graph/names').then((resp) => resp.json()).then(function(data) {
-		// 	console.log(data);
-		// });
-		
+		current_graph = document.querySelector("#blueprint_name_input").value;
 		log("changed graph");
 	},
 	onDeny: function() {
