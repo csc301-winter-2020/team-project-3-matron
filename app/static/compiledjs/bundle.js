@@ -546,6 +546,14 @@
       cy.remove(selected);
     }
   });
+  var ur_options = {
+    isDebug: true,
+    actions: {},
+    undoableDrag: true,
+    stackSizeLimit: undefined,
+    ready: function ready() {}
+  };
+  var ur = cy.undoRedo(ur_options);
 
   function duplicateLabelCheck() {
     var labels = {};

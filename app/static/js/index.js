@@ -581,6 +581,18 @@ window.addEventListener("keydown", function(e) {
 	}
 });
 
+let ur_options = {
+	isDebug: true,
+	actions: {},
+	undoableDrag: true,
+	stackSizeLimit: undefined,
+	ready: function() {
+		
+	}
+}
+
+let ur = cy.undoRedo(ur_options)
+
 function duplicateLabelCheck() {
 	let labels = {};
 	let nodes = cy.nodes();
