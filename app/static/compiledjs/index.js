@@ -123,7 +123,7 @@ function toggleSelected(e) {
   e.unselectify();
 }
 
-function addEdge(cyNode1, cyNode2, cyInstance) {
+function addEdge(cyNode1, cyNode2, cyInstance, undoable, give_json, cyNode1_is_id) {
   // if (!cy.$id(cyNode1.id())[0] || !cy.$id(cyNode2.id())[0]) {
   // 	return;
   // }
@@ -133,8 +133,9 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
     return;
   }
 
-  var id1 = cyNode1.id() + "-" + cyNode2.id();
-  var id2 = cyNode2.id() + "-" + cyNode1.id();
+  var cynode1_id = cyNode1_is_id ? cyNode1 : cyNode1.id();
+  var id1 = cynode1_id + "-" + cyNode2.id();
+  var id2 = cyNode2.id() + "-" + cynode1_id;
 
   if (cyInstance.$id(id1)[0] || cyInstance.$id(id2)[0]) {
     return;
@@ -144,38 +145,102 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
     data: {
       id: id1,
       label: "",
-      source: cyNode1.id(),
+      source: cynode1_id,
       target: cyNode2.id()
     },
+    selecable: false,
+    grabbable: false,
     classes: []
   };
-  var cyEdge = cyInstance.add(edge);
-  cyEdge.unselectify();
-  cyEdge.ungrabify();
-  console.log("changed graph");
+
+  if (give_json) {
+    return edge;
+  }
+
+  var cyEdge;
+
+  if (undoable) {
+    cyEdge = ur["do"]("add", edge);
+  } else {
+    cyEdge = cyInstance.add(edge);
+  } // cyEdge.unselectify();
+  // cyEdge.ungrabify();
+  // console.log("changed graph");
+
+
   changed_graph = cyInstance == cy;
   return cyEdge;
 }
 
-function addNode(posX, posY, cyInstance) {
-  changed_graph = true;
-  console.log("changed graph");
+function addNode(posX, posY, cyInstance, undoable, customid, give_json, is_hallway) {
+  changed_graph = true; // console.log("changed graph");
+
   cyInstance = cyInstance || cy;
+  var node_type = is_hallway ? "hallway" : "";
   var node = {
     data: {
       label: "",
-      type: ""
+      type: node_type,
+      id: customid
     },
     position: {
       x: posX,
       y: posY
     },
+    grabbable: false,
+    selectable: false,
     classes: []
   };
-  var cyNode = cyInstance.add(node)[0];
-  cyNode.unselectify();
-  cyNode.ungrabify();
+
+  if (give_json) {
+    return node;
+  }
+
+  var cyNode;
+
+  if (undoable) {
+    cyNode = ur["do"]("add", node);
+  } else {
+    cyNode = cyInstance.add(node)[0]; // cyNode.unselectify();
+    // cyNode.ungrabify();
+  }
+
   return cyNode;
+}
+
+function createJunctionBatch(hovered, x, y, source, target, ghostsource) {
+  var customid = Math.random();
+  var newNode = addNode(x, y, cy, false, customid, true, true); // newNode.data("type", "hallway");
+
+  console.log("newnode");
+  console.log(newNode);
+  var e1 = addEdge(customid, source, cy, false, true, true);
+  var e2 = addEdge(customid, target, cy, false, true, true);
+  var e3 = addEdge(customid, ghostsource, cy, false, true, true);
+  var actions = [];
+  actions.push({
+    name: "remove",
+    param: hovered
+  });
+  actions.push({
+    name: "add",
+    param: newNode
+  });
+  actions.push({
+    name: "add",
+    param: e1
+  });
+  actions.push({
+    name: "add",
+    param: e2
+  });
+  actions.push({
+    name: "add",
+    param: e3
+  }); // cy.remove(newNode);
+
+  ur["do"]("batch", actions);
+  changed_graph = true;
 }
 
 var ghost = {
@@ -259,8 +324,9 @@ function deleteNodesTap(e) {
     return;
   }
 
-  resetRescaler();
-  cy.remove(target);
+  resetRescaler(); //cy.remove(target);
+
+  ur["do"]("remove", target);
 } // cy.on("tapstart", function(e) {
 // 	let target = e.target;
 // 	if (target == cy) {
@@ -293,7 +359,7 @@ function addNodesTap(e) {
 
   if (target == cy) {
     if (!ghost.enabled) {
-      var newNode = addNode(e.position.x, e.position.y);
+      var newNode = addNode(e.position.x, e.position.y, cy, true);
       popperNode = newNode;
       var popper = popperNode.popper({
         content: function content() {
@@ -427,7 +493,7 @@ function addEdgesCxtTap(e) {
     }
 
     if (target == cy) {
-      var newNode = addNode(e.position.x, e.position.y);
+      var newNode = addNode(e.position.x, e.position.y, cy, true);
       newNode.data("type", "hallway");
       add_new_node_type("hallway");
       ghost.enable();
@@ -438,19 +504,19 @@ function addEdgesCxtTap(e) {
     }
   } else {
     if (!hovered) {
-      var _newNode = addNode(e.position.x, e.position.y);
+      var _newNode = addNode(e.position.x, e.position.y, cy, true);
 
       _newNode.data("type", "hallway");
 
       add_new_node_type("hallway");
-      addEdge(ghost.source, _newNode);
+      addEdge(ghost.source, _newNode, cy, true);
       ghost.setSource(_newNode);
       ghost.redraw();
       return;
     }
 
     if (hovered.group() == "nodes") {
-      addEdge(ghost.source, hovered); // ghost.setSource(hovered);
+      addEdge(ghost.source, hovered, cy, true); // ghost.setSource(hovered);
       // ghost.redraw();
 
       ghost.disable();
@@ -466,17 +532,16 @@ function addEdgesCxtTap(e) {
         return;
       }
 
-      var intersectPos = window.finiteLinesIntersect(e.position.x, e.position.y, e.position.x + (_target.position().y - source.position().y), e.position.y + (source.position().x - _target.position().x), source.position().x, source.position().y, _target.position().x, _target.position().y, true);
-      cy.remove(hovered);
+      var intersectPos = window.finiteLinesIntersect(e.position.x, e.position.y, e.position.x + (_target.position().y - source.position().y), e.position.y + (source.position().x - _target.position().x), source.position().x, source.position().y, _target.position().x, _target.position().y, true); // DO THIS AS A BATCH JOB
+      // cy.remove(hovered);			
+      // let newNode = addNode(intersectPos[0], intersectPos[1], cy, true);
+      // addEdge(newNode, source);
+      // addEdge(newNode, target);
+      // addEdge(newNode, ghost.source);
+      // newNode.data("type", "hallway");
 
-      var _newNode2 = addNode(intersectPos[0], intersectPos[1]);
-
-      _newNode2.data("type", "hallway");
-
-      add_new_node_type("hallway");
-      addEdge(_newNode2, source);
-      addEdge(_newNode2, _target);
-      addEdge(_newNode2, ghost.source); // ghost.setSource(newNode);
+      createJunctionBatch(hovered, intersectPos[0], intersectPos[1], source, _target, ghost.source);
+      add_new_node_type("hallway"); // ghost.setSource(newNode);
       // ghost.redraw();
 
       ghost.disable();
@@ -526,6 +591,26 @@ cy.on("drag", "elements", function (e) {
 window.addEventListener("keydown", function (e) {
   console.log(e);
 
+  if (e.key == "y") {
+    console.log(addNode(0, 0, cy, true));
+  }
+
+  if (e.key.toLowerCase() == "z" && e.ctrlKey && e.shiftKey) {
+    console.log("redo");
+    ur.redo();
+    ghost.disable();
+    hidePopper();
+    return;
+  }
+
+  if (e.key == "z" && e.ctrlKey) {
+    console.log("undo");
+    ur.undo();
+    ghost.disable();
+    hidePopper();
+    return;
+  }
+
   if (e.key == "Escape" || e.key == "Esc") {
     ghost.disable();
     hidePopper();
@@ -557,7 +642,7 @@ window.addEventListener("keydown", function (e) {
       }
     }
 
-    cy.remove(selected);
+    ur["do"]("remove", selected); //cy.remove(selected);
   }
 });
 var ur_options = {
