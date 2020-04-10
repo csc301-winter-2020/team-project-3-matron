@@ -152,14 +152,14 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
   var cyEdge = cyInstance.add(edge);
   cyEdge.unselectify();
   cyEdge.ungrabify();
-  log("changed graph");
+  console.log("changed graph");
   changed_graph = cyInstance == cy;
   return cyEdge;
 }
 
 function addNode(posX, posY, cyInstance) {
   changed_graph = true;
-  log("changed graph");
+  console.log("changed graph");
   cyInstance = cyInstance || cy;
   var node = {
     data: {
@@ -284,7 +284,7 @@ function deleteNodesTap(e) {
 function randomHex() {
   // from comments in https://www.paulirish.com/2009/random-hex-color-code-snippets/
   var hex = '#' + ('000000' + (Math.random() * 0xFFFFFF << 0).toString(16)).slice(-6);
-  log(hex);
+  console.log(hex);
   return hex;
 }
 
@@ -387,13 +387,13 @@ function smartTap(e) {
 
 
   if (!e.originalEvent.ctrlKey) {
-    log("ttettetetet");
+    console.log("ttettetetet");
     unselectAll(); //return;
   }
 
   if (target.group() == "nodes") {
     target.grabify();
-    log(target); // log(target.data("type"));
+    console.log(target); // console.log(target.data("type"));
 
     if (target.data("type") == "hallway" || e.originalEvent.ctrlKey) {
       toggleSelected(target);
@@ -533,14 +533,14 @@ window.addEventListener("keydown", function (e) {
 
   if (e.key == "x" && (tool == "Smart" || tool == "Delete")) {
     resetRescaler();
-    log(document.activeElement);
+    console.log(document.activeElement);
 
     if (document.activeElement != document.body) {
       return;
     }
 
     var selected = cy.$(":selected");
-    log(selected);
+    console.log(selected);
 
     if (selected.some(function (e) {
       return e == popperNode;
@@ -585,7 +585,7 @@ function duplicateLabelCheck() {
 
       labels[label] = 1;
     }
-  } //log(labels);
+  } //console.log(labels);
 
 
   return false;
@@ -606,7 +606,7 @@ function saveGraph() {
   ungrabifyAll();
   unselectAll();
   unHoverAll();
-  log(current_graph);
+  console.log(current_graph);
 
   if (current_graph == "") {
     return;
@@ -620,9 +620,9 @@ function saveGraph() {
     }
   }
 
-  log('SAVED');
-  var graph = cy.json(); // log(graph.elements.nodes);
-  // log(graph.elements.edges);
+  console.log('SAVED');
+  var graph = cy.json(); // console.log(graph.elements.nodes);
+  // console.log(graph.elements.edges);
 
   if (!graph.elements.nodes) {
     graph.elements.nodes = [];
@@ -637,20 +637,26 @@ function saveGraph() {
   var _graph = cy.json();
 
   _graph.types = types;
-  _graph.blueprint_scale = blueprint_scale; // log(_graph);
+  _graph.blueprint_scale = blueprint_scale; // console.log(_graph);
 
   var blueprint = fileImage == -1 ? "" : fileImage.src;
   console.log("nameeeee");
   console.log(current_graph);
+  console.log(new_name);
   fetch(url, {
     method: 'post',
     body: JSON.stringify({
       graph: _graph,
       blueprint: blueprint,
-      new_name: current_graph
+      new_name: new_name
     })
   }).then(function (res) {
     load_graph_versions();
+    console.log("tesssssss");
+    console.log(new_name, current_graph);
+    current_graph = new_name; // todo
+
+    window.history.replaceState({}, "Matron", "/" + current_graph);
   });
 
   if (rescale_complete) {
@@ -661,7 +667,7 @@ function saveGraph() {
 
 function unHoverAll() {
   cy.$(".hover").forEach(function (e) {
-    log(e);
+    console.log(e);
     e.removeClass("hover");
   });
 }
@@ -671,7 +677,7 @@ var mapnames = [];
 function fillmapnames(names) {
   mapnames = [];
   names.forEach(function (name) {
-    // log(name);
+    // console.log(name);
     // if (name.trim() == "demo") {
     // 	values.push({name: "<div>" + name + "<a class='item remove_map_btn' id='no_delete'> <i id='ico' class='ban icon'></i> </a></div>", value: name});
     // } else {
@@ -689,13 +695,14 @@ function getMapNamesFromServer() {
     fillmapnames(data.graph);
 
     if (urlMapName != "") {
-      log(mapnames);
-      log(urlMapName);
+      console.log(mapnames);
+      console.log(urlMapName);
 
       if (mapnames.some(function (name) {
         return name.value == urlMapName;
       })) {
         current_graph = urlMapName;
+        new_name = urlMapName;
         editFloor(urlMapName);
       } else {
         window.history.replaceState({}, "Matron", "/");
@@ -708,7 +715,7 @@ function getMapNamesFromServer() {
       values: mapnames,
       forceSelection: true,
       onChange: function onChange(value, name) {
-        log(value, name);
+        console.log(value, name);
 
         if (value == "" || mapnames.some(function (val) {
           return val.value == value;
@@ -719,7 +726,7 @@ function getMapNamesFromServer() {
           document.querySelector('#edit_floor').classList.add("positive");
           document.querySelector('#edit_floor').innerHTML = "Edit map";
           document.querySelector('#select_floor_header').innerText = 'Select unit';
-          log("oldd");
+          console.log("oldd");
         } else {
           document.querySelector('#create_floor_inputs').style.display = "block";
           document.querySelector('#edit_floor').style.display = 'none';
@@ -735,14 +742,14 @@ function getMapNamesFromServer() {
         var curValue = $("#floor_search").dropdown("get value").trim();
 
         if (name == curValue) {
-          log("match");
+          console.log("match");
           $("#floor_search").dropdown("restore defaults");
         }
 
         deleteMap(name);
         mapnames = mapnames.filter(function (value, index, arr) {
           return value.value != name;
-        }); // log(mapnames);
+        }); // console.log(mapnames);
         //getMapNamesFromServer();
       });
     });
@@ -763,7 +770,7 @@ var reader = new FileReader();
 reader.addEventListener("load", function (e) {
   // Force rerender
   document.querySelector('#cy').style.visibility = 'hidden';
-  document.querySelector('#cy').style.visibility = 'visible'; //log(e.target.result);
+  document.querySelector('#cy').style.visibility = 'visible'; //console.log(e.target.result);
 
   fileData = e.target.result;
   var url = "both/".concat(current_graph);
@@ -790,6 +797,7 @@ function getImageData() {
 var edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', function (e) {
   current_graph = $("#floor_search").dropdown("get value");
+  new_name = current_graph;
 
   if (current_graph) {
     editFloor(current_graph);
@@ -798,7 +806,7 @@ edit_floor_btn.addEventListener('click', function (e) {
 });
 
 function editFloor(current_graph) {
-  log(current_graph); // if (!(mapnames.some(name => name == current_graph))) {
+  console.log(current_graph); // if (!(mapnames.some(name => name == current_graph))) {
   // 	current_graph = "";
   // 	return;
   // }
@@ -812,13 +820,13 @@ function editFloor(current_graph) {
 
 function loadGraphData(data) {
   changed_graph = false;
-  cy.elements().remove(); // log(cy.elements().remove());
-  // log(data);
+  cy.elements().remove(); // console.log(cy.elements().remove());
+  // console.log(data);
 
   types = [];
 
   if (data.graph.types) {
-    log("Adding types");
+    console.log("Adding types");
     data.graph.types.forEach(function (e) {
       types.push(e);
     });
@@ -827,17 +835,17 @@ function loadGraphData(data) {
   fillTypes();
 
   if (data.graph.elements.nodes) {
-    log(data.graph.elements);
+    console.log(data.graph.elements);
     cy.add(data.graph.elements);
   }
 
   if (data.graph.zoom) {
-    log(data.graph.zoom);
+    console.log(data.graph.zoom);
     cy.zoom(data.graph.zoom);
   }
 
   if (data.graph.pan) {
-    log(data.graph.pan);
+    console.log(data.graph.pan);
     cy.pan(data.graph.pan);
   }
 
@@ -845,7 +853,7 @@ function loadGraphData(data) {
     blueprint_scale = data.graph.blueprint_scale;
     blueprint_scale_input.value = blueprint_scale;
     drawBG();
-    log(blueprint_scale);
+    console.log(blueprint_scale);
   }
 
   var blueprint = data.blueprint; // loads all the versions for a given graph.
@@ -859,7 +867,7 @@ function loadGraphData(data) {
     document.querySelector('#cy').style.visibility = 'visible';
   }
 
-  load_graph_versions(); //log(types);
+  load_graph_versions(); //console.log(types);
 
   document.querySelector('#select_floor').style.display = 'none';
   document.querySelector('#tool_select').style.display = 'block';
@@ -875,7 +883,8 @@ create_floor_btn.addEventListener('click', function (e) {
   // img_src = document.querySelector('#img');
   // load empty graph with this img (we'll send it to server on save)
   current_graph = $("#floor_search").dropdown("get value");
-  log(current_graph);
+  new_name = current_graph;
+  console.log(current_graph);
 
   if (file != -1) {
     reader.readAsDataURL(file);
@@ -921,9 +930,9 @@ var type_list = document.querySelector('#type_list'); //const colors = ['green',
 // // should really get from server returned map, we need to store manually alongside cy.json();
 
 function fillTypes() {
-  // log("filling types");
+  // console.log("filling types");
   while (type_list.hasChildNodes()) {
-    // log("removinnnng");
+    // console.log("removinnnng");
     type_list.removeChild(type_list.lastChild);
   }
 
@@ -953,11 +962,11 @@ $("#type_select").dropdown({
   allowAdditions: true,
   hideAdditions: false,
   onChange: function onChange(value, name) {
-    log(value, name);
+    console.log(value, name);
 
     if (popperNode != -1) {
       popperNode.data("type", value);
-      log("changed graph");
+      console.log("changed graph");
       changed_graph = true;
       var input_label = document.querySelector('#node_label_input').value;
       var input_type = $("#type_select").dropdown("get value");
@@ -1023,7 +1032,7 @@ set_type_btn.addEventListener("click", function (e) {
   fillTypes();
   var input_label = document.querySelector('#node_label_input').value;
   var input_type = $("#type_select").dropdown("get value");
-  log(input_label, input_type);
+  console.log(input_label, input_type);
 
   if (set_type_btn.classList.contains("negative")) {
     return;
@@ -1063,7 +1072,7 @@ function add_new_node_type(type_name) {
     return;
   }
 
-  log("ADDING NEW NODE TYPEEEE"); // let color = colors[types.length%colors.length];
+  console.log("ADDING NEW NODE TYPEEEE"); // let color = colors[types.length%colors.length];
 
   var color;
 
@@ -1113,17 +1122,19 @@ var blueprint_icon = document.querySelector('#image_icon');
 var upload_new_blueprint_btn = document.querySelector('#upload_new_blueprint');
 var blueprint_reader = new FileReader();
 var blueprint_scale = 1;
-upload_new_blueprint_btn.addEventListener('click', function (e) {});
+upload_new_blueprint_btn.addEventListener('click', function (e) {}); // blueprint_name_input.value = current_graph;
+
+var new_name = "";
 $('#blueprint_modal').modal({
   onApprove: function onApprove() {
-    file = document.querySelector('#new_blue_print').files[0]; // log(file);
+    file = document.querySelector('#new_blue_print').files[0]; // console.log(file);
 
     if (file) {
       reader.readAsDataURL(file);
       changed_graph = true;
     }
 
-    log(blueprint_scale_input.value);
+    console.log(blueprint_scale_input.value);
     var new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
 
     if (blueprint_scale != new_blueprint_scale) {
@@ -1133,8 +1144,8 @@ $('#blueprint_modal').modal({
       drawBG();
     }
 
-    current_graph = document.querySelector("#blueprint_name_input").value;
-    log("changed graph");
+    new_name = document.querySelector("#blueprint_name_input").value;
+    console.log("changed graph");
   },
   onDeny: function onDeny() {
     return false;
@@ -1213,8 +1224,8 @@ distance_btn.addEventListener('click', function (e) {
   distance_result_div.style.display = 'block';
   var node1_label = document.querySelector('#node1').value;
   var node2_label = document.querySelector('#node2').value;
-  log(node1_label);
-  log(node2_label);
+  console.log(node1_label);
+  console.log(node2_label);
 
   if (node1_label == "" || node2_label == "") {
     document.querySelector('#dist_result').innerText = "Cannot search for empty room.";
@@ -1246,14 +1257,14 @@ distance_btn.addEventListener('click', function (e) {
   });
 });
 var urlPath = decodeURI(window.location.href);
-log(urlPath);
+console.log(urlPath);
 var lastSlashIndex = urlPath.lastIndexOf("/");
 var lastQueryIndex = urlPath.lastIndexOf("?") == -1 ? urlPath.length : urlPath.lastIndexOf("?");
 var urlParams = urlPath.substring(lastQueryIndex + 1);
-log(urlParams);
-log(lastQueryIndex);
+console.log(urlParams);
+console.log(lastQueryIndex);
 var urlMapName = urlPath.substring(lastSlashIndex + 1, lastQueryIndex);
-log(urlMapName);
+console.log(urlMapName);
 
 function addVec(a, b) {
   return {
@@ -1285,8 +1296,8 @@ function len(a) {
 }
 
 function nodeDist(node1, node2) {
-  // log(node1);
-  // log(node2);
+  // console.log(node1);
+  // console.log(node2);
   return len(subVec(node1.position(), node2.position()));
 }
 
@@ -1294,15 +1305,15 @@ function reScale(node1pos, node2pos, scale) {
   var diff = subVec(node2pos, node1pos);
   var newdiff = scaleVec(diff, scale);
   var newpos = addVec(subVec(node2pos, diff), newdiff);
-  return newpos; // log(newpos);
+  return newpos; // console.log(newpos);
   // node2.position(newpos);
 } // neighbor, source, len
 
 
 function fillPath(node, id, len) {
-  // log(len);
+  // console.log(len);
   var neighbors = node; //let neighbors = node.closedNeighborhood("node[type = 'hallway'][[degree <= 2]]");
-  // log(node);
+  // console.log(node);
   // node = node.successors("node[type = 'hallway'][[degree <= 2]][id != '"+ node.id() + "']");
 
   var oldNode = node;
@@ -1310,15 +1321,15 @@ function fillPath(node, id, len) {
   while (true) {
     // probably also needs a selector for node has not already been rescaled
     var newNeighbors = neighbors.closedNeighborhood("node[type = 'hallway'][[degree = 2]]");
-    var newNode = newNeighbors.difference(neighbors)[0]; // log(neighbors.difference(neighbors));
-    // log(newNode);
+    var newNode = newNeighbors.difference(neighbors)[0]; // console.log(neighbors.difference(neighbors));
+    // console.log(newNode);
 
     if (!newNode) {
       break;
-    } // log(newNode);
+    } // console.log(newNode);
 
 
-    len += nodeDist(newNode, oldNode); // log(len);
+    len += nodeDist(newNode, oldNode); // console.log(len);
 
     oldNode = newNode;
     neighbors = newNeighbors;
@@ -1338,8 +1349,8 @@ function fillPath(node, id, len) {
 
 
   len += nodeDist(oldNode, end); // toggleSelected(end);
-  // log(len);
-  // log(end);
+  // console.log(len);
+  // console.log(end);
 
   return {
     interim: neighbors,
@@ -1368,7 +1379,7 @@ function fillNode(node) {
     branch.start = node;
     paths.push(branch); // }
     // toggleSelected(branch.path);
-  }); // log(paths);
+  }); // console.log(paths);
 
   return paths;
 }
@@ -1380,7 +1391,7 @@ function setScaleFactor(node1, node2, t) {
   // let node2 = cy.$("node[label='" + label2 + "']")[0];
   var path = fillNode(node1).find(function (p) {
     return p.end == node2;
-  }); // log(path);
+  }); // console.log(path);
 
   if (!path) {
     return;
@@ -1394,9 +1405,9 @@ function setScaleFactor(node1, node2, t) {
 
   var cyLen = path.len;
   scaleFactor = cyLen / t;
-  log(t);
-  log(cyLen);
-  log(scaleFactor);
+  console.log(t);
+  console.log(cyLen);
+  console.log(scaleFactor);
 }
 
 function reScalePath(node1, node2, t) {
@@ -1419,7 +1430,7 @@ function reScalePath(node1, node2, t) {
   var scale = t * scaleFactor / path.len;
   var newPos = reScale(node1.position(), node2.position(), scale);
   var offset = subVec(newPos, node2.position());
-  log(offset); //translateNode(node2, offset);
+  console.log(offset); //translateNode(node2, offset);
 
   translateNode(flood(node1, node2, true), offset);
 }
@@ -1429,16 +1440,16 @@ function labeltonode(label) {
 }
 
 function translateNode(nodes, offset) {
-  log(nodes);
-  log(offset);
+  console.log(nodes);
+  console.log(offset);
   nodes.forEach(function (node) {
     node = cy.$id(node.id()); // let node = cy.$("node[label='" + label + "']")[0];
 
     var originalPos = JSON.parse(JSON.stringify(node.position()));
     var newPos = addVec(node.position(), offset);
     node.position(newPos);
-    log(originalPos);
-    log(newPos);
+    console.log(originalPos);
+    console.log(newPos);
     var paths = fillNode(node);
     paths.forEach(function (p) {
       p.interim.forEach(function (n) {
@@ -1491,11 +1502,11 @@ function cleanGraph(invis) {
 }
 
 function flood(src, pathstart, invis) {
-  log(src);
-  log(pathstart); // if (!pathstart.data("debug")) {return;}
+  console.log(src);
+  console.log(pathstart); // if (!pathstart.data("debug")) {return;}
 
   var cyInstance = invis ? cy2 : cy;
-  log("MADE IT");
+  console.log("MADE IT");
   src = cyInstance.$id(src.id());
   pathstart = cyInstance.$id(pathstart.id());
   var neighbors = pathstart;
@@ -1512,7 +1523,7 @@ function flood(src, pathstart, invis) {
   }
 
   toggleSelected(neighbors);
-  log(neighbors);
+  console.log(neighbors);
   return neighbors;
 }
 
@@ -1540,7 +1551,7 @@ function rescaleAll(t) {
   var cy2Pair = getLeaf();
 
   if (!cy2Pair) {
-    log("Rescaling complete.");
+    console.log("Rescaling complete.");
     return true;
   }
 
@@ -1548,7 +1559,7 @@ function rescaleAll(t) {
   n1 = cy.$id(cy2Pair.neighbor.id());
   var desiredpath = fillNode(n1).find(function (p) {
     return p.end == n2;
-  }); // log(desiredpath);
+  }); // console.log(desiredpath);
   // desiredpath.start.addClass("desiredpath");
   // desiredpath.end.addClass("desiredpath");
   //desiredpath.interim.connectedEdges().addClass("desiredpath");
@@ -1562,12 +1573,12 @@ function rescaleAll(t) {
     desiredpath.interim.connectedEdges().addClass("desiredpath");
   }
 
-  log("");
-  log("Please enter dist between");
-  log(n1.data("label"));
-  log("and");
-  log(n2.data("label"));
-  log("");
+  console.log("");
+  console.log("Please enter dist between");
+  console.log(n1.data("label"));
+  console.log("and");
+  console.log(n2.data("label"));
+  console.log("");
   return false;
 }
 
@@ -1575,7 +1586,7 @@ function getLeaf() {
   // issue is this degree selector doesn't care about whether the neighbors are rescale or not, it's global
   // os after a few rescales there won't be any true degree 1 nodes left
   var leaf = cy3.$("node[[degree = 1]]"); // the whole point of rescaled is to make this unscaled leaf selector work
-  // log(leaf);
+  // console.log(leaf);
 
   if (leaf.length <= 1) {
     return false;
@@ -1614,7 +1625,7 @@ var cy3 = cytoscape({
 // 			let endToNewNode2 = subVec(newStartPos, p.end.position());
 // 			if (p.end.data("rescaled")) {
 // 				n.position(addVec(n.position(), startOffset));
-// 				log("TEEEEEEEEEEEEEEEEEEEEEEEEST");
+// 				console.log("TEEEEEEEEEEEEEEEEEEEEEEEEST");
 // 			} else {
 // 				n.position(reScale(p.end.position(), n.position(), scale));
 // 				n.position(rotateVec(n.position(), p.end.position(), -getAng(endToNode2)));
@@ -1634,7 +1645,7 @@ function rotateVec(point, origin, theta) {
     x: x,
     y: y
   };
-  vec = addVec(vec, origin); //log(vec);
+  vec = addVec(vec, origin); //console.log(vec);
 
   return vec;
 }
@@ -1665,9 +1676,9 @@ $("#version_select").dropdown({
   onChange: function onChange(value, text, $selectedItem) {
     // the text corresponds to date
     var date = text;
-    log(value);
-    log(text);
-    log($selectedItem);
+    console.log(value);
+    console.log(text);
+    console.log($selectedItem);
 
     if (!value) {
       return;
@@ -1679,11 +1690,11 @@ $("#version_select").dropdown({
       return resp.json();
     }).then(function (data) {
       // here we would do something load our older version graph
-      //log(data);
-      //log(data);
-      log("dataaaaaaaaa");
-      log(data);
-      log(urlParams);
+      //console.log(data);
+      //console.log(data);
+      console.log("dataaaaaaaaa");
+      console.log(data);
+      console.log(urlParams);
 
       if (!changed_graph || urlParams == "dev" || window.confirm("You have unsaved changed. Continue?")) {
         loadGraphData(data);
@@ -1697,7 +1708,7 @@ $("#version_select").dropdown({
  */
 
 function load_graph_versions() {
-  log("LOADING GRAPH VERSIONS");
+  console.log("LOADING GRAPH VERSIONS");
   document.querySelector('#version_select').style.display = 'block';
   fetch("/graph/requestAll/".concat(current_graph)).then(function (resp) {
     return resp.json();
@@ -1709,7 +1720,7 @@ function load_graph_versions() {
       version_list.removeChild(version_list.lastChild);
     }
 
-    var count = 0; // log(data)
+    var count = 0; // console.log(data)
 
     data.times.reverse();
     data.times.forEach(function (time) {
@@ -1726,9 +1737,9 @@ var tool;
 $('#tool_select').dropdown({
   onChange: function onChange(value, text, $selectedItem) {
     // custom action
-    log(value);
-    log(text);
-    log($selectedItem);
+    console.log(value);
+    console.log(text);
+    console.log($selectedItem);
     tool = value;
     ghost.disable();
     ungrabifyAll();
@@ -1775,7 +1786,7 @@ function rescale_icon_helper() {
     return;
   }
 
-  log("begin rescaling");
+  console.log("begin rescaling");
   resetRescaler();
 
   if (rescale_menu.style.visibility != "visible") {
@@ -1791,7 +1802,7 @@ function rescale_icon_helper() {
     progress_bar.style.display = "none";
   }
 
-  log(rescale_button.innerText);
+  console.log(rescale_button.innerText);
 }
 
 var rescale_menu = document.querySelector("#rescale_menu");
@@ -1827,7 +1838,7 @@ rescale_button.onclick = function () {
       }, 16);
     }
   } else {
-    log(rescale_input.value);
+    console.log(rescale_input.value);
     clearInterval(timerInterval);
     rescaleUIHelper();
   }
@@ -1836,7 +1847,7 @@ rescale_button.onclick = function () {
 var first = 1;
 
 function rescaleUIHelper() {
-  log("RESCALE UI HELPER");
+  console.log("RESCALE UI HELPER");
 
   if (rescaleAll(parseFloat(rescale_input.value) + 0.0001 * first)) {
     rescaling_started = false;
@@ -1858,7 +1869,7 @@ function rescaleUIHelper() {
   first = 0;
   rescaled_edges += 1;
   var percent = 100 * rescaled_edges / cy2.edges().length;
-  log(percent);
+  console.log(percent);
   $("#progress_bar").progress("set percent", percent); //$("#progress_bar").progress("complete");
 }
 
@@ -1902,13 +1913,12 @@ colorPicker.on('color:change', function (color) {
 $("#progress_bar").progress({
   percent: 0
 });
-var debugtext = document.querySelector("#debugtext");
-
-function log(data) {
-  if (window.console) {
-    console.log(data);
-  }
-} // function cleanNode(label) {
+var debugtext = document.querySelector("#debugtext"); // function console.log(data) {
+// 	if (window.console) {
+// 		console.log(data);
+// 	}
+// }
+// function cleanNode(label) {
 // 	let node = cy.$("node[label='" + label + "']")[0];
 // 	let paths = fillNode(node);
 // 	paths.forEach(path => {
@@ -1922,7 +1932,7 @@ function log(data) {
 // function cleanNodeID(id) {
 // 	let node = cy.$("node[id='" + id + "']")[0];
 // 	let paths = fillNode(node);
-// 	log(paths);
+// 	console.log(paths);
 // 	paths.forEach(path => {
 // 		cy.remove(path.interim);
 // 		//removeNodes(path.interim);

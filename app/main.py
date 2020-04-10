@@ -92,7 +92,7 @@ def graph_and_print(graph_name):
         new_name = ''
 
     # sets a new name for the graph if one is posted
-    if new_name != "":
+    if new_name != "" and (graph_name != new_name):
         check = dao.rename_graph(graph_name, new_name)
         if(check == -1):
             return jsonify({"status": 400, "error": "new name is not a string"})
