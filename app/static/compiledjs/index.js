@@ -180,7 +180,7 @@ function addNode(posX, posY, cyInstance, undoable, customid, give_json, type, la
   var node_label = label ? label : "";
   var node = {
     data: {
-      label: "",
+      label: node_label,
       type: node_type,
       id: customid
     },
@@ -603,10 +603,10 @@ cy.on("drag", "elements", function (e) {
   ghost.disable();
 });
 window.addEventListener("keydown", function (e) {
-  console.log(e); // if (e.key == "y") {
+  // console.log(e)
+  // if (e.key == "y") {
   // 	console.log(addNode(0,0,cy,true));
   // }
-
   if (e.key.toLowerCase() == "z" && e.ctrlKey && e.shiftKey) {
     console.log("redo");
     ur.redo();
@@ -1070,9 +1070,45 @@ function fillTypes() {
   }
 }
 
-function swapPopper() {
+function swapPopper(label, type) {
+  console.log("SWWWWWWWWWWWWWWWWWWWWAPPING POPPER");
   var poppernodeID = popperNode.id();
-  var newnode = addNode(popperNode.position().x, popperNode.position().y, false, poppernodeID, true, popperNode.data("type"), popperNode.data("label"));
+  var newnode = addNode(popperNode.position().x, popperNode.position().y, cy, false, poppernodeID, true, type, label);
+  var connected = popperNode.openNeighborhood("node");
+  console.log(popperNode);
+  console.log(newnode);
+  console.log(ur.getUndoStack());
+  var actions = [];
+  actions.push({
+    name: "remove",
+    param: popperNode
+  });
+  actions.push({
+    name: "add",
+    param: newnode
+  });
+  connected.forEach(function (n) {
+    // let edge = addEdge(poppernodeID, n, cy, false, true, true);
+    var edge = {
+      data: {
+        id: poppernodeID + "-" + n.id(),
+        label: "",
+        source: poppernodeID,
+        target: n.id()
+      },
+      selecable: false,
+      grabbable: false,
+      classes: []
+    };
+    console.log(edge);
+    actions.push({
+      name: "add",
+      param: edge
+    });
+  });
+  console.log(actions);
+  ur["do"]("batch", actions);
+  popperNode = cy.$id(poppernodeID);
 }
 
 $("#type_select").dropdown({
@@ -1082,7 +1118,15 @@ $("#type_select").dropdown({
     console.log(value, name);
 
     if (popperNode != -1) {
-      popperNode.data("type", value);
+      console.log(popperNode.data("type"));
+      console.log(value);
+
+      if (value == popperNode.data("type")) {
+        return;
+      } //popperNode.data("type", value);
+
+
+      swapPopper(popperNode.data("label"), value);
       console.log("changed graph");
       changed_graph = true;
       var input_label = document.querySelector('#node_label_input').value;
@@ -1147,6 +1191,7 @@ function changeLabel() {
 var set_type_btn = document.querySelector('#set_type');
 set_type_btn.addEventListener("click", function (e) {
   fillTypes();
+  var old_label = popperNode.data("label");
   var input_label = document.querySelector('#node_label_input').value;
   var input_type = $("#type_select").dropdown("get value");
   console.log(input_label, input_type);
@@ -1161,10 +1206,14 @@ set_type_btn.addEventListener("click", function (e) {
     add_new_node_type(input_type);
   }
 
-  if (input_type == "hallway") {
-    popperNode.data("label", "");
-  } else {
-    popperNode.data("label", input_label);
+  if (input_label != old_label) {
+    if (input_type == "hallway") {
+      //popperNode.data("label", "");
+      swapPopper("", popperNode.data("type"));
+    } else {
+      //popperNode.data("label", input_label);
+      swapPopper(input_label, popperNode.data("type"));
+    }
   }
 
   hidePopper();
