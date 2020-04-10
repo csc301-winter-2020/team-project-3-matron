@@ -30,10 +30,12 @@ There are two options to set up the Matron application: it can either be set up 
 
 ### Set it up on Heroku
 
-1. Download the project from the repository either by running `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` from the command line. Then navigate to the folder that was just created.
+1. Download and install the Heroku command line interface from the [official website](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) and make an account
 
-2. Create a new Heroku app by running `heroku create` from the command line. You will then a URL printed, which will be the URL of the website once it's up.
+2. Download the project from the repository either by running `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` from the command line. Then navigate to the folder that was just created.
 
-3. Set the environment variables by running `heroku config:set DB_URL=<THE URL FOR YOUR DB>` and `heroku config:set DB_PASS=<THE PASSWORD FOR YOUR DB>`
+3. Create a new Heroku app by running `heroku create` from the command line. You will then a URL printed, which will be the URL of the website once it's up.
 
-4. Deploy the app to Heroku by running `git push heroku master` from the command line. You should then be able to access the application from the URL you got in step 2.
+4. Set the environment variables by running `heroku config:set DB_URL=<THE URL FOR YOUR DB>` and `heroku config:set DB_PASS=<THE PASSWORD FOR YOUR DB>`
+
+5. Deploy the app to Heroku by running `git push heroku master` from the command line. You should then be able to access the application from the URL you got in step 2.
