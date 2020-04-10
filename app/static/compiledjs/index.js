@@ -3,6 +3,7 @@ import "core-js/modules/es.array.filter";
 import "core-js/modules/es.array.find";
 import "core-js/modules/es.array.find-index";
 import "core-js/modules/es.array.for-each";
+import "core-js/modules/es.array.index-of";
 import "core-js/modules/es.array.last-index-of";
 import "core-js/modules/es.array.slice";
 import "core-js/modules/es.array.some";
@@ -84,14 +85,68 @@ var types = [];
 var defaulttHoverThresh = [8, 1];
 var ghostHOverThresh = [25, 5];
 setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
-var changed_graph = false;
+var changed_graph = false; // From https://coderwall.com/p/i817wa/one-line-function-to-detect-mobile-devices-with-javascript
+
+function isMobileDevice() {
+  return typeof window.orientation !== "undefined" || navigator.userAgent.indexOf('IEMobile') !== -1;
+}
+
+;
+var ismobile = isMobileDevice();
+
+if (ismobile) {
+  document.querySelector('#version_select').style.display = 'none';
+  document.querySelector('#tool_select').style.display = 'none';
+  document.querySelector('#image_icon').style.display = "none";
+  document.querySelector('#distance_icon').style.display = "none";
+  var size = "50px";
+
+  var _instructions = document.querySelector("#instructions");
+
+  _instructions.parentNode.parentNode.appendChild(_instructions);
+
+  _instructions.style.fontSize = size;
+  _instructions.style.position = "fixed";
+  _instructions.style.width = "100%";
+  _instructions.style.textAlign = "center";
+  _instructions.style.left = 0;
+  _instructions.style.transform = "translateY(200px)";
+  document.querySelector("#rescale_button").style.fontSize = size;
+  document.querySelector("#rescale_input").style.fontSize = "50px";
+  document.querySelector("#rescale_input").style.width = "400px";
+  document.querySelector("#rescale_icon").style.fontSize = size;
+  document.querySelector("#rescale_icon").classList.add("right"); // From https://gist.github.com/tzi/2953155
+
+  document.querySelector("#rescale_icon").style.setProperty("margin-left", "0", "important");
+  document.querySelector("#save_icon").style.fontSize = size;
+  document.querySelector("#save_icon").classList.add("right");
+  document.querySelector("#matron_name").style.fontSize = size;
+  document.querySelector("#matron_name").style.paddingLeft = "30px";
+  document.querySelector("#matron_name").style.paddingRight = "30px";
+
+  var _rescale_menu = document.querySelector("#rescale_menu");
+
+  _rescale_menu.style.right = "auto";
+  _rescale_menu.style.left = "50%";
+  _rescale_menu.style.margin = "0 auto";
+  _rescale_menu.style.transform = "translateX(-50%)";
+  _rescale_menu.style.position = "fixed";
+  _rescale_menu.style.height = "auto";
+  _rescale_menu.style.bottom = 0;
+}
+
+var pxlratio = ismobile ? 0.15 : 1.0;
+pxlratio *= window.devicePixelRatio;
+console.log(window.devicePixelRatio);
+console.log(pxlratio);
 var cy = cytoscape({
   container: document.getElementById("cy"),
   layout: {
     name: "preset"
   },
   style: cyStyle,
-  wheelSensitivity: 0.2
+  wheelSensitivity: 0.2,
+  pixelRatio: pxlratio
 });
 
 function mod(n, m) {
@@ -180,7 +235,7 @@ function addNode(posX, posY, cyInstance, undoable, customid, give_json, type, la
   var node_label = label ? label : "";
   var node = {
     data: {
-      label: "",
+      label: node_label,
       type: node_type,
       id: customid
     },
@@ -305,6 +360,10 @@ var ghost = {
 };
 var popperNode = -1;
 cy.on("tap", function (e) {
+  if (ismobile) {
+    return;
+  }
+
   if (tool == "Smart") {
     smartTap(e);
   } else if (tool == "Add Nodes") {
@@ -564,9 +623,13 @@ function addEdgesCxtTap(e) {
 }
 
 cy.on("cxttapend", function (e) {
-  // if (popperNode != -1) {
+  if (ismobile) {
+    return;
+  } // if (popperNode != -1) {
   // 	return;
   // }
+
+
   addEdgesCxtTap(e);
 });
 cy.on("mousemove", function (e) {
@@ -603,10 +666,10 @@ cy.on("drag", "elements", function (e) {
   ghost.disable();
 });
 window.addEventListener("keydown", function (e) {
-  console.log(e); // if (e.key == "y") {
+  // console.log(e)
+  // if (e.key == "y") {
   // 	console.log(addNode(0,0,cy,true));
   // }
-
   if (e.key.toLowerCase() == "z" && e.ctrlKey && e.shiftKey) {
     console.log("redo");
     ur.redo();
@@ -762,6 +825,7 @@ function saveGraph() {
 
   if (rescale_complete) {
     rescale_menu.style.visibility = "hidden";
+    document.querySelector("#instructions").style.display = "none";
     progress_bar.style.display = "none";
   }
 }
@@ -923,6 +987,11 @@ function editFloor(current_graph) {
   // 	return;
   // }
 
+  if (ismobile) {// console.log("RESETTING ZOOOOOOOOOOOOM");
+    // let viewportmeta = document.querySelector('meta[name="viewport"]');
+    // viewportmeta.setAttribute('content', "initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0");
+  }
+
   fetch("graph/".concat(current_graph)).then(function (resp) {
     return resp.json();
   }).then(function (data) {
@@ -982,11 +1051,16 @@ function loadGraphData(data) {
   load_graph_versions(); //console.log(types);
 
   document.querySelector('#select_floor').style.display = 'none';
-  document.querySelector('#tool_select').style.display = 'block';
+
+  if (!ismobile) {
+    document.querySelector('#tool_select').style.display = 'block';
+  }
+
   document.querySelector('#cy').style.visibility = 'visible';
   cy.elements().removeClass("desiredpath");
   resetRescaler();
   rescale_menu.style.visibility = "hidden";
+  document.querySelector("#instructions").style.display = "none";
   progress_bar.style.display = "none";
 }
 
@@ -1013,11 +1087,16 @@ create_floor_btn.addEventListener('click', function (e) {
 
   document.querySelector('#select_floor').style.display = 'none';
   document.querySelector('#cy').style.visibility = 'visible';
-  document.querySelector('#tool_select').style.display = 'block';
+
+  if (!ismobile) {
+    document.querySelector('#tool_select').style.display = 'block';
+  }
+
   window.history.replaceState({}, "Matron", "/" + current_graph);
 });
 var canvasLayer = cy.cyCanvas({
-  zIndex: -1
+  zIndex: -1,
+  pixelRatio: pxlratio
 });
 var canvas = canvasLayer.getCanvas();
 var ctx = canvas.getContext("2d");
@@ -1070,9 +1149,45 @@ function fillTypes() {
   }
 }
 
-function swapPopper() {
+function swapPopper(label, type) {
+  console.log("SWWWWWWWWWWWWWWWWWWWWAPPING POPPER");
   var poppernodeID = popperNode.id();
-  var newnode = addNode(popperNode.position().x, popperNode.position().y, false, poppernodeID, true, popperNode.data("type"), popperNode.data("label"));
+  var newnode = addNode(popperNode.position().x, popperNode.position().y, cy, false, poppernodeID, true, type, label);
+  var connected = popperNode.openNeighborhood("node");
+  console.log(popperNode);
+  console.log(newnode);
+  console.log(ur.getUndoStack());
+  var actions = [];
+  actions.push({
+    name: "remove",
+    param: popperNode
+  });
+  actions.push({
+    name: "add",
+    param: newnode
+  });
+  connected.forEach(function (n) {
+    // let edge = addEdge(poppernodeID, n, cy, false, true, true);
+    var edge = {
+      data: {
+        id: poppernodeID + "-" + n.id(),
+        label: "",
+        source: poppernodeID,
+        target: n.id()
+      },
+      selecable: false,
+      grabbable: false,
+      classes: []
+    };
+    console.log(edge);
+    actions.push({
+      name: "add",
+      param: edge
+    });
+  });
+  console.log(actions);
+  ur["do"]("batch", actions);
+  popperNode = cy.$id(poppernodeID);
 }
 
 $("#type_select").dropdown({
@@ -1082,7 +1197,15 @@ $("#type_select").dropdown({
     console.log(value, name);
 
     if (popperNode != -1) {
-      popperNode.data("type", value);
+      console.log(popperNode.data("type"));
+      console.log(value);
+
+      if (value == popperNode.data("type")) {
+        return;
+      } //popperNode.data("type", value);
+
+
+      swapPopper(popperNode.data("label"), value);
       console.log("changed graph");
       changed_graph = true;
       var input_label = document.querySelector('#node_label_input').value;
@@ -1147,6 +1270,7 @@ function changeLabel() {
 var set_type_btn = document.querySelector('#set_type');
 set_type_btn.addEventListener("click", function (e) {
   fillTypes();
+  var old_label = popperNode.data("label");
   var input_label = document.querySelector('#node_label_input').value;
   var input_type = $("#type_select").dropdown("get value");
   console.log(input_label, input_type);
@@ -1161,10 +1285,14 @@ set_type_btn.addEventListener("click", function (e) {
     add_new_node_type(input_type);
   }
 
-  if (input_type == "hallway") {
-    popperNode.data("label", "");
-  } else {
-    popperNode.data("label", input_label);
+  if (input_label != old_label) {
+    if (input_type == "hallway") {
+      //popperNode.data("label", "");
+      swapPopper("", popperNode.data("type"));
+    } else {
+      //popperNode.data("label", input_label);
+      swapPopper(input_label, popperNode.data("type"));
+    }
   }
 
   hidePopper();
@@ -1825,6 +1953,10 @@ $("#version_select").dropdown({
  */
 
 function load_graph_versions() {
+  if (ismobile) {
+    return;
+  }
+
   console.log("LOADING GRAPH VERSIONS");
   document.querySelector('#version_select').style.display = 'block';
   fetch("/graph/requestAll/".concat(current_graph)).then(function (resp) {
@@ -1908,6 +2040,7 @@ function rescale_icon_helper() {
 
   if (rescale_menu.style.visibility != "visible") {
     rescale_menu.style.visibility = "visible";
+    document.querySelector("#instructions").style.display = "block";
     progress_bar.style.display = "block";
 
     if (rescaleAll()) {
@@ -1916,6 +2049,7 @@ function rescale_icon_helper() {
     }
   } else {
     rescale_menu.style.visibility = "hidden";
+    document.querySelector("#instructions").style.display = "none";
     progress_bar.style.display = "none";
   }
 

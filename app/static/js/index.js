@@ -85,13 +85,67 @@ setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
 
 let changed_graph = false;
 
+// From https://coderwall.com/p/i817wa/one-line-function-to-detect-mobile-devices-with-javascript
+function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+};
+let ismobile = isMobileDevice();
+
+if (ismobile) {
+	document.querySelector('#version_select').style.display = 'none';
+	document.querySelector('#tool_select').style.display = 'none';
+	document.querySelector('#image_icon').style.display = "none";
+	document.querySelector('#distance_icon').style.display = "none";
+
+	let size = "50px";
+
+	let instructions = document.querySelector("#instructions");
+	instructions.parentNode.parentNode.appendChild(instructions);
+	instructions.style.fontSize = size
+	instructions.style.position = "fixed";
+	instructions.style.width = "100%";
+	instructions.style.textAlign = "center";
+	instructions.style.left = 0;
+	instructions.style.transform = "translateY(200px)";
+
+	document.querySelector("#rescale_button").style.fontSize = size
+	document.querySelector("#rescale_input").style.fontSize = "50px";
+	document.querySelector("#rescale_input").style.width = "400px";
+
+	document.querySelector("#rescale_icon").style.fontSize = size
+	document.querySelector("#rescale_icon").classList.add("right");
+	// From https://gist.github.com/tzi/2953155
+	document.querySelector("#rescale_icon").style.setProperty("margin-left", "0", "important");
+
+	document.querySelector("#save_icon").style.fontSize = size
+	document.querySelector("#save_icon").classList.add("right");
+	document.querySelector("#matron_name").style.fontSize = size
+	document.querySelector("#matron_name").style.paddingLeft = "30px"
+	document.querySelector("#matron_name").style.paddingRight = "30px"
+
+	let rescale_menu = document.querySelector("#rescale_menu");
+	rescale_menu.style.right = "auto";
+	rescale_menu.style.left = "50%";
+	rescale_menu.style.margin = "0 auto";
+	rescale_menu.style.transform = "translateX(-50%)";
+	rescale_menu.style.position = "fixed";
+	rescale_menu.style.height = "auto";
+	rescale_menu.style.bottom = 0;
+}
+
+let pxlratio = ismobile ? 0.15 : 1.0;
+pxlratio *= window.devicePixelRatio;
+console.log(window.devicePixelRatio);
+console.log(pxlratio);
+
 let cy = cytoscape({
 	container: document.getElementById("cy"),
 	layout: {
 		name: "preset"
 	},
 	style: cyStyle,
-	wheelSensitivity: 0.2
+	wheelSensitivity: 0.2,
+	pixelRatio: pxlratio
 });
 
 function mod(n, m) {
@@ -186,7 +240,7 @@ function addNode(posX, posY, cyInstance, undoable, customid, give_json, type, la
 
 	let node = {
 		data: {
-			label: "",
+			label: node_label,
 			type: node_type,
 			id: customid
 		},
@@ -288,6 +342,10 @@ let ghost = {
 
 let popperNode = -1;
 cy.on("tap", function(e) {
+	if (ismobile) {
+		return;
+	}
+
 	if (tool == "Smart") {
 		smartTap(e);
 	} else if (tool == "Add Nodes") {
@@ -574,7 +632,9 @@ function addEdgesCxtTap(e) {
 
 
 cy.on("cxttapend", function(e) {
-
+	if (ismobile) {
+		return;
+	}
 
 	// if (popperNode != -1) {
 	// 	return;
@@ -623,7 +683,7 @@ cy.on("drag", "elements", function(e) {
 })
 
 window.addEventListener("keydown", function(e) {
-	console.log(e)
+	// console.log(e)
 
 	// if (e.key == "y") {
 	// 	console.log(addNode(0,0,cy,true));
@@ -779,6 +839,7 @@ function saveGraph() {
 	});
 	if (rescale_complete) {
 		rescale_menu.style.visibility = "hidden";
+		document.querySelector("#instructions").style.display = "none";
 		progress_bar.style.display = "none";
 	}
 }
@@ -934,6 +995,11 @@ function editFloor(current_graph) {
 	// 	current_graph = "";
 	// 	return;
 	// }
+	if (ismobile) {
+		// console.log("RESETTING ZOOOOOOOOOOOOM");
+		// let viewportmeta = document.querySelector('meta[name="viewport"]');
+		// viewportmeta.setAttribute('content', "initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0");
+	}
 
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		loadGraphData(data);		
@@ -985,11 +1051,14 @@ function loadGraphData(data) {
 		load_graph_versions();
 		//console.log(types);
 		document.querySelector('#select_floor').style.display = 'none';
-		document.querySelector('#tool_select').style.display = 'block';
+		if (!ismobile) {
+			document.querySelector('#tool_select').style.display = 'block';
+		}		
 		document.querySelector('#cy').style.visibility = 'visible';
 		cy.elements().removeClass("desiredpath");
 		resetRescaler();
 		rescale_menu.style.visibility = "hidden";
+		document.querySelector("#instructions").style.display = "none";
 		progress_bar.style.display = "none";
 }
 
@@ -1013,13 +1082,17 @@ create_floor_btn.addEventListener('click', (e) => {
 
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
-	document.querySelector('#tool_select').style.display = 'block';
+	if (!ismobile) {
+		document.querySelector('#tool_select').style.display = 'block';
+	}
+	
 	window.history.replaceState({}, "Matron", "/" + current_graph);
 });
 
 
 let canvasLayer = cy.cyCanvas({
-	zIndex: -1
+	zIndex: -1,
+	pixelRatio: pxlratio
 })
 let canvas = canvasLayer.getCanvas();
 let ctx = canvas.getContext("2d");
@@ -1070,9 +1143,46 @@ function fillTypes() {
 	}
 }
 
-function swapPopper() {
+function swapPopper(label, type) {
+	console.log("SWWWWWWWWWWWWWWWWWWWWAPPING POPPER");
 	let poppernodeID = popperNode.id();
-	let newnode = addNode(popperNode.position().x, popperNode.position().y, false, poppernodeID, true, popperNode.data("type"), popperNode.data("label"));
+	let newnode = addNode(popperNode.position().x, popperNode.position().y, cy, false, poppernodeID, true, type, label);
+	let connected = popperNode.openNeighborhood("node");
+
+	console.log(popperNode);
+	console.log(newnode);
+
+	console.log(ur.getUndoStack());
+
+	let actions = [];
+
+	actions.push({name: "remove", param: popperNode});
+	actions.push({name: "add", param: newnode});
+
+	connected.forEach(n => {
+		// let edge = addEdge(poppernodeID, n, cy, false, true, true);
+
+		let edge = {
+			data: {
+				id: poppernodeID + "-" + n.id(),
+				label: "",
+				source: poppernodeID,
+				target: n.id(),
+			},
+			selecable: false,
+			grabbable: false,
+			classes: []
+		}
+
+		console.log(edge);
+		actions.push({name: "add", param: edge});
+	});
+
+	console.log(actions);
+
+	ur.do("batch", actions);
+
+	popperNode = cy.$id(poppernodeID);
 }
 
 $("#type_select").dropdown({
@@ -1081,7 +1191,14 @@ $("#type_select").dropdown({
 	onChange: function(value, name) {
 		console.log(value, name);
 		if (popperNode != -1) {
-			popperNode.data("type", value);
+			console.log(popperNode.data("type"));
+			console.log(value);
+			if (value == popperNode.data("type")) {
+				return;
+			}
+
+			//popperNode.data("type", value);
+			swapPopper(popperNode.data("label"), value);
 			console.log("changed graph");
 			changed_graph = true;
 			let input_label = document.querySelector('#node_label_input').value;
@@ -1142,6 +1259,8 @@ set_type_btn.addEventListener("click", (e) => {
 
 	fillTypes();
 
+	let old_label = popperNode.data("label");
+
 	let input_label = document.querySelector('#node_label_input').value;
 	let input_type = $("#type_select").dropdown("get value");
 
@@ -1154,10 +1273,14 @@ set_type_btn.addEventListener("click", (e) => {
 		add_new_node_type(input_type);
 	}
 	
-	if (input_type == "hallway") {
-		popperNode.data("label", "");
-	} else {
-		popperNode.data("label", input_label);
+	if (input_label != old_label) {
+		if (input_type == "hallway") {
+			//popperNode.data("label", "");
+			swapPopper("", popperNode.data("type"));
+		} else {
+			//popperNode.data("label", input_label);
+			swapPopper(input_label, popperNode.data("type"));
+		}
 	}
 	
 	hidePopper();
@@ -1815,6 +1938,10 @@ $("#version_select").dropdown({
  * Function used to load in the graph version on the dropdown
  */
 function load_graph_versions(){
+	if (ismobile) {
+		return;
+	}
+
 	console.log("LOADING GRAPH VERSIONS")
 	document.querySelector('#version_select').style.display = 'block';
 	fetch(`/graph/requestAll/${current_graph}`).then((resp) => resp.json()).then(function(data) {
@@ -1904,6 +2031,7 @@ function rescale_icon_helper() {
 	resetRescaler();
 	if (rescale_menu.style.visibility != "visible") {
 		rescale_menu.style.visibility = "visible";
+		document.querySelector("#instructions").style.display = "block";
 		progress_bar.style.display = "block";
 
 		if (rescaleAll()) {
@@ -1912,6 +2040,7 @@ function rescale_icon_helper() {
 		}
 	} else {
 		rescale_menu.style.visibility = "hidden";
+		document.querySelector("#instructions").style.display = "none";
 		progress_bar.style.display = "none";
 	}
 	
