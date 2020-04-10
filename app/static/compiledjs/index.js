@@ -984,6 +984,11 @@ function editFloor(current_graph) {
   // 	return;
   // }
 
+  if (ismobile) {// console.log("RESETTING ZOOOOOOOOOOOOM");
+    // let viewportmeta = document.querySelector('meta[name="viewport"]');
+    // viewportmeta.setAttribute('content', "initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0");
+  }
+
   fetch("graph/".concat(current_graph)).then(function (resp) {
     return resp.json();
   }).then(function (data) {

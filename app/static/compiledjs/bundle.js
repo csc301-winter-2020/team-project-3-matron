@@ -963,9 +963,6 @@
 
   function editFloor(current_graph) {
     console.log(current_graph); // if (!(mapnames.some(name => name == current_graph))) {
-    // 	current_graph = "";
-    // 	return;
-    // }
 
     fetch("graph/".concat(current_graph)).then(function (resp) {
       return resp.json();
