@@ -65,7 +65,7 @@ jobs:
         run: |
           cd app
           Start-Process -NoNewWindow python main.py
-          cd ../selenium_test/
+          cd ../selenium_test/test_Chrome
           python -m pytest 
         env:
           SELENIUM_TEST_BROWSER: "CHROME"
@@ -73,7 +73,7 @@ jobs:
         run: |
           cd app
           Start-Process -NoNewWindow python main.py
-          cd ../selenium_test/
+          cd ../selenium_test/test_IE
           python -m pytest 
         env:
           SELENIUM_TEST_BROWSER: "IE"
