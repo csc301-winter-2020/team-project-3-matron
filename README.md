@@ -15,7 +15,6 @@ There are two options to set up the Matron application: it can either be set up 
 ### Set it up locally
 
 0. Download/install Python3 from the [the official website](https://www.python.org/downloads/).
-
 1. `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` to download the repository.
 2. `cd team-project-3-matron/app` to navigate to the correct directory.
 3. `pip install -r requirements.txt` to install the dependencies.
