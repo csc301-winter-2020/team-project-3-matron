@@ -667,12 +667,11 @@ function saveGraph() {
 		method: 'post',
 		body: JSON.stringify({graph: _graph, blueprint: blueprint, new_name: new_name})
 	}).then(res=>{
+		current_graph = new_name;
 		load_graph_versions();
 
 		console.log("tesssssss");
-		console.log(new_name, current_graph);
-
-		current_graph = new_name;
+		console.log(new_name, current_graph);		
 
 		// todo
 		window.history.replaceState({}, "Matron", "/" + current_graph);

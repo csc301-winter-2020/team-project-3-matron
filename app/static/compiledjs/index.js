@@ -651,10 +651,10 @@ function saveGraph() {
       new_name: new_name
     })
   }).then(function (res) {
+    current_graph = new_name;
     load_graph_versions();
     console.log("tesssssss");
-    console.log(new_name, current_graph);
-    current_graph = new_name; // todo
+    console.log(new_name, current_graph); // todo
 
     window.history.replaceState({}, "Matron", "/" + current_graph);
   });
