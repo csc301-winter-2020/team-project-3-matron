@@ -39,3 +39,15 @@ There are two options to set up the Matron application: it can either be set up 
 4. Set the environment variables by running `heroku config:set DB_URL=<THE URL FOR YOUR DB>` and `heroku config:set DB_PASS=<THE PASSWORD FOR YOUR DB>`
 
 5. Deploy the app to Heroku by running `git push heroku master` from the command line. You should then be able to access the application from the URL you got in step 2.
+
+# Main Routes
+
+There are a few main routes which allow other applications to interact with the virtual blueprint. All routes are designed to accept GET requests.
+
+ - `/graph/names`: gets the names of all saved graphs
+ 
+ - `/graph/all_distances/<graphname>`: gets all distances between every pair of nodes in the `<graphname>` graph
+ 
+ - `/graph/distances_from_room/<graphname>/<roomname>`: gets all distances between `<roomname>` and every other room in the `<graphname>` graph
+ 
+ - `/graph/distance_two_rooms/<graphname>/<room1>/<room2>`: gets all distances between `<room1>` and `<room2>` in the `<graphname>` graph
