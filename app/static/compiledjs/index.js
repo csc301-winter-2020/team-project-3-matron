@@ -504,13 +504,26 @@ function addEdgesCxtTap(e) {
     }
   } else {
     if (!hovered) {
-      var _newNode = addNode(e.position.x, e.position.y, cy, true);
+      var customid = Math.random();
 
-      _newNode.data("type", "hallway");
+      var _newNode = addNode(e.position.x, e.position.y, cy, false, customid, true, true);
 
-      add_new_node_type("hallway");
-      addEdge(ghost.source, _newNode, cy, true);
-      ghost.setSource(_newNode);
+      var e1 = addEdge(customid, ghost.source, cy, false, true, true);
+      var actions = [];
+      actions.push({
+        name: "add",
+        param: _newNode
+      });
+      actions.push({
+        name: "add",
+        param: e1
+      });
+      ur["do"]("batch", actions); // newNode.data("type", "hallway");
+
+      add_new_node_type("hallway"); // addEdge(ghost.source, newNode, cy, true);
+      // ghost.setSource(newNode) //cy.$id(customid);
+
+      ghost.setSource(cy.$id(customid));
       ghost.redraw();
       return;
     }
@@ -589,11 +602,9 @@ cy.on("drag", "elements", function (e) {
   ghost.disable();
 });
 window.addEventListener("keydown", function (e) {
-  console.log(e);
-
-  if (e.key == "y") {
-    console.log(addNode(0, 0, cy, true));
-  }
+  console.log(e); // if (e.key == "y") {
+  // 	console.log(addNode(0,0,cy,true));
+  // }
 
   if (e.key.toLowerCase() == "z" && e.ctrlKey && e.shiftKey) {
     console.log("redo");

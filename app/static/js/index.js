@@ -503,11 +503,21 @@ function addEdgesCxtTap(e) {
 		}
 	} else {
 		if (!hovered) {
-			let newNode = addNode(e.position.x, e.position.y, cy, true);
-			newNode.data("type", "hallway");
+			let customid = Math.random();
+
+			let newNode = addNode(e.position.x, e.position.y, cy, false, customid, true, true);
+			let e1 = addEdge(customid, ghost.source, cy, false, true, true);
+
+			let actions = [];
+			actions.push({name: "add", param: newNode});
+			actions.push({name: "add", param: e1});
+			ur.do("batch", actions);
+
+			// newNode.data("type", "hallway");
 			add_new_node_type("hallway");
-			addEdge(ghost.source, newNode, cy, true);
-			ghost.setSource(newNode)
+			// addEdge(ghost.source, newNode, cy, true);
+			// ghost.setSource(newNode) //cy.$id(customid);
+			ghost.setSource(cy.$id(customid));
 			ghost.redraw();
 			return;
 		}
@@ -614,9 +624,9 @@ cy.on("drag", "elements", function(e) {
 window.addEventListener("keydown", function(e) {
 	console.log(e)
 
-	if (e.key == "y") {
-		console.log(addNode(0,0,cy,true));
-	}
+	// if (e.key == "y") {
+	// 	console.log(addNode(0,0,cy,true));
+	// }
 
 	if (e.key.toLowerCase() == "z" && e.ctrlKey && e.shiftKey) {
 		console.log("redo");
