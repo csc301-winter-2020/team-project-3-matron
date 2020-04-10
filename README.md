@@ -14,7 +14,7 @@ There are two options to set up the Matron application: it can either be set up 
 
 ### Set it up locally
 
-0. Install Python3 via the [the official website](https://www.python.org/downloads/).
+0. Download/install Python3 from the [the official website](https://www.python.org/downloads/).
 
 1. `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` to download the repository.
 2. `cd team-project-3-matron/app` to navigate to the correct directory.
@@ -38,6 +38,12 @@ Where `<DB_URL>` and `<DB_PASS>` are the URL and Password of your MongoDB server
 
 5. From the command line, run `python ./app/main.py` to start the server. It can then be accessed from your web browser by navigating to `localhost:80`
 -->
+
+### Developing it locally
+
+0. After setting up the project locally, download/install NodeJS from [the official website](https://nodejs.org/en/).
+1. `npm install` in the project root directory to install the dependencies.
+2. `npm run dev` to run the watch script the auto-recompiles the project on changes to `app/static/js/index.js`.
 
 ### Set it up on Heroku
 
