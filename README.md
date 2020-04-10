@@ -51,7 +51,7 @@ Where `<DB_URL>` and `<DB_PASS>` are the URL and Password of your MongoDB server
 2. `cd team-project-3-matron/app` to navigate to the correct directory.
 3. `heroku create` to create a new Heroku app. You will then see a URL and password printed in the console, which will be the URL of the website once it's up.
 4. `heroku config:set DB_URL=<THE URL FOR YOUR DB>` and `heroku config:set DB_PASS=<THE PASSWORD FOR YOUR DB>` to the environment variables.
-5. `git push heroku master` to deploy the app to Heroku. You should then be able to access the application from the URL you got in step 2.
+5. `git push heroku master` to deploy the app to Heroku. You should then be able to access the application from the URL you got in step 3.
 
 # Main Routes
 
