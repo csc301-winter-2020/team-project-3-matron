@@ -14,9 +14,12 @@ There are two options to set up the Matron application: it can either be set up 
 
 ### Set it up locally
 
-1. `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` to download the repository
-2. `cd team-project-3-matron/app` to navigate to the correct directory
-3. `python run_local.py <DB_URL> <DB_PASS>` to run the server with the given params
+0. Install Python3 via the [the official website](https://www.python.org/downloads/).
+
+1. `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` to download the repository.
+2. `cd team-project-3-matron/app` to navigate to the correct directory.
+3. `pip install -r requirements.txt` to install the dependencies.
+4. `python run_local.py <DB_URL> <DB_PASS>` to run the server with the given params.
 
 Where `<DB_URL>` and `<DB_PASS>` are the URL and Password of your MongoDB server, in quotes.
 
