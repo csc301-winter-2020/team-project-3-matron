@@ -60,10 +60,36 @@ Where `<DB_URL>` and `<DB_PASS>` are the URL and Password of your MongoDB server
 
 There are a few main routes which allow other applications to interact with the virtual blueprint. All routes are designed to accept GET requests.
 
- - `/graph/names`: gets the names of all saved graphs
+* `/graph/names` gets the names of all saved graphs in a list.
  
- - `/graph/all_distances/<graphname>`: gets all distances between every pair of nodes in the `<graphname>` graph
+* `/graph/all_distances/<graphname>` gets all distances between every pair of nodes in the `<graphname>` graph. The returned JSON data is in the following form
+    ```
+    {
+        <string:start_room_name>:
+        {
+            <string:room_type>:
+            [
+                [<distance:float>, <string:end_room_name],
+                ...
+            ],
+            ...
+        },
+        ...
+    }
+    ```
+    `start_room_name` is the label of a non-hallway node, and it maps to a dictionary of room types. Each `room_type` (for example, `"supply room"` or `office`) maps to a list of pairs (`distance`, `end_room_name`), where `distance` is the relative distance between `start_room_name` and `end_room_name`. This list is in ascending order, with the lowest `distance` first. The node labeled `end_room_name` is always of type `room_type`. 
  
- - `/graph/distances_from_room/<graphname>/<roomname>`: gets all distances between `<roomname>` and every other room in the `<graphname>` graph
+* `/graph/distances_from_room/<graphname>/<roomname>` gets all distances between `<roomname>` and every other room in the `<graphname>` graph. The returned JSON data is in the following form
+    ```
+    {
+        <string:room_type>:
+        [
+            [<distance:float>, <string:end_room_name],
+            ...
+        ],
+        ...
+    }
+    ```
+    Each `room_type` (for example, `"supply room"` or `office`) maps to a list of pairs (`distance`, `end_room_name`), where `distance` is the relative distance between `roomname` and `end_room_name`. This list is in ascending order, with the lowest `distance` first. The node labeled `end_room_name` is always of type `room_type`.
  
- - `/graph/distance_two_rooms/<graphname>/<room1>/<room2>`: gets all distances between `<room1>` and `<room2>` in the `<graphname>` graph
+* `/graph/distance_two_rooms/<graphname>/<room1>/<room2>` gets the relative distance between `<room1>` and `<room2>` in the `<graphname>` graph, and returns this distance as a floating point value.
