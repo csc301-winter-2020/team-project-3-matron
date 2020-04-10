@@ -46,15 +46,12 @@ Where `<DB_URL>` and `<DB_PASS>` are the URL and Password of your MongoDB server
 
 ### Set it up on Heroku
 
-1. Download and install the Heroku command line interface from the [official website](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) and make an account
-
-2. Download the project from the repository either by running `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` from the command line. Then navigate to the folder that was just created.
-
-3. Create a new Heroku app by running `heroku create` from the command line. You will then a URL printed, which will be the URL of the website once it's up.
-
-4. Set the environment variables by running `heroku config:set DB_URL=<THE URL FOR YOUR DB>` and `heroku config:set DB_PASS=<THE PASSWORD FOR YOUR DB>`
-
-5. Deploy the app to Heroku by running `git push heroku master` from the command line. You should then be able to access the application from the URL you got in step 2.
+0. Download and install the Heroku command line interface from the [official website](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) and make an account.
+1. `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` to download the repository.
+2. `cd team-project-3-matron/app` to navigate to the correct directory.
+3. `heroku create` to create a new Heroku app. You will then see a URL and password printed in the console, which will be the URL of the website once it's up.
+4. `heroku config:set DB_URL=<THE URL FOR YOUR DB>` and `heroku config:set DB_PASS=<THE PASSWORD FOR YOUR DB>` to the environment variables.
+5. `git push heroku master` to deploy the app to Heroku. You should then be able to access the application from the URL you got in step 2.
 
 # Main Routes
 
