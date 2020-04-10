@@ -1,5 +1,5 @@
 (function (factory) {
-  typeof define === 'function' && define.amd ? define(['core-js/modules/es.array.concat', 'core-js/modules/es.array.filter', 'core-js/modules/es.array.find', 'core-js/modules/es.array.find-index', 'core-js/modules/es.array.for-each', 'core-js/modules/es.array.last-index-of', 'core-js/modules/es.array.slice', 'core-js/modules/es.array.some', 'core-js/modules/es.function.name', 'core-js/modules/es.number.to-fixed', 'core-js/modules/es.object.to-string', 'core-js/modules/es.promise', 'core-js/modules/es.regexp.to-string', 'core-js/modules/es.string.trim', 'core-js/modules/web.dom-collections.for-each'], factory) :
+  typeof define === 'function' && define.amd ? define(['core-js/modules/es.array.concat', 'core-js/modules/es.array.filter', 'core-js/modules/es.array.find', 'core-js/modules/es.array.find-index', 'core-js/modules/es.array.for-each', 'core-js/modules/es.array.index-of', 'core-js/modules/es.array.last-index-of', 'core-js/modules/es.array.slice', 'core-js/modules/es.array.some', 'core-js/modules/es.function.name', 'core-js/modules/es.number.to-fixed', 'core-js/modules/es.object.to-string', 'core-js/modules/es.promise', 'core-js/modules/es.regexp.to-string', 'core-js/modules/es.string.trim', 'core-js/modules/web.dom-collections.for-each'], factory) :
   factory();
 }((function () { 'use strict';
 
@@ -74,14 +74,63 @@
   var defaulttHoverThresh = [8, 1];
   var ghostHOverThresh = [25, 5];
   setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
-  var changed_graph = false;
+  var changed_graph = false; // From https://coderwall.com/p/i817wa/one-line-function-to-detect-mobile-devices-with-javascript
+
+  function isMobileDevice() {
+    return typeof window.orientation !== "undefined" || navigator.userAgent.indexOf('IEMobile') !== -1;
+  }
+  var ismobile = isMobileDevice();
+
+  if (ismobile) {
+    document.querySelector('#version_select').style.display = 'none';
+    document.querySelector('#tool_select').style.display = 'none';
+    document.querySelector('#image_icon').style.display = "none";
+    document.querySelector('#distance_icon').style.display = "none";
+    var size = "50px";
+
+    var _instructions = document.querySelector("#instructions");
+
+    _instructions.parentNode.parentNode.appendChild(_instructions);
+
+    _instructions.style.fontSize = size;
+    _instructions.style.position = "fixed";
+    _instructions.style.width = "100%";
+    _instructions.style.textAlign = "center";
+    _instructions.style.left = 0;
+    _instructions.style.transform = "translateY(200px)";
+    document.querySelector("#rescale_button").style.fontSize = size;
+    document.querySelector("#rescale_input").style.fontSize = "50px";
+    document.querySelector("#rescale_input").style.width = "400px";
+    document.querySelector("#rescale_icon").style.fontSize = size;
+    document.querySelector("#rescale_icon").classList.add("right"); // From https://gist.github.com/tzi/2953155
+
+    document.querySelector("#rescale_icon").style.setProperty("margin-left", "0", "important");
+    document.querySelector("#save_icon").style.fontSize = size;
+    document.querySelector("#save_icon").classList.add("right");
+    document.querySelector("#matron_name").style.fontSize = size;
+    document.querySelector("#matron_name").style.paddingLeft = "30px";
+    document.querySelector("#matron_name").style.paddingRight = "30px";
+
+    var _rescale_menu = document.querySelector("#rescale_menu");
+
+    _rescale_menu.style.right = "auto";
+    _rescale_menu.style.left = "50%";
+    _rescale_menu.style.margin = "0 auto";
+    _rescale_menu.style.transform = "translateX(-50%)";
+    _rescale_menu.style.position = "fixed";
+    _rescale_menu.style.height = "auto";
+    _rescale_menu.style.bottom = 0;
+  }
+
+  var pxlratio = ismobile ? 0.3 : 1.0;
   var cy = cytoscape({
     container: document.getElementById("cy"),
     layout: {
       name: "preset"
     },
     style: cyStyle,
-    wheelSensitivity: 0.2
+    wheelSensitivity: 0.2,
+    pixelRatio: pxlratio
   });
 
   function setHoverThresh(node, edge) {
@@ -291,6 +340,10 @@
   };
   var popperNode = -1;
   cy.on("tap", function (e) {
+    if (ismobile) {
+      return;
+    }
+
     if (tool == "Smart") {
       smartTap(e);
     } else if (tool == "Add Nodes") {
@@ -550,9 +603,13 @@
   }
 
   cy.on("cxttapend", function (e) {
-    // if (popperNode != -1) {
+    if (ismobile) {
+      return;
+    } // if (popperNode != -1) {
     // 	return;
     // }
+
+
     addEdgesCxtTap(e);
   });
   cy.on("mousemove", function (e) {
@@ -748,6 +805,7 @@
 
     if (rescale_complete) {
       rescale_menu.style.visibility = "hidden";
+      document.querySelector("#instructions").style.display = "none";
       progress_bar.style.display = "none";
     }
   }
@@ -968,11 +1026,16 @@
     load_graph_versions(); //console.log(types);
 
     document.querySelector('#select_floor').style.display = 'none';
-    document.querySelector('#tool_select').style.display = 'block';
+
+    if (!ismobile) {
+      document.querySelector('#tool_select').style.display = 'block';
+    }
+
     document.querySelector('#cy').style.visibility = 'visible';
     cy.elements().removeClass("desiredpath");
     resetRescaler();
     rescale_menu.style.visibility = "hidden";
+    document.querySelector("#instructions").style.display = "none";
     progress_bar.style.display = "none";
   }
 
@@ -999,11 +1062,16 @@
 
     document.querySelector('#select_floor').style.display = 'none';
     document.querySelector('#cy').style.visibility = 'visible';
-    document.querySelector('#tool_select').style.display = 'block';
+
+    if (!ismobile) {
+      document.querySelector('#tool_select').style.display = 'block';
+    }
+
     window.history.replaceState({}, "Matron", "/" + current_graph);
   });
   var canvasLayer = cy.cyCanvas({
-    zIndex: -1
+    zIndex: -1,
+    pixelRatio: pxlratio
   });
   var canvas = canvasLayer.getCanvas();
   var ctx = canvas.getContext("2d");
@@ -1852,6 +1920,10 @@
    */
 
   function load_graph_versions() {
+    if (ismobile) {
+      return;
+    }
+
     console.log("LOADING GRAPH VERSIONS");
     document.querySelector('#version_select').style.display = 'block';
     fetch("/graph/requestAll/".concat(current_graph)).then(function (resp) {
@@ -1935,6 +2007,7 @@
 
     if (rescale_menu.style.visibility != "visible") {
       rescale_menu.style.visibility = "visible";
+      document.querySelector("#instructions").style.display = "block";
       progress_bar.style.display = "block";
 
       if (rescaleAll()) {
@@ -1943,6 +2016,7 @@
       }
     } else {
       rescale_menu.style.visibility = "hidden";
+      document.querySelector("#instructions").style.display = "none";
       progress_bar.style.display = "none";
     }
 
