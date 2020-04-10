@@ -158,11 +158,11 @@
     return cyEdge;
   }
 
-  function addNode(posX, posY, cyInstance, undoable, customid, give_json, is_hallway) {
+  function addNode(posX, posY, cyInstance, undoable, customid, give_json, type, label) {
     changed_graph = true; // console.log("changed graph");
 
     cyInstance = cyInstance || cy;
-    var node_type = is_hallway ? "hallway" : "";
+    var node_type = type ? type : "";
     var node = {
       data: {
         label: "",
@@ -196,7 +196,7 @@
 
   function createJunctionBatch(hovered, x, y, source, target, ghostsource) {
     var customid = Math.random();
-    var newNode = addNode(x, y, cy, false, customid, true, true); // newNode.data("type", "hallway");
+    var newNode = addNode(x, y, cy, false, customid, true, "hallway"); // newNode.data("type", "hallway");
 
     console.log("newnode");
     console.log(newNode);
@@ -492,7 +492,7 @@
       if (!hovered) {
         var customid = Math.random();
 
-        var _newNode = addNode(e.position.x, e.position.y, cy, false, customid, true, true);
+        var _newNode = addNode(e.position.x, e.position.y, cy, false, customid, true, "hallway");
 
         var e1 = addEdge(customid, ghost.source, cy, false, true, true);
         var actions = [];
@@ -595,6 +595,8 @@
     if (e.key.toLowerCase() == "z" && e.ctrlKey && e.shiftKey) {
       console.log("redo");
       ur.redo();
+      unselectAll();
+      unHoverAll();
       ghost.disable();
       hidePopper();
       return;
@@ -603,6 +605,8 @@
     if (e.key == "z" && e.ctrlKey) {
       console.log("undo");
       ur.undo();
+      unselectAll();
+      unHoverAll();
       ghost.disable();
       hidePopper();
       return;
@@ -816,9 +820,16 @@
           }
         }
       });
-      document.querySelectorAll("#delete_map").forEach(function (e1) {
+      console.log("GOT HERE");
+      var all_delete_maps = document.querySelectorAll("#delete_map");
+
+      var _loop = function _loop(i) {
+        var e1 = all_delete_maps[i];
+        console.log("ADDING EVENT LISTENER");
         e1.addEventListener("click", function (e2) {
           var name = e1.parentNode.parentNode.textContent.trim();
+          console.log("DELETEING MAPPPPP");
+          console.log(name);
           e1.parentNode.parentNode.remove(); // reset value of dropdown if current selection gets deleted
 
           var curValue = $("#floor_search").dropdown("get value").trim();
@@ -834,7 +845,11 @@
           }); // console.log(mapnames);
           //getMapNamesFromServer();
         });
-      });
+      };
+
+      for (var i = 0; i < all_delete_maps.length; i++) {
+        _loop(i);
+      }
     });
   }
 
