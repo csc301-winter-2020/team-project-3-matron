@@ -66,7 +66,7 @@ There are a few main routes which allow other applications to interact with the 
         {
             <string:room_type>:
             [
-                [<distance:float>, <string:end_room_name],
+                [<float:distance>, <string:end_room_name],
                 ...
             ],
             ...
@@ -81,7 +81,7 @@ There are a few main routes which allow other applications to interact with the 
     {
         <string:room_type>:
         [
-            [<distance:float>, <string:end_room_name],
+            [<float:distance>, <string:end_room_name],
             ...
         ],
         ...
