@@ -68,19 +68,6 @@ class seleniumtest(EasyDriver):
         matron_button = self.driver.find_element_by_id("matron")
 
         create_node(self.driver, 150, 500, "r1", "room")
-
-        # cy_elements = self.driver.execute_script("return cy.json().elements")
-        # node_type = []
-        # label = []
-
-        # for nodes in cy_elements['nodes']:
-            # node_type.append(nodes['data']['type'])
-            # label.append(nodes['data']['label'])
-
-        
-        # assert 'r1' in label
-        # assert 'room' in node_type 
-        # assert len(cy_elements['nodes']) == 1
         
         # remove map used for test case
         remove_saved_map(self.driver, "test_selenium")
@@ -105,17 +92,6 @@ class seleniumtest(EasyDriver):
         create_triangle.perform()
         sleep(1)
         
-        # # testing if three hallways are created 
-        # cy_elements = self.driver.execute_script("return cy.json().elements")
-
-        # nodes = []
-        # edges = []
-
-        # assert (len(cy_elements['nodes']) == 3)
-        # for node in cy_elements['nodes']:
-            # assert node['data']['type'] == 'hallway'
-            
-        # assert len(cy_elements['edges']) == 3
         
         # remove map used for test case
         remove_saved_map(self.driver, "test_selenium")
@@ -168,21 +144,6 @@ class seleniumtest(EasyDriver):
         create_edge.perform()
         sleep(1)
         
-        # # Test the data to be in proper form 
-        # cy_elements = self.driver.execute_script("return cy.json().elements")
-        
-        # assert len(cy_elements["nodes"]) == 2
-        # assert len(cy_elements["edges"]) == 1
-        
-        # nodes_label = []
-        # edges = []
-        
-        # for node in cy_elements["nodes"]:
-            # nodes_label.append(node["data"]["label"])
-            
-        # assert "r1" in nodes_label
-        # assert "r2" in nodes_label
-        
         # remove map used for test case
         remove_saved_map(self.driver, "test_selenium")
         
@@ -213,20 +174,6 @@ class seleniumtest(EasyDriver):
         # reload
         self.driver.find_element_by_id('edit_floor').click()
         sleep(1)  
-        # cy_elements = self.driver.execute_script("return cy.json().elements")
-        
-        # # Onto the test case
-        # type = []
-        # label = []
-
-        # for node in cy_elements['nodes']:
-            # type.append(node['data']['type'])
-            # label.append(node['data']['label'])
-
-        
-        # assert 'r1' in label
-        # assert 'room' in type 
-        # assert len(cy_elements['nodes']) == 1
 
         # remove map used for test case
         remove_saved_map(self.driver, "test_selenium")
@@ -256,17 +203,6 @@ class seleniumtest(EasyDriver):
 
         connect_with_two_hallway.perform()
 
-        # test before
-        # cy_elements = self.driver.execute_script("return cy.json().elements")
-        # labels = []
-
-        # for node in cy_elements['nodes']:
-            # labels.append(node['data']['label'])
-
-        # assert 'r1' in labels
-        # assert 'r2' in labels
-        # assert len(cy_elements['edges']) == 3
-
         delete_edge_1 = ActionChains(self.driver)
         delete_edge_2 = ActionChains(self.driver)
         delete_edge_3 = ActionChains(self.driver)
@@ -286,11 +222,6 @@ class seleniumtest(EasyDriver):
                 .move_to_element_with_offset(matron_button, 450, 500).click().send_keys('x')
         delete_all_nodes.perform()
         sleep(1)
-
-        # test here
-        # cy_elements = self.driver.execute_script("return cy.json().elements")
-
-        # assert cy_elements == {}
     
         # remove map used for test case
         remove_saved_map(self.driver, "test_selenium")
