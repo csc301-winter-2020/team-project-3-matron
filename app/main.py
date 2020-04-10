@@ -38,9 +38,25 @@ def graph_functions(name):
     """
     print(name)
     if request.method == 'POST':
-        g = request.get_json(force=True)
+        data = request.get_json(force=True)
+        g = data['graph']
+
+        if 'new_name' in data:
+            new_name = data['new_name']
+        else:
+            new_name = ''
+
         t = int(time())
         graph = {"date": t, "graph": g}
+
+        # sets a new name for the graph if one is posted
+        if new_name != "":
+            check = dao.rename_graph(name, new_name)
+            if(check == -1):
+                return jsonify({"status": 400, "error": "new name is not a string"})
+            elif (check == -2):
+                return jsonify({"status": 400, "error": "not a valid new name"})
+            name = new_name
         if dao.save_graph(name, graph):
             return jsonify(success)
         else:
@@ -70,6 +86,19 @@ def graph_and_print(graph_name):
     incoming_data = request.get_json(force=True)
     g = incoming_data['graph']
     blueprint = incoming_data['blueprint']
+    if 'new_name' in incoming_data:
+        new_name = incoming_data['new_name']
+    else:
+        new_name = ''
+
+    # sets a new name for the graph if one is posted
+    if new_name != "" and (graph_name != new_name):
+        check = dao.rename_graph(graph_name, new_name)
+        if(check == -1):
+            return jsonify({"status": 400, "error": "new name is not a string"})
+        elif (check == -2):
+            return jsonify({"status": 400, "error": "not a valid new name"})
+        graph_name = new_name
 
     t = int(time())
     graph = {"date": t, "graph": g}

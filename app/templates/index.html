@@ -16,6 +16,7 @@
 		<script src="../static/js/lib/cytoscape-popper.js"></script>
 		<script src="../static/compiledjs/lib/cytoscape-canvas.js"></script>
 		<script src="../static/js/lib/fetch.umd.js"></script>
+		<script src="../static/js/lib/cytoscape-undo-redo.js"></script>
 
 		<script src="../static/compiledjs/iro_bundle.js"></script>
 		<!-- <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script> -->
@@ -43,7 +44,7 @@
 			<a class="item" id="save_icon" > <i id="ico" class="save icon"></i> </a>
 			<!-- <a class="item"> <i id="ico" class="cog icon"></i></a> -->
 			<a class="item" id="distance_icon"> <i id="ico" class="location arrow icon"></i></a>
-			<a class="item" id="image_icon"> <i id="ico" class="image outline icon"></i> </a>
+			<a class="item" id="image_icon"> <i id="ico" class="cog icon"></i> </a>
 			<a class="item" id="rescale_icon"> <i id="ico" class="expand arrows alternate icon"></i> </a>
 			<div id="version_select" class="ui fluid selection dropdown">
 
@@ -105,13 +106,11 @@
 					<br>
 				</div>
 
-				
-
 			</div>
 		</div>
 
 
-		<div class="tiny ui modal" id="blueprint_modal">
+		<div class="ui modal" id="blueprint_modal">
 			<i class="close icon"></i>
 			<div class="header">
 			  Modify blueprint
@@ -120,14 +119,17 @@
 				<div class="ui form">
 
 				<div class="inline fields">
-					<label> Upload new blueprint: </label>
+					<label class="modify_map_label"> Upload new blueprint: </label>
 					<input id="new_blue_print" type="file" accept="image/*">
 				</div>
 				<div class="inline fields">
-					<label> Blueprint scale factor: </label>
+					<label class="modify_map_label"> Blueprint scale factor: </label>
 					<input id="blueprint_scale_input" type="text" placeholder="Scale factor">
 				</div>
-
+				<div class="inline fields">
+					<label class="modify_map_label"> Map name: </label>
+					<input class="blueprint_input" id="blueprint_name_input" type="text" >
+				</div>
 				</div>
 			</div>
 			<div class="actions">
