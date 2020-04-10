@@ -122,7 +122,10 @@
     _rescale_menu.style.bottom = 0;
   }
 
-  var pxlratio = ismobile ? 0.3 : 1.0;
+  var pxlratio = ismobile ? 0.15 : 1.0;
+  pxlratio *= window.devicePixelRatio;
+  console.log(window.devicePixelRatio);
+  console.log(pxlratio);
   var cy = cytoscape({
     container: document.getElementById("cy"),
     layout: {

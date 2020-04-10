@@ -133,7 +133,10 @@ if (ismobile) {
 	rescale_menu.style.bottom = 0;
 }
 
-let pxlratio = ismobile ? 0.3 : 1.0;
+let pxlratio = ismobile ? 0.15 : 1.0;
+pxlratio *= window.devicePixelRatio;
+console.log(window.devicePixelRatio);
+console.log(pxlratio);
 
 let cy = cytoscape({
 	container: document.getElementById("cy"),
