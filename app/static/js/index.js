@@ -85,13 +85,67 @@ setHoverThresh(defaulttHoverThresh[0], defaulttHoverThresh[1]);
 
 let changed_graph = false;
 
+// From https://coderwall.com/p/i817wa/one-line-function-to-detect-mobile-devices-with-javascript
+function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+};
+let ismobile = isMobileDevice();
+
+if (ismobile) {
+	document.querySelector('#version_select').style.display = 'none';
+	document.querySelector('#tool_select').style.display = 'none';
+	document.querySelector('#image_icon').style.display = "none";
+	document.querySelector('#distance_icon').style.display = "none";
+
+	let size = "50px";
+
+	let instructions = document.querySelector("#instructions");
+	instructions.parentNode.parentNode.appendChild(instructions);
+	instructions.style.fontSize = size
+	instructions.style.position = "fixed";
+	instructions.style.width = "100%";
+	instructions.style.textAlign = "center";
+	instructions.style.left = 0;
+	instructions.style.transform = "translateY(200px)";
+
+	document.querySelector("#rescale_button").style.fontSize = size
+	document.querySelector("#rescale_input").style.fontSize = "50px";
+	document.querySelector("#rescale_input").style.width = "400px";
+
+	document.querySelector("#rescale_icon").style.fontSize = size
+	document.querySelector("#rescale_icon").classList.add("right");
+	// From https://gist.github.com/tzi/2953155
+	document.querySelector("#rescale_icon").style.setProperty("margin-left", "0", "important");
+
+	document.querySelector("#save_icon").style.fontSize = size
+	document.querySelector("#save_icon").classList.add("right");
+	document.querySelector("#matron_name").style.fontSize = size
+	document.querySelector("#matron_name").style.paddingLeft = "30px"
+	document.querySelector("#matron_name").style.paddingRight = "30px"
+
+	let rescale_menu = document.querySelector("#rescale_menu");
+	rescale_menu.style.right = "auto";
+	rescale_menu.style.left = "50%";
+	rescale_menu.style.margin = "0 auto";
+	rescale_menu.style.transform = "translateX(-50%)";
+	rescale_menu.style.position = "fixed";
+	rescale_menu.style.height = "auto";
+	rescale_menu.style.bottom = 0;
+}
+
+let pxlratio = ismobile ? 0.15 : 1.0;
+pxlratio *= window.devicePixelRatio;
+console.log(window.devicePixelRatio);
+console.log(pxlratio);
+
 let cy = cytoscape({
 	container: document.getElementById("cy"),
 	layout: {
 		name: "preset"
 	},
 	style: cyStyle,
-	wheelSensitivity: 0.2
+	wheelSensitivity: 0.2,
+	pixelRatio: pxlratio
 });
 
 function mod(n, m) {
@@ -121,7 +175,7 @@ function toggleSelected(e) {
 	e.unselectify();
 }
 
-function addEdge(cyNode1, cyNode2, cyInstance) {
+function addEdge(cyNode1, cyNode2, cyInstance, undoable, give_json, cyNode1_is_id) {
 	// if (!cy.$id(cyNode1.id())[0] || !cy.$id(cyNode2.id())[0]) {
 	// 	return;
 	// }
@@ -134,8 +188,10 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 		return;
 	}
 
-	let id1 = cyNode1.id() + "-" + cyNode2.id();
-	let id2 = cyNode2.id() + "-" + cyNode1.id();
+	let cynode1_id = cyNode1_is_id ? cyNode1 : cyNode1.id();
+
+	let id1 = cynode1_id + "-" + cyNode2.id();
+	let id2 = cyNode2.id() + "-" + cynode1_id;
 
 	if (cyInstance.$id(id1)[0] || cyInstance.$id(id2)[0]) {
 		return;
@@ -145,41 +201,96 @@ function addEdge(cyNode1, cyNode2, cyInstance) {
 		data: {
 			id: id1,
 			label: "",
-			source: cyNode1.id(),
+			source: cynode1_id,
 			target: cyNode2.id(),
 		},
+		selecable: false,
+		grabbable: false,
 		classes: []
 	}
 	
-	let cyEdge = cyInstance.add(edge);
-	cyEdge.unselectify();
-	cyEdge.ungrabify();
-	console.log("changed graph");
+	if (give_json) {
+		return edge;
+	}
+
+	let cyEdge;
+
+	if (undoable) {
+		cyEdge = ur.do("add", edge)
+	} else {
+		cyEdge = cyInstance.add(edge);
+	}
+	
+	// cyEdge.unselectify();
+	// cyEdge.ungrabify();
+	// console.log("changed graph");
 
 	changed_graph = (cyInstance == cy);
 
 	return cyEdge;
 }
 
-function addNode(posX, posY, cyInstance) {
+function addNode(posX, posY, cyInstance, undoable, customid, give_json, type, label) {
 	changed_graph = true;
-	console.log("changed graph");
+	// console.log("changed graph");
 	cyInstance = cyInstance || cy;
+
+	let node_type = type ? type : "";
+	let node_label = label ? label : "";
+
 	let node = {
 		data: {
-			label: "",
-			type: ""
+			label: node_label,
+			type: node_type,
+			id: customid
 		},
 		position: {
 			x: posX,
 			y: posY
 		},
+		grabbable: false,
+		selectable: false,
 		classes: []
 	}
-	let cyNode = cyInstance.add(node)[0];
-	cyNode.unselectify();
-	cyNode.ungrabify();
+
+	if (give_json) {
+		return node;
+	}
+
+	let cyNode;
+	if (undoable) {
+		cyNode = ur.do("add", node);
+	} else {
+		cyNode = cyInstance.add(node)[0];
+		// cyNode.unselectify();
+		// cyNode.ungrabify();
+	}
 	return cyNode;
+}
+
+function createJunctionBatch(hovered, x, y, source, target, ghostsource) {
+	let customid = Math.random();
+	let newNode = addNode(x, y, cy, false, customid, true, "hallway");
+	// newNode.data("type", "hallway");
+	console.log("newnode");
+	console.log(newNode);
+
+	let e1 = addEdge(customid, source, cy, false, true, true);
+	let e2 = addEdge(customid, target, cy, false, true, true);
+	let e3 = addEdge(customid, ghostsource, cy, false, true, true);
+
+	let actions = [];
+	actions.push({name: "remove", param: hovered});
+	actions.push({name: "add", param: newNode});
+	actions.push({name: "add", param: e1});
+	actions.push({name: "add", param: e2});
+	actions.push({name: "add", param: e3});
+
+	// cy.remove(newNode);
+
+	ur.do("batch", actions);
+
+	changed_graph = true;
 }
 
 let ghost = {
@@ -231,6 +342,10 @@ let ghost = {
 
 let popperNode = -1;
 cy.on("tap", function(e) {
+	if (ismobile) {
+		return;
+	}
+
 	if (tool == "Smart") {
 		smartTap(e);
 	} else if (tool == "Add Nodes") {
@@ -251,7 +366,8 @@ function deleteNodesTap(e) {
 	}
 
 	resetRescaler();
-	cy.remove(target);
+	//cy.remove(target);
+	ur.do("remove", target);
 }
 
 // cy.on("tapstart", function(e) {
@@ -289,7 +405,7 @@ function addNodesTap(e) {
 	// create a new node
 	if (target == cy) {
 		if (!ghost.enabled) {
-			let newNode = addNode(e.position.x, e.position.y);
+			let newNode = addNode(e.position.x, e.position.y, cy, true);
 			popperNode = newNode;
 
 			let popper = popperNode.popper({
@@ -435,7 +551,7 @@ function addEdgesCxtTap(e) {
 		}
 
 		if (target == cy) {
-			let newNode = addNode(e.position.x, e.position.y);
+			let newNode = addNode(e.position.x, e.position.y, cy, true);
 			newNode.data("type", "hallway");
 			add_new_node_type("hallway");
 			ghost.enable();
@@ -446,17 +562,27 @@ function addEdgesCxtTap(e) {
 		}
 	} else {
 		if (!hovered) {
-			let newNode = addNode(e.position.x, e.position.y);
-			newNode.data("type", "hallway");
+			let customid = Math.random();
+
+			let newNode = addNode(e.position.x, e.position.y, cy, false, customid, true, "hallway");
+			let e1 = addEdge(customid, ghost.source, cy, false, true, true);
+
+			let actions = [];
+			actions.push({name: "add", param: newNode});
+			actions.push({name: "add", param: e1});
+			ur.do("batch", actions);
+
+			// newNode.data("type", "hallway");
 			add_new_node_type("hallway");
-			addEdge(ghost.source, newNode);
-			ghost.setSource(newNode)
+			// addEdge(ghost.source, newNode, cy, true);
+			// ghost.setSource(newNode) //cy.$id(customid);
+			ghost.setSource(cy.$id(customid));
 			ghost.redraw();
 			return;
 		}
 
 		if (hovered.group() == "nodes") {
-			addEdge(ghost.source, hovered);
+			addEdge(ghost.source, hovered, cy, true);
 			// ghost.setSource(hovered);
 			// ghost.redraw();
 			ghost.disable();
@@ -485,13 +611,17 @@ function addEdgesCxtTap(e) {
 				true
 			);
 
-			cy.remove(hovered);
-			let newNode = addNode(intersectPos[0], intersectPos[1]);
-			newNode.data("type", "hallway");
+			// DO THIS AS A BATCH JOB
+			// cy.remove(hovered);			
+			// let newNode = addNode(intersectPos[0], intersectPos[1], cy, true);
+			// addEdge(newNode, source);
+			// addEdge(newNode, target);
+			// addEdge(newNode, ghost.source);
+
+			// newNode.data("type", "hallway");
+			createJunctionBatch(hovered, intersectPos[0], intersectPos[1], source, target, ghost.source);
 			add_new_node_type("hallway");
-			addEdge(newNode, source);
-			addEdge(newNode, target);
-			addEdge(newNode, ghost.source);
+
 			// ghost.setSource(newNode);
 			// ghost.redraw();
 			ghost.disable();
@@ -499,8 +629,12 @@ function addEdgesCxtTap(e) {
 	}
 }
 
-cy.on("cxttapend", function(e) {
 
+
+cy.on("cxttapend", function(e) {
+	if (ismobile) {
+		return;
+	}
 
 	// if (popperNode != -1) {
 	// 	return;
@@ -540,6 +674,7 @@ cy.on("box", "elements", function(e) {
 
 	let target = e.target;
 	toggleSelected(target);
+	target.grabify();
 })
 
 cy.on("drag", "elements", function(e) {
@@ -548,12 +683,40 @@ cy.on("drag", "elements", function(e) {
 })
 
 window.addEventListener("keydown", function(e) {
-	if (e.code == "Escape") {
+	// console.log(e)
+
+	// if (e.key == "y") {
+	// 	console.log(addNode(0,0,cy,true));
+	// }
+
+	if (e.key.toLowerCase() == "z" && e.ctrlKey && e.shiftKey) {
+		console.log("redo");
+		ur.redo();
+
+		unselectAll();
+		unHoverAll();
+		ghost.disable();
+		hidePopper();
+		return;
+	}
+
+	if (e.key == "z" && e.ctrlKey) {
+		console.log("undo");
+		ur.undo();
+
+		unselectAll();
+		unHoverAll();
+		ghost.disable();
+		hidePopper();
+		return;
+	}
+
+	if (e.key == "Escape" || e.key == "Esc") {
 		ghost.disable();
 		hidePopper();
 	}
 
-	if (e.code == "KeyX" && (tool == "Smart" || tool == "Delete")) {
+	if (e.key == "x" && (tool == "Smart" || tool == "Delete")) {
 		resetRescaler();
 		console.log(document.activeElement);
 		if (document.activeElement != document.body) {
@@ -574,9 +737,22 @@ window.addEventListener("keydown", function(e) {
 			}
 		}
 
-		cy.remove(selected);
+		ur.do("remove", selected);
+		//cy.remove(selected);
 	}
 });
+
+let ur_options = {
+	isDebug: true,
+	actions: {},
+	undoableDrag: true,
+	stackSizeLimit: undefined,
+	ready: function() {
+		
+	}
+}
+
+let ur = cy.undoRedo(ur_options)
 
 function duplicateLabelCheck() {
 	let labels = {};
@@ -602,11 +778,15 @@ function duplicateLabelCheck() {
 const info = document.querySelector('#node_info');
 const node_label_input = document.querySelector('#node_label_input').value = '';
 
+function ungrabifyAll() {
+	cy.nodes().ungrabify();
+}
+
 const save_btn = document.querySelector('#save_icon');
 save_btn.addEventListener('click', saveGraph);
 function saveGraph() {
 	changed_graph = false;
-
+	ungrabifyAll();
 	unselectAll();
 	unHoverAll();
 	console.log(current_graph);
@@ -641,14 +821,26 @@ function saveGraph() {
 	_graph.blueprint_scale = blueprint_scale;
 	// console.log(_graph);
 	let blueprint = fileImage == -1 ? "" : fileImage.src;
+	console.log("nameeeee");
+	console.log(current_graph);
+	console.log(new_name);
 	fetch(url, {
 		method: 'post',
-		body: JSON.stringify({graph: _graph, blueprint: blueprint})
+		body: JSON.stringify({graph: _graph, blueprint: blueprint, new_name: new_name})
 	}).then(res=>{
+		current_graph = new_name;
 		load_graph_versions();
+
+		console.log("tesssssss");
+		console.log(new_name, current_graph);		
+
+		// todo
+		window.history.replaceState({}, "Matron", "/" + current_graph);
 	});
 	if (rescale_complete) {
 		rescale_menu.style.visibility = "hidden";
+		document.querySelector("#instructions").style.display = "none";
+		progress_bar.style.display = "none";
 	}
 }
 
@@ -662,6 +854,7 @@ function unHoverAll() {
 let mapnames = [];
 
 function fillmapnames(names) {
+	mapnames = [];
 	names.forEach((name) => {
 		// console.log(name);
 		// if (name.trim() == "demo") {
@@ -681,6 +874,7 @@ function getMapNamesFromServer() {
 			console.log(urlMapName);
 			if (mapnames.some(name=>name.value==urlMapName)) {
 				current_graph = urlMapName;
+				new_name = urlMapName;
 				editFloor(urlMapName);
 			} else {
 				window.history.replaceState({}, "Matron", "/");
@@ -712,9 +906,20 @@ function getMapNamesFromServer() {
 			}
 		});
 
-		document.querySelectorAll("#delete_map").forEach((e1) => {
+		console.log("GOT HERE");
+		let all_delete_maps = document.querySelectorAll("#delete_map");
+		for (let i=0; i<all_delete_maps.length; i++) {
+
+			let e1 = all_delete_maps[i]
+
+			console.log("ADDING EVENT LISTENER");
 			e1.addEventListener("click", function(e2) {
+
 				let name = e1.parentNode.parentNode.textContent.trim();
+
+				console.log("DELETEING MAPPPPP");
+				console.log(name);
+
 				e1.parentNode.parentNode.remove();
 
 				// reset value of dropdown if current selection gets deleted
@@ -733,7 +938,7 @@ function getMapNamesFromServer() {
 				// console.log(mapnames);
 				//getMapNamesFromServer();
 			})
-		});
+		}
 
 	});
 }
@@ -776,6 +981,7 @@ function getImageData() {
 const edit_floor_btn = document.querySelector('#edit_floor');
 edit_floor_btn.addEventListener('click', (e) => {
 	current_graph = $("#floor_search").dropdown("get value");
+	new_name = current_graph;
 	if (current_graph) {
 		editFloor(current_graph);
 		window.history.replaceState({}, "Matron", "/" + current_graph);
@@ -789,6 +995,11 @@ function editFloor(current_graph) {
 	// 	current_graph = "";
 	// 	return;
 	// }
+	if (ismobile) {
+		// console.log("RESETTING ZOOOOOOOOOOOOM");
+		// let viewportmeta = document.querySelector('meta[name="viewport"]');
+		// viewportmeta.setAttribute('content', "initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0");
+	}
 
 	fetch(`graph/${current_graph}`).then((resp) => resp.json()).then(function(data) {
 		loadGraphData(data);		
@@ -840,16 +1051,23 @@ function loadGraphData(data) {
 		load_graph_versions();
 		//console.log(types);
 		document.querySelector('#select_floor').style.display = 'none';
-		document.querySelector('#tool_select').style.display = 'block';
+		if (!ismobile) {
+			document.querySelector('#tool_select').style.display = 'block';
+		}		
 		document.querySelector('#cy').style.visibility = 'visible';
 		cy.elements().removeClass("desiredpath");
+		resetRescaler();
+		rescale_menu.style.visibility = "hidden";
+		document.querySelector("#instructions").style.display = "none";
+		progress_bar.style.display = "none";
 }
 
 const create_floor_btn = document.querySelector('#create_floor');
 create_floor_btn.addEventListener('click', (e) => {
-	img_src = document.querySelector('#img');
+	// img_src = document.querySelector('#img');
 	// load empty graph with this img (we'll send it to server on save)
 	current_graph = $("#floor_search").dropdown("get value");
+	new_name = current_graph;
 	console.log(current_graph);
 	
 	if (file != -1) {
@@ -864,13 +1082,17 @@ create_floor_btn.addEventListener('click', (e) => {
 
 	document.querySelector('#select_floor').style.display = 'none';
 	document.querySelector('#cy').style.visibility = 'visible';
-	document.querySelector('#tool_select').style.display = 'block';
+	if (!ismobile) {
+		document.querySelector('#tool_select').style.display = 'block';
+	}
+	
 	window.history.replaceState({}, "Matron", "/" + current_graph);
 });
 
 
 let canvasLayer = cy.cyCanvas({
-	zIndex: -1
+	zIndex: -1,
+	pixelRatio: pxlratio
 })
 let canvas = canvasLayer.getCanvas();
 let ctx = canvas.getContext("2d");
@@ -921,13 +1143,62 @@ function fillTypes() {
 	}
 }
 
+function swapPopper(label, type) {
+	console.log("SWWWWWWWWWWWWWWWWWWWWAPPING POPPER");
+	let poppernodeID = popperNode.id();
+	let newnode = addNode(popperNode.position().x, popperNode.position().y, cy, false, poppernodeID, true, type, label);
+	let connected = popperNode.openNeighborhood("node");
+
+	console.log(popperNode);
+	console.log(newnode);
+
+	console.log(ur.getUndoStack());
+
+	let actions = [];
+
+	actions.push({name: "remove", param: popperNode});
+	actions.push({name: "add", param: newnode});
+
+	connected.forEach(n => {
+		// let edge = addEdge(poppernodeID, n, cy, false, true, true);
+
+		let edge = {
+			data: {
+				id: poppernodeID + "-" + n.id(),
+				label: "",
+				source: poppernodeID,
+				target: n.id(),
+			},
+			selecable: false,
+			grabbable: false,
+			classes: []
+		}
+
+		console.log(edge);
+		actions.push({name: "add", param: edge});
+	});
+
+	console.log(actions);
+
+	ur.do("batch", actions);
+
+	popperNode = cy.$id(poppernodeID);
+}
+
 $("#type_select").dropdown({
 	allowAdditions: true, 
 	hideAdditions: false,
 	onChange: function(value, name) {
 		console.log(value, name);
 		if (popperNode != -1) {
-			popperNode.data("type", value);
+			console.log(popperNode.data("type"));
+			console.log(value);
+			if (value == popperNode.data("type")) {
+				return;
+			}
+
+			//popperNode.data("type", value);
+			swapPopper(popperNode.data("label"), value);
 			console.log("changed graph");
 			changed_graph = true;
 			let input_label = document.querySelector('#node_label_input').value;
@@ -988,6 +1259,8 @@ set_type_btn.addEventListener("click", (e) => {
 
 	fillTypes();
 
+	let old_label = popperNode.data("label");
+
 	let input_label = document.querySelector('#node_label_input').value;
 	let input_type = $("#type_select").dropdown("get value");
 
@@ -1000,10 +1273,14 @@ set_type_btn.addEventListener("click", (e) => {
 		add_new_node_type(input_type);
 	}
 	
-	if (input_type == "hallway") {
-		popperNode.data("label", "");
-	} else {
-		popperNode.data("label", input_label);
+	if (input_label != old_label) {
+		if (input_type == "hallway") {
+			//popperNode.data("label", "");
+			swapPopper("", popperNode.data("type"));
+		} else {
+			//popperNode.data("label", input_label);
+			swapPopper(input_label, popperNode.data("type"));
+		}
 	}
 	
 	hidePopper();
@@ -1062,6 +1339,10 @@ matron_btn.addEventListener("click", (e) => {
 	//location.reload();
 });
 
+document.querySelector('#file_button').onchange = function() {
+	getImageData();
+}
+
 const distance_btn = document.querySelector('#distance_btn');
 const distance_result_div = document.querySelector('#distance_result_div');
 const distance_icon = document.querySelector('#distance_icon');
@@ -1072,24 +1353,35 @@ const blueprint_reader = new FileReader();
 
 let blueprint_scale = 1;
 upload_new_blueprint_btn.addEventListener('click', (e)=>{
-	file = document.querySelector('#new_blue_print').files[0];
-	// console.log(file);
-	if (file) {
-		reader.readAsDataURL(file);
-		changed_graph = true;
-	}
-	
-	console.log(blueprint_scale_input.value);
-	new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
 
-	if (blueprint_scale != new_blueprint_scale) {
-		scale_full_graph(new_blueprint_scale/blueprint_scale);
-		blueprint_scale = new_blueprint_scale;
-		changed_graph = true;
-		drawBG();
+});
+
+// blueprint_name_input.value = current_graph;
+let new_name = "";
+$('#blueprint_modal').modal({
+	onApprove: function() {
+		file = document.querySelector('#new_blue_print').files[0];
+		// console.log(file);
+		if (file) {
+			reader.readAsDataURL(file);
+			changed_graph = true;
+		}
+		
+		console.log(blueprint_scale_input.value);
+		let new_blueprint_scale = blueprint_scale_input.value ? blueprint_scale_input.value : blueprint_scale;
+
+		if (blueprint_scale != new_blueprint_scale) {
+			scale_full_graph(new_blueprint_scale/blueprint_scale);
+			blueprint_scale = new_blueprint_scale;
+			changed_graph = true;
+			drawBG();
+		}
+		new_name = document.querySelector("#blueprint_name_input").value;
+		console.log("changed graph");
+	},
+	onDeny: function() {
+		return false;
 	}
-	
-	console.log("changed graph");
 });
 
 function scale_full_graph(factor) {
@@ -1104,11 +1396,55 @@ function scale_full_graph(factor) {
 	})
 }
 
+// blueprint_name_input.onchange = function() {
+// 	console.log("changinggggg")
+// }
+
+document.querySelector("#blueprint_name_input").oninput = function() {
+	console.log("changeeeee");
+	let newname = document.querySelector("#blueprint_name_input").value;
+
+	if (newname == current_graph) {
+		return;
+	}
+
+	if (newname.trim() == "") {
+		upload_new_blueprint_btn.classList.remove("positive");
+		upload_new_blueprint_btn.classList.add("negative");
+		upload_new_blueprint_btn.innerText = "Empty name not allowed"
+		return;
+	}
+
+	if (mapnames.some(name => newname == name.value)) {
+		upload_new_blueprint_btn.classList.remove("positive");
+		upload_new_blueprint_btn.classList.add("negative");
+		upload_new_blueprint_btn.innerText = "Name already taken"
+		return;
+	}
+
+	upload_new_blueprint_btn.classList.remove("negative");
+	upload_new_blueprint_btn.classList.add("positive");
+	upload_new_blueprint_btn.innerText = "Update"
+}
+
+
+
 blueprint_icon.addEventListener('click', (e)=>{
 	if (current_graph == "") {
 		return
 	}
 	
+	upload_new_blueprint_btn.classList.remove("negative");
+	upload_new_blueprint_btn.classList.add("positive");
+	upload_new_blueprint_btn.innerText = "Update"
+
+	blueprint_scale_input.value = blueprint_scale;
+	blueprint_name_input.value = current_graph;
+
+	fetch('graph/names').then((resp) => resp.json()).then(function(data) {
+		fillmapnames(data.graph);
+	});
+
 	$('#blueprint_modal')
 		.modal('show')
 	;
@@ -1586,7 +1922,8 @@ $("#version_select").dropdown({
 			// here we would do something load our older version graph
 			//console.log(data);
 			//console.log(data);
-
+			console.log("dataaaaaaaaa");
+			console.log(data);
 			console.log(urlParams);
 			if ((!changed_graph || urlParams=="dev") || window.confirm("You have unsaved changed. Continue?")) {
 				loadGraphData(data);
@@ -1601,10 +1938,15 @@ $("#version_select").dropdown({
  * Function used to load in the graph version on the dropdown
  */
 function load_graph_versions(){
-	console.log("LOADING GRAPH VERSIONS");
+	if (ismobile) {
+		return;
+	}
+
+	console.log("LOADING GRAPH VERSIONS")
 	document.querySelector('#version_select').style.display = 'block';
 	fetch(`/graph/requestAll/${current_graph}`).then((resp) => resp.json()).then(function(data) {
-
+		debugtext.innerText = performance.now() + data.times;
+		
 		const version_list = document.querySelector('#version_list');
 		while(version_list.hasChildNodes()) {
 			version_list.removeChild(version_list.lastChild);
@@ -1634,6 +1976,7 @@ $('#tool_select')
 		tool = value;
 		ghost.disable();
 
+		ungrabifyAll();
 	 	unselectAll();
 		unHoverAll();
 		hidePopper();
@@ -1676,7 +2019,10 @@ document.querySelector("#node_info_close").onclick = function() {
 }
 
 document.querySelector("#rescale_icon").onclick = function() {
+	rescale_icon_helper();
+}
 
+function rescale_icon_helper() {
 	if (!current_graph) {
 		return;
 	}
@@ -1685,6 +2031,7 @@ document.querySelector("#rescale_icon").onclick = function() {
 	resetRescaler();
 	if (rescale_menu.style.visibility != "visible") {
 		rescale_menu.style.visibility = "visible";
+		document.querySelector("#instructions").style.display = "block";
 		progress_bar.style.display = "block";
 
 		if (rescaleAll()) {
@@ -1693,6 +2040,7 @@ document.querySelector("#rescale_icon").onclick = function() {
 		}
 	} else {
 		rescale_menu.style.visibility = "hidden";
+		document.querySelector("#instructions").style.display = "none";
 		progress_bar.style.display = "none";
 	}
 	
@@ -1704,6 +2052,7 @@ let instructions = document.querySelector("#instructions");
 let rescale_input = document.querySelector("#rescale_input");
 let rescale_button = document.querySelector("#rescale_button");
 let blueprint_scale_input = document.querySelector("#blueprint_scale_input");
+let blueprint_name_input = document.querySelector("#blueprint_name_input");
 let progress_bar = document.querySelector("#progress_bar");
 
 let rescaled_edges = 0;
@@ -1805,6 +2154,14 @@ colorPicker.on('color:change', function(color) {
 });
 
 $("#progress_bar").progress({percent: 0});
+
+let debugtext = document.querySelector("#debugtext");
+
+// function console.log(data) {
+// 	if (window.console) {
+// 		console.log(data);
+// 	}
+// }
 
 // function cleanNode(label) {
 // 	let node = cy.$("node[label='" + label + "']")[0];

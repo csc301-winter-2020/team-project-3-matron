@@ -19,7 +19,7 @@ body {
 }
 
 #node_label_input{
-	width: 250px;
+	min-width: 187px;
 }
 
 #node_info{
@@ -35,8 +35,6 @@ body {
 	left: 0%;
 	bottom: 50%;
   }
-
-
 
 .hide{
 	display: none;
@@ -170,8 +168,8 @@ body {
 #new_blue_print{
 /*	margin: auto;*/
 	display: block;
-	margin-top: 10px;
-	margin-bottom: 10px;
+/*	margin-top: 10px;
+	margin-bottom: 10px;*/
 	width: 250px;
 }
 
@@ -194,6 +192,7 @@ body {
 /*	margin-top: -140px;
 	margin-right: -2px;*/
 	transform: translate(255px, 13px);
+	top: 0;
 }
 
 #picker {
@@ -217,4 +216,23 @@ body {
 
 #top_menu {
 	padding: 0;
+}
+
+#debugtext {
+	font-size: 10px;
+	position: fixed;
+	z-index: 100000;
+	display: none;
+}
+
+#blueprint_name_input{
+	width: 250px;
+}
+
+.modify_map_label {
+	min-width: 150px; 
+}
+
+#blueprint_modal {
+	max-width: 462px !important;
 }
