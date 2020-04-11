@@ -48,6 +48,8 @@ Where `<DB_URL>` and `<DB_PASS>` are the URL and Password of your MongoDB server
 1. `npm install` in the project root directory to install the dependencies.
 2. `npm run dev` to run the watch script the auto-recompiles the project on changes to `app/static/js/index.js`.
 
+Note that the build script takes about half a second to run, so you'll need to wait after making changes before refreshing your browser.
+
 ### Set it up on Heroku
 
 0. Download and install the Heroku command line interface from the [official website](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) and make an account.
