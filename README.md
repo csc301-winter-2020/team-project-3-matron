@@ -20,9 +20,10 @@ There are two options to set up the Matron application: it can either be set up 
 
 0. Download/install Python3 from the [the official website](https://www.python.org/downloads/).
 1. `git clone https://github.com/csc301-winter-2020/team-project-3-matron.git` to download the repository.
-2. `pip install -r requirements.txt` to install the dependencies.
-3. `cd team-project-3-matron/app` to navigate to the correct directory.
-4. `python run_local.py <DB_URL> <DB_PASS>` to run the server with the given params.
+2. `cd team-project-3-matron` to navigate to the correct directory.
+3. `pip install -r requirements.txt` to install the dependencies.
+4. `cd app` to navigate to correct directoy.
+5. `python run_local.py <DB_URL> <DB_PASS>` to run the server with the given params.
 
 Where `<DB_URL>` and `<DB_PASS>` are the URL and Password of your MongoDB server, in quotes.
 
@@ -32,7 +33,7 @@ Where `<DB_URL>` and `<DB_PASS>` are the URL and Password of your MongoDB server
 1. `npm install` in the project root directory to install the dependencies.
 2. `npm run dev` to run the watch script that auto-recompiles the project on changes to `app/static/js/index.js`.
 
-Note that the build script takes about half a second to run, so you'll need to wait after making changes before refreshing your browser.
+Note the build process takes some time, so wait about half a second after making changes before refreshing your browser.
 
 ### Set it up on Heroku
 
@@ -42,7 +43,7 @@ Note that the build script takes about half a second to run, so you'll need to w
 3. `cd team-project-3-matron/app` to navigate to the correct directory.
 4. `heroku create` to create a new Heroku app. You will then see a URL and password printed in the console, which will be the URL of the website once it's up.
 5. `heroku config:set DB_URL=<THE URL FOR YOUR DB>` and `heroku config:set DB_PASS=<THE PASSWORD FOR YOUR DB>` to the environment variables.
-6. `git push heroku master` to deploy the app to Heroku. You should then be able to access the application from the URL you got in step 3.
+6. `git push heroku master` to deploy the app to Heroku. You should then be able to access the application from the URL you got in step 4.
 
 # Main Routes
 
