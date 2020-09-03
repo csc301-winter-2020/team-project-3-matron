@@ -9,6 +9,8 @@ class MongoDAO:
     ----------
     client : MongoClient
         used to connect to the database server
+    userdb : Database
+        used to store users credentials 
     graphdb : Database
         used to manipulate graph database entries
     blueprintdb : Database
@@ -21,6 +23,13 @@ class MongoDAO:
         alternate object for blueprint_fs, used for renaming
     Methods
     -------
+    save_user: bool
+        saves user credential in the database 
+        returns true if successfull, false otherwise
+    get_user: Dict or None
+        returns user object with specified username
+    get_user_by_id: Dict or None
+        returns user object with specified id
     save_graph : bool
         saves latest version of a graph in the database
         returns true if successful, false otherwise
@@ -66,6 +75,9 @@ class MongoDAO:
         """
         self.client = pymongo.MongoClient(connection.replace("<password>", password))
 
+        # use self.userdb to reference the database of users
+        self.userdb = self.client.user
+        
         # use self.graphdb to reference the database of graphs
         self.graphdb = self.client.graphs
 
@@ -75,6 +87,57 @@ class MongoDAO:
         self.meta_collect = self.blueprintdb.fs.files
         self.bucket = gridfs.GridFSBucket(self.blueprintdb)
 
+    def save_user(self, username, passwordhash):
+        """
+            creates a new user document
+
+        Parameters
+        ----------
+        username : string
+            username of the user resource
+        passwordhash : string
+            hashed text representation of the user password
+        Returns 
+        -------
+        Bool
+            True if successful, False otherwise
+        """
+
+        user = self.userdb.users.find_one({"username": username})
+        if user is not None:
+            return False
+        
+        self.userdb.users.save({"username": username, "password": passwordhash})
+        return True
+
+    def get_user(self, username):
+        """
+            retrieve user resource with given username
+        Parameters
+        ----------
+        username : string
+            username of the user resource
+        Returns
+        -------
+        Dict or None
+            user resource if successfull, None otherwise
+        """
+        return self.userdb.users.find_one({"username": username})
+    
+    def get_user_by_id(self, id):
+        """
+             retrieve user resource with given id
+        Parameters
+        ----------
+        id : string
+            id of the user resource
+        Returns
+        -------
+        Dict or None
+            user resource if successfull, None otherwise
+        """
+        return self.userdb.users.find_one({"_id": id})
+        
     def save_graph(self, graphname, graph):
         """
         Saves the newest version of a graph, along with its blueprint
